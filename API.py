@@ -20,8 +20,8 @@ mongo  = PyMongo(app)
 CORS(app)
 
 
-@app.route("/Admin/Signup",metheds=["POST"])
-def signup():
+@app.route("/Admin/Signup",methods=["POST"])
+def a_signup():
     status= 200
     resp ={}
     try:
@@ -59,8 +59,8 @@ def signup():
     return jsonify(resp),status
 
 
-@app.route("/Teacher/Signup",metheds=["POST"])
-def signup():
+@app.route("/Teacher/Signup",methods=["POST"])
+def t_signup():
     status= 200
     resp ={}
     try:
@@ -105,8 +105,8 @@ def signup():
 
 
         
-@app.route("/Securtity/Signup",metheds=["POST"])
-def signup():
+@app.route("/Securtity/Signup",methods=["POST"])
+def se_signup():
     status= 200
     resp ={}
     try:
@@ -148,8 +148,8 @@ def signup():
     return jsonify(resp),status
 
 
-@app.route("/Domestic/Signup",metheds=["POST"])
-def signup():
+@app.route("/Domestic/Signup",methods=["POST"])
+def dom_signup():
     status= 200
     resp ={}
     try:
@@ -192,8 +192,8 @@ def signup():
 
 
 
-@app.route("/Student/Signup",metheds=["POST"])
-def signup():
+@app.route("/Student/Signup",methods=["POST"])
+def stu_signup():
     status= 200
     resp ={}
     try:
@@ -246,8 +246,8 @@ def signup():
     return jsonify(resp),status
 
 
-@app.route("/Visitor/Signup",metheds=["POST"])
-def signup():
+@app.route("/Visitor/Signup",methods=["POST"])
+def v_signup():
     status= 200
     resp ={}
     try:
