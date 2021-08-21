@@ -19,7 +19,7 @@ app.config["MONGO_URI"] = "mongodb://localhost:27017/School"
 mongo  = PyMongo(app)
 CORS(app)
 
-
+#signup routes ////
 @app.route("/Admin/Signup",methods=["POST"])
 def a_signup():
     status= 200
@@ -49,13 +49,13 @@ def a_signup():
                 "acess_level":0,
                 "token":[]
             }
-            teacher  = mongo.db.teacher.insert(signup_payload)
+            teacher  = mongo.db.admin.insert(signup_payload)
             status = 200
             resp = {"message":"succeessful","status":f"{status}"}       
     except Exception as e:
         status = 400
-        resp = {"message":"ERROR on /User/Signup","status":f"{status}",}
-        print("ERROR:/User/Signup-->",e)
+        resp = {"message":"ERROR on /Admin/Signup","status":f"{status}",}
+        print("ERROR:/Admin/Signup-->",e)
     return jsonify(resp),status
 
 
@@ -99,13 +99,13 @@ def t_signup():
             resp = {"message":"succeessful","status":f"{status}"}       
     except Exception as e:
         status = 400
-        resp = {"message":"ERROR on /User/Signup","status":f"{status}",}
-        print("ERROR:/User/Signup-->",e)
+        resp = {"message":"ERROR on /Teacher/Signup","status":f"{status}",}
+        print("ERROR:/Teacher/Signup-->",e)
     return jsonify(resp),status
 
 
         
-@app.route("/Securtity/Signup",methods=["POST"])
+@app.route("/Security/Signup",methods=["POST"])
 def se_signup():
     status= 200
     resp ={}
@@ -138,13 +138,13 @@ def se_signup():
                 "acess_level":2,
                 "token":[]
             }
-            teacher  = mongo.db.teacher.insert(signup_payload)
+            teacher  = mongo.db.security.insert(signup_payload)
             status = 200
             resp = {"message":"succeessful","status":f"{status}"}       
     except Exception as e:
         status = 400
-        resp = {"message":"ERROR on /User/Signup","status":f"{status}",}
-        print("ERROR:/User/Signup-->",e)
+        resp = {"message":"ERROR on /Security/Signup","status":f"{status}",}
+        print("ERROR:/Security/Signup-->",e)
     return jsonify(resp),status
 
 
@@ -181,13 +181,13 @@ def dom_signup():
                 "acess_level":1,
                 "token":[]
             }
-            teacher  = mongo.db.teacher.insert(signup_payload)
+            teacher  = mongo.db.domestic.insert(signup_payload)
             status = 200
             resp = {"message":"succeessful","status":f"{status}"}       
     except Exception as e:
         status = 400
-        resp = {"message":"ERROR on /User/Signup","status":f"{status}",}
-        print("ERROR:/User/Signup-->",e)
+        resp = {"message":"ERROR on /Domestic/Signup","status":f"{status}",}
+        print("ERROR:/Domestic/Signup-->",e)
     return jsonify(resp),status
 
 
@@ -236,13 +236,13 @@ def stu_signup():
                 "acess_level":0,
                 "token":[]
             }
-            teacher  = mongo.db.teacher.insert(signup_payload)
+            teacher  = mongo.db.student.insert(signup_payload)
             status = 200
             resp = {"message":"succeessful","status":f"{status}"}       
     except Exception as e:
         status = 400
-        resp = {"message":"ERROR on /User/Signup","status":f"{status}",}
-        print("ERROR:/User/Signup-->",e)
+        resp = {"message":"ERROR on /Student/Signup","status":f"{status}",}
+        print("ERROR:/Student/Signup-->",e)
     return jsonify(resp),status
 
 
@@ -281,16 +281,124 @@ def v_signup():
                 "acess_level":0,
                 "token":[]
             }
-            teacher  = mongo.db.teacher.insert(signup_payload)
+            teacher  = mongo.db.visitor.insert(signup_payload)
             status = 200
             resp = {"message":"succeessful","status":f"{status}"}       
     except Exception as e:
         status = 400
-        resp = {"message":"ERROR on /User/Signup","status":f"{status}",}
-        print("ERROR:/User/Signup-->",e)
+        resp = {"message":"ERROR on /Visitor/Signup","status":f"{status}",}
+        print("ERROR:/Visitor/Signup-->",e)
     return jsonify(resp),status
 
 
+#login routes ///
+@app.route("/User/login",methods=["POST"])
+def login_user():
+    status = 200
+    resp = {}
+    try:
+        user_number = request.json.get("user_number")
+        password = request.json.get("password")
+
+        if user_number != "" and password != "":
+            teacher = mongo.db.teacher.find({"staff_number":f"{user_number}"})
+            admin = mongo.db.teacher.find({ "admin_number":f"{user_number}"})
+            student = mongo.db.student.find({"student_number":f"{user_number}"})
+            security = mongo.db.domestic.find({"staff_number":f"{user_number}"})
+            domestic = mongo.db.security.find({"staff_number":f"{user_number}"})
+            visitor = mongo.db.visitor.find({"visitor_number":f"{user_number}"})
+
+            if teacher != None:
+                print("Tacher")
+                data = parse_json(teacher)
+                if  data != {}: 
+                    database_password = data[0]["password"]
+                    if database_password  == password:
+                        print("welcome user")
+                        status = 200
+                        resp = {"message":"Welcome","status":status,"token":"active","user":data}
+                    else:
+                        print("Password is incorrect")
+                        status = 400
+                        resp = {"message":"Fail in check password","status":status}  
+            
+            if admin != None:
+                print("Admin")
+                data = parse_json(admin)
+                if  data != {}: 
+                    database_password = data[0]["password"]
+                    if database_password  == password:
+                        print("welcome user")
+                        status = 200
+                        resp = {"message":"Welcome","status":status,"token":"active","user":data}
+                    else:
+                        print("Password is incorrect")
+                        status = 400
+                        resp = {"message":"Fail in check password","status":status}  
+
+            if student != None:
+                print("Student")
+                data = parse_json(student)
+                if  data != {}: 
+                    database_password = data[0]["password"]
+                    if database_password  == password:
+                        print("welcome user")
+                        status = 200
+                        resp = {"message":"Welcome","status":status,"token":"active","user":data}
+                    else:
+                        print("Password is incorrect")
+                        status = 400
+                        resp = {"message":"Fail in check password","status":status}  
+
+            if security != None:
+                print("Security")
+                data = parse_json(security)
+                if  data != {}: 
+                    database_password = data[0]["password"]
+                    if database_password  == password:
+                        print("welcome user")
+                        status = 200
+                        resp = {"message":"Welcome","status":status,"token":"active","user":data}
+                    else:
+                        print("Password is incorrect")
+                        status = 400
+                        resp = {"message":"Fail in check password","status":status}  
+
+            if domestic != None:
+                print("Domestic")
+                data = parse_json(domestic)
+                if  data != {}: 
+                    database_password = data[0]["password"]
+                    if database_password  == password:
+                        print("welcome user")
+                        status = 200
+                        resp = {"message":"Welcome","status":status,"token":"active","user":data}
+                    else:
+                        print("Password is incorrect")
+                        status = 400
+                        resp = {"message":"Fail in check password","status":status}  
+
+            if visitor != None:
+                print("Vistor")
+                data = parse_json(visitor)
+                if  data != {}: 
+                    database_password = data[0]["password"]
+                    if database_password  == password:
+                        print("welcome user")
+                        status = 200
+                        resp = {"message":"Welcome","status":status,"token":"active","user":data}
+                    else:
+                        print("Password is incorrect")
+                        status = 400
+                        resp = {"message":"Fail in check password","status":status}  
+        else:
+            print("missing credential on sign up ")
+            status = 400
+            resp = {"message":"ERROR on /User/login missing credential","status":f"{status}",}
+    except Exception as e :
+        status = 400
+        resp = {"message":"ERROR on /User/login","status":f"{status}",}
+        print("ERROR:/User/login-->",e)
 
 
 
