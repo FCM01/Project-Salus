@@ -10,13 +10,60 @@ import uuid
 #QR module import
 import qrcode
 from PIL import Image
+import cv2 as cv
 
 class tools :
         def id_number_genrator(self):
             id_number = uuid.uuid1()
             return id_number
 
-        def emailing_services(self,reciver_email,name,type,verification_password=""):
+        def generate_token(self, profile,user_number):
+            image = ""
+            qr_id = uuid.uuid1()
+            try:
+                if profile != "" and user_number != "": 
+                    name = profile["name"]
+                    surname = profile["surname"]
+                    creation_point = datetime.datetime.now()
+                    payload_image= f"NAME:{name}, SURNAME:{surname}, USER NUMBER:{user_number}, CREATED:{creation_point}, QR CODE ID:{qr_id},"
+                    text =qrcode.make(payload)
+                    #image creation 
+                    qr.add_data(payload_image)
+                    qr.make(fit=True)
+                    image = qr.make_image(fill_color="black", back_color="white").convert('RGB')
+                    # image.save(f"QRcodes/{user_number}.png")
+                else :
+                    print("Missing credentials to create qr code")
+            except Exception as e :
+                print("[generate_token] generate_token() error:",e)
+            return image 
+
+        def class_register_qr_code(self,class_subject,teacher_name,qr_id ):
+            image = ""
+            qr_id = uuid.uuid1()
+            try:
+                if class_subject != "" and teacher_name != "" and qr_id !="":
+                    creation_point = datetime.datetime.now()
+                    payload_image= f"CLASS:{class_subject}, TEACHER:{teacher_name}, CREATED:{creation_point}, QR CODE ID:{qr_id},"
+
+                    #image creation 
+                    qr.add_data(payload_image)
+                    qr.make(fit=True)
+                    image = qr.make_image(fill_color="black", back_color="white").convert('RGB')
+                    # image.save(f"QRcodes/{user_number}.png")
+                else :
+                    print("Missing credentials to create qr code")
+            except Exception as e:
+                print("[class_register_qr_code] class_register_qr_code() error:",e)
+
+        def read_qr_code(self,user_number):
+            im = cv.imread(f'{user_number}.png')
+            det = cv.QRCodeDetector()
+            retval, points, straight_qrcode = det.detectAndDecode(im)
+            print(retval)
+            print(points)
+            print(straight_qrcode)
+        def emailing_services(self,reciver_email,name,type,token = "",verification_password=""):
             try:
                 
                 email_address  ="dummyjackson8@gmail.com"
@@ -50,14 +97,40 @@ class tools :
                             file_type = imghdr.what(image.name)
                             file_name= image.name
                         msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name)
-                
+                elif type == "qr_code":
+                    print("qr_code")
+                    # token.save(f"QRcodes/{user_number}.png")
+                    msg = EmailMessage()
+                    msg['Subject'] = 'QR Token '
+                    msg['From'] = email_address
+                    msg['To']= email_recieve
+                    msg.set_content ( f'You have been issed a Token to enter grounds{name}  you may enter school grounds as soon as your QR code has been scanned ')
+                    msg.add_alternative(f"""
+                        <!DOCTYPE html>
+                        <html>
+                            <body>
+                                <h1 style ="color:#96c8cc;">School Grounds Token</h1> 
+                                <h2 style ="color:#96c8cc;">{name}</h2>
+                                <p>You have been issed a Token to enter grounds{name}  you may enter school grounds as soon as your QR code has been scanned </p>
+                                <p>Yours sincerly</p>
+                                <p>The Salus team</p>
+                            </body>
+                        </html>
+                        """,subtype= "html")
+                    files = [f"{token}"]
+                    for images in files:
+                        with open(f"C:/Users/farai/OneDrive/Documents/personal work/startup/Flow/resources/{images}","rb") as image :
+                            file_data = image.read()
+                            file_type = imghdr.what(image.name)
+                            file_name= image.name
+                        msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name)
                 elif type == "forgot_passoword":
                     print("forgot passowrd")
                     msg = EmailMessage()
                     msg['Subject'] = 'Forgot Your Password '
                     msg['From'] = email_address
                     msg['To']= email_recieve
-                    msg.set_content ( 'Welcome to flow we happy to provide u a new way to bring ease to you doctor appointment making system')
+                    msg.set_content ( f'A sign in attempt requires further verification because we did not recognize your device. To complete the sign in, enter the verification code on the unrecognized device. Here is your verification code :{verification_password}')
                     msg.add_alternative(f"""
                         <!DOCTYPE html>
                         <html>
@@ -110,4 +183,4 @@ class tools :
                     print("Email has been sent")    
                     return True    
             except Exception as e :
-                print("[email_service] emailingServices() joining error:",e)
+                print("[email_service] emailingServices() error:",e)

@@ -259,7 +259,7 @@ def v_signup():
         phone_number= request.json.get("phone_number")
         address= request.json.get("address")
         password = request.json.get("password")
-        purpose_of_visit= request .json.get("purpose_of_visit")
+        purpose_of_visit= request.json.get("purpose_of_visit")
         time_in = request.json.get("time_in") 
         time_out = request.json.get("time_out") 
         if name!= "" and email !="" and password !="" and   id_number  != "":
@@ -281,6 +281,7 @@ def v_signup():
                 "acess_level":0,
                 "token":[]
             }
+            print(signup_payload)
             teacher  = mongo.db.visitor.insert(signup_payload)
             status = 200
             resp = {"message":"succeessful","status":f"{status}"}       
@@ -401,10 +402,181 @@ def login_user():
         print("ERROR:/User/login-->",e)
 
 
+@app.route("/generate/token",methods=["POST"])
+def generate_token():
+    status  = 200
+    resp= {}
+    try:
+        #user_number is not SA id number its user specific number 
+        user_number = request.json.get("user_number")
+        user_type = request.json.get("user_type")
+        if user_number != "" and user_type != "":
+
+            if user_type == "staff":
+                teacher = mongo.db.teacher.find({"staff_number":f"{user_number}"})
+                security = mongo.db.domestic.find({"staff_number":f"{user_number}"})
+                domestic = mongo.db.security.find({"staff_number":f"{user_number}"})
+
+                if teacher != None:
+                    qr = tools()
+                    token = qr.generate_token(teacher,user_number)
+                    email = teacher["email"]
+                    name = teacher["name"] 
+                    qr.emailing_services(email,name,qr_code,token)
+                else :
+                    status = 400 
+                    resp = {"message":"User not found","status":f"{status}"}
+                
+                if security != None:
+                    qr = tools()
+                    token = qr.generate_token(security,user_number)
+                    email = security["email"]
+                    name = security["name"] 
+                    qr.emailing_services(email,name,qr_code,token)
+                else :
+                    status = 400 
+                    resp = {"message":"User not found","status":f"{status}"}
+
+                if domestic != None:
+                    qr = tools()
+                    token = qr.generate_token(domestic,user_number)
+                    email = domestic["email"]
+                    name = domestic["name"] 
+                    qr.emailing_services(email,name,qr_code,token)
+                else :
+                    status = 400 
+                    token = resp = {"message":"User not found","status":f"{status}"}
+
+            elif user_type == "student":
+                student = mongo.db.student.find({"student_number":f"{user_number}"})
+                if  student != None :
+                    qr = tools()
+                    token = qr.generate_token(student,user_number)
+                    email = student["email"]
+                    name = student["name"] 
+                    qr.emailing_services(email,name,qr_code,token)
+                else :
+                    status = 400 
+                    resp = {"message":"User not found","status":f"{status}"}
+            
+            elif user_type == "vistor":
+                visitor = mongo.db.visitor.find({"visitor_number":f"{user_number}"})
+                if visitor  != None:
+                    qr = tools()
+                    token = qr.generate_token(visitor,user_number)
+                    email = visitor["email"]
+                    name = visitor["name"] 
+                    qr.emailing_services(email,name,qr_code,token)
+                else :
+                    status = 400 
+                    resp = {"message":"User not found","status":f"{status}"}
+
+            elif admin_type  == "admin":
+                admin = mongo.db.teacher.find({ "admin_number":f"{user_number}"})
+                if admin != None:
+                    qr = tools()
+                    token = qr.generate_token(admin,user_number)
+                    email = admin["email"]
+                    name = admin["name"] 
+                    qr.emailing_services(email,name,qr_code,token)
+                else :
+                    status = 400 
+                    resp = {"message":"User not found","status":f"{status}"}
+
+    except Exception as e :
+        status = 400
+        resp = {"message":"ERROR on /generate/token","status":f"{status}",}
+        print("ERROR:/User/login-->",e)
+    return jsonify(resp),status
+##############################################################################
+#######################################################################
+################################################
+#RETRIVE USER SECTION
+
+@app.route("/retrieve/User",methods=["POST","GET"])
+def get_patient_list():
+    status = 200
+    resp  = {}
+    try:
+        database_name = request.json.get("datbase_name")
+        if database_name != "":
+            patients = mongo.db.database_name
+            response  = patients.find()
+            if response != None:
+                status = 200
+                patients_array =[]
+                for i in response:
+                    patients_array.append(i)
+                return_response = parse_json(patients_array)
+                resp = {"response":return_response,"message":"patients retieved","status":status}
+        else:
+            status  = 400
+            resp={"message":"missing database name to retrieve from","status":status}
+    except Exception as e :
+        status  = 400
+        resp={"message":f"{e}","status":status}  
+        print("ERORR (patients retrieve route)--->",e)
+    return jsonify(resp),status
+#############################################################################
+#########################################################
+#############################################
+#Delete user area
+@app.route("/delete/user",methods=["DELETE"])
+def user_delete():
+    status = 200
+    resp  ={}
+    try:
+        name = request.json.get("name")
+        surname = request.json.get("surname")
+        user_number= request.json.get("user_number")
+        user_type =request.json.get("user_type")
+
+        if name != "" and surname !="" and user_number != "" and user_type != "":
+            database  = mongo.db.patients.find_one({"name":f"{patient_name}","surname":f"{patient_surnmae}","id_number":f"{patient_id_number}"})
+            if database != None:
+                print("patient is in database ")
+                patient_database_id  = patient_in_database["_id"]
+                print(patient_database_id)
+                if patient_database_id != "":
+                    mongo.db.patients.delete_one({"_id":f"{patient_database_id}"})
+                    status =200
+                    resp = {"message":"Patient profile has been deleted","status":status}
+                else:
+                    status =400
+                    resp = {"message":"Could not get patient _id ","status":status}
+
+            else:
+                status =400
+                resp = {"message":"There is no patient in the database with these credentials","status":status}
+        else:
+            status = 500
+            resp = {"message":"Missing credential to make query","status":status}
+    except Exception as e:
+        status  = 400
+        resp={"message":f"{e}","status":status}  
+        print("ERORR (/delete/user route)--->",e)
+    return jsonify(resp),status
 
 
 
+# Forget password and Change password 
 
+# @app.route("/forgot/passowrd",methods=["POST"]):
+# def forgot_password():
+#     status =200
+#     resp = {}
+#     try:
+#         print("fogotten password")
+#     except Exception as e:
+#         status  = 400
+#         resp={"message":f"{e}","status":status}  
+#         print("ERORR (/delete/user route)--->",e)
+#     return jsonify(resp),status
+
+########################################################################
+########################################################
+#########################################
+#QR code checking area
 
 if __name__  =="__main__":
     app.run(debug=True)
