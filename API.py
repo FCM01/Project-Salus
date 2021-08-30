@@ -194,10 +194,12 @@ def dom_signup():
 
 @app.route("/Student/Signup",methods=["POST"])
 def stu_signup():
+    print("hello")
     status= 200
     resp ={}
     try:
         name = request.json.get("name")
+        print(name)
         surname = request.json.get("surname")
         id_number = request.json.get("id_number")
         date_of_birth = request.json.get("date_of_birth")
@@ -205,20 +207,22 @@ def stu_signup():
         phone_number= request.json.get("phone_number")
         address= request.json.get("address")
         password = request.json.get("password")
+        student_number = request.json.get("student_number")
         register_class = request.json.get("register_class")
         subject_combo = request.json.get("subject_combo")
-        time_table = request.jso.get("time_table")
+        time_table = request.json.get("time_table")
         guardian_name  = request.json.get("guardian_name")
         guardian_surname = request.json.get("guardian_surname")
         gaurdian_email  = request.json.get(" gaurdian_email")
         gaurdian_phone_number = request.json.get("gaurdian_phone_number")
         
         if name!= "" and email !="" and password !="" and   id_number  != "":
-            uuid_number = tools()
-            student_number = uuid_number.id_number_genrator() 
+            # uuid_number = tools()
+            # student_number = uuid_number.id_number_genrator()
+            # print("st-->",student_number) 
             signup_payload = {
                 "name":f"{name}",
-                "surnmae":f"{surname}",
+                "surname":f"{surname}",
                 "id_number":f"{id_number}",
                 "date_of_birth": f"{date_of_birth}",
                 "email":f"{email}",
@@ -236,12 +240,13 @@ def stu_signup():
                 "acess_level":0,
                 "token":[]
             }
+            print(signup_payload)
             teacher  = mongo.db.student.insert(signup_payload)
             status = 200
             resp = {"message":"succeessful","status":f"{status}"}       
     except Exception as e:
         status = 400
-        resp = {"message":"ERROR on /Student/Signup","status":f"{status}",}
+        resp = {"message":"ERROR on /Student/Signup","status":f"{status}","e":f"{e}"}
         print("ERROR:/Student/Signup-->",e)
     return jsonify(resp),status
 
@@ -400,7 +405,7 @@ def login_user():
         status = 400
         resp = {"message":"ERROR on /User/login","status":f"{status}",}
         print("ERROR:/User/login-->",e)
-
+    return jsonify(resp),status
 
 @app.route("/generate/token",methods=["POST"])
 def generate_token():
@@ -422,7 +427,7 @@ def generate_token():
                     token = qr.generate_token(teacher,user_number)
                     email = teacher["email"]
                     name = teacher["name"] 
-                    qr.emailing_services(email,name,qr_code,token)
+                    qr.emailing_services(email,name,"qr_code",token)
                 else :
                     status = 400 
                     resp = {"message":"User not found","status":f"{status}"}
@@ -432,7 +437,7 @@ def generate_token():
                     token = qr.generate_token(security,user_number)
                     email = security["email"]
                     name = security["name"] 
-                    qr.emailing_services(email,name,qr_code,token)
+                    qr.emailing_services(email,name,"qr_code",token)
                 else :
                     status = 400 
                     resp = {"message":"User not found","status":f"{status}"}
@@ -442,7 +447,7 @@ def generate_token():
                     token = qr.generate_token(domestic,user_number)
                     email = domestic["email"]
                     name = domestic["name"] 
-                    qr.emailing_services(email,name,qr_code,token)
+                    qr.emailing_services(email,name,"qr_code",token)
                 else :
                     status = 400 
                     token = resp = {"message":"User not found","status":f"{status}"}
@@ -454,7 +459,7 @@ def generate_token():
                     token = qr.generate_token(student,user_number)
                     email = student["email"]
                     name = student["name"] 
-                    qr.emailing_services(email,name,qr_code,token)
+                    qr.emailing_services(email,name,"qr_code",token)
                 else :
                     status = 400 
                     resp = {"message":"User not found","status":f"{status}"}
@@ -466,7 +471,7 @@ def generate_token():
                     token = qr.generate_token(visitor,user_number)
                     email = visitor["email"]
                     name = visitor["name"] 
-                    qr.emailing_services(email,name,qr_code,token)
+                    qr.emailing_services(email,name,"qr_code",token)
                 else :
                     status = 400 
                     resp = {"message":"User not found","status":f"{status}"}
@@ -478,7 +483,7 @@ def generate_token():
                     token = qr.generate_token(admin,user_number)
                     email = admin["email"]
                     name = admin["name"] 
-                    qr.emailing_services(email,name,qr_code,token)
+                    qr.emailing_services(email,name,"qr_code",token)
                 else :
                     status = 400 
                     resp = {"message":"User not found","status":f"{status}"}

@@ -15,6 +15,7 @@ import cv2 as cv
 class tools :
         def id_number_genrator(self):
             id_number = uuid.uuid1()
+            print(id_number)
             return id_number
 
         def generate_token(self, profile,user_number):
