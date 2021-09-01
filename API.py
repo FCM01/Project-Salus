@@ -33,9 +33,10 @@ def a_signup():
         phone_number= request.json.get("phone_number")
         address= request.json.get("address")
         password = request.json.get("password")
+        admin_number = request.json.get("admin_number")
         if name!= "" and email !="" and password !="" and   id_number  != "":
-            uuid_number = tools()
-            admin_number = uuid_number.id_number_genrator() 
+            # uuid_number = tools()
+            # admin_number = uuid_number.id_number_genrator() 
             signup_payload = {
                 "name":f"{name}",
                 "surnmae":f"{surname}",
@@ -72,12 +73,13 @@ def t_signup():
         phone_number= request.json.get("phone_number")
         address= request.json.get("address")
         password = request.json.get("password")
+        staff_number = request.json.get("staff_number")
         position= request .json.get("position")
         subject= request.json.get("subject")
         register_class = request.json.get("register_class")
         if name!= "" and email !="" and password !="" and   id_number  != "":
-            uuid_number = tools()
-            staff_number = uuid_number.id_number_genrator() 
+            # uuid_number = tools()
+            # staff_number = uuid_number.id_number_genrator() 
             signup_payload = {
                 "name":f"{name}",
                 "surnmae":f"{surname}",
@@ -121,8 +123,8 @@ def se_signup():
         position= request .json.get("position")
         petrol_sector = request.json.get("petrol_sector") 
         if name!= "" and email !="" and password !="" and   id_number  != "":
-            uuid_number = tools()
-            staff_number = uuid_number.id_number_genrator() 
+            # uuid_number = tools()
+            # staff_number = uuid_number.id_number_genrator() 
             signup_payload = {
                 "name":f"{name}",
                 "surnmae":f"{surname}",
@@ -161,11 +163,12 @@ def dom_signup():
         phone_number= request.json.get("phone_number")
         address= request.json.get("address")
         password = request.json.get("password")
+        staff_number= request.json.get("staff_number")
         position= request .json.get("position")
         job_title = request.json.get("job_title") 
         if name!= "" and email !="" and password !="" and   id_number  != "":
-            uuid_number = tools()
-            staff_number = uuid_number.id_number_genrator() 
+            # uuid_number = tools()
+            # staff_number = uuid_number.id_number_genrator() 
             signup_payload = {
                 "name":f"{name}",
                 "surnmae":f"{surname}",
@@ -305,98 +308,93 @@ def login_user():
     try:
         user_number = request.json.get("user_number")
         password = request.json.get("password")
-
+        print(user_number,password)
         if user_number != "" and password != "":
             teacher = mongo.db.teacher.find({"staff_number":f"{user_number}"})
             admin = mongo.db.teacher.find({ "admin_number":f"{user_number}"})
             student = mongo.db.student.find({"student_number":f"{user_number}"})
-            security = mongo.db.domestic.find({"staff_number":f"{user_number}"})
-            domestic = mongo.db.security.find({"staff_number":f"{user_number}"})
+            domestic = mongo.db.domestic.find_one({"staff_number":f"{user_number}"})
+            security = mongo.db.security.find({"staff_number":f"{user_number}"})
             visitor = mongo.db.visitor.find({"visitor_number":f"{user_number}"})
-
-            if teacher != None:
-                print("Tacher")
+            print(parse_json(domestic))
+            print(parse_json(teacher))
+            if parse_json(teacher) != []:
+                print("Teacher")
                 data = parse_json(teacher)
-                if  data != {}: 
-                    database_password = data[0]["password"]
-                    if database_password  == password:
-                        print("welcome user")
-                        status = 200
-                        resp = {"message":"Welcome","status":status,"token":"active","user":data}
-                    else:
-                        print("Password is incorrect")
-                        status = 400
-                        resp = {"message":"Fail in check password","status":status}  
+                database_password = data["password"]   
+                if database_password  == password:
+                    print("welcome user")
+                    status = 200
+                    resp = {"message":"Welcome","status":status,"token":"active","user":data}
+                else:
+                    print("Password is incorrect")
+                    status = 400
+                    resp = {"message":"Fail in check password","status":status}  
             
-            if admin != None:
+            if parse_json(admin) != []:
                 print("Admin")
                 data = parse_json(admin)
-                if  data != {}: 
-                    database_password = data[0]["password"]
-                    if database_password  == password:
-                        print("welcome user")
-                        status = 200
-                        resp = {"message":"Welcome","status":status,"token":"active","user":data}
-                    else:
-                        print("Password is incorrect")
-                        status = 400
-                        resp = {"message":"Fail in check password","status":status}  
+                database_password = data["password"]   
+                if database_password  == password:
+                    print("welcome user")
+                    status = 200
+                    resp = {"message":"Welcome","status":status,"token":"active","user":data}
+                else:
+                    print("Password is incorrect")
+                    status = 400
+                    resp = {"message":"Fail in check password","status":status} 
 
-            if student != None:
+            if parse_json(student) != []:
                 print("Student")
                 data = parse_json(student)
-                if  data != {}: 
-                    database_password = data[0]["password"]
-                    if database_password  == password:
-                        print("welcome user")
-                        status = 200
-                        resp = {"message":"Welcome","status":status,"token":"active","user":data}
-                    else:
-                        print("Password is incorrect")
-                        status = 400
-                        resp = {"message":"Fail in check password","status":status}  
+                database_password = data["password"]   
+                if database_password  == password:
+                    print("welcome user")
+                    status = 200
+                    resp = {"message":"Welcome","status":status,"token":"active","user":data}
+                else:
+                    print("Password is incorrect")
+                    status = 400
+                    resp = {"message":"Fail in check password","status":status} 
 
-            if security != None:
+            if parse_json(security) != []:
                 print("Security")
                 data = parse_json(security)
-                if  data != {}: 
-                    database_password = data[0]["password"]
-                    if database_password  == password:
-                        print("welcome user")
-                        status = 200
-                        resp = {"message":"Welcome","status":status,"token":"active","user":data}
-                    else:
-                        print("Password is incorrect")
-                        status = 400
-                        resp = {"message":"Fail in check password","status":status}  
+                database_password = data["password"]   
+                if database_password  == password:
+                    print("welcome user")
+                    status = 200
+                    resp = {"message":"Welcome","status":status,"token":"active","user":data}
+                else:
+                    print("Password is incorrect")
+                    status = 400
+                    resp = {"message":"Fail in check password","status":status}  
 
-            if domestic != None:
+            if parse_json(domestic) != []:
                 print("Domestic")
                 data = parse_json(domestic)
-                if  data != {}: 
-                    database_password = data[0]["password"]
-                    if database_password  == password:
-                        print("welcome user")
-                        status = 200
-                        resp = {"message":"Welcome","status":status,"token":"active","user":data}
-                    else:
-                        print("Password is incorrect")
-                        status = 400
-                        resp = {"message":"Fail in check password","status":status}  
+                database_password = data["password"]   
+                if database_password  == password:
+                    print("welcome user")
+                    status = 200
+                    resp = {"message":"Welcome","status":status,"token":"active","user":data}
+                else:
+                    print("Password is incorrect")
+                    status = 400
+                    resp = {"message":"Fail in check password","status":status}  
 
-            if visitor != None:
+            if parse_json(visitor) != []:
                 print("Vistor")
-                data = parse_json(visitor)
-                if  data != {}: 
-                    database_password = data[0]["password"]
-                    if database_password  == password:
-                        print("welcome user")
-                        status = 200
-                        resp = {"message":"Welcome","status":status,"token":"active","user":data}
-                    else:
-                        print("Password is incorrect")
-                        status = 400
-                        resp = {"message":"Fail in check password","status":status}  
+               data = parse_json(visitor)
+                database_password = data["password"]   
+                if database_password  == password:
+                    print("welcome user")
+                    status = 200
+                    resp = {"message":"Welcome","status":status,"token":"active","user":data}
+                else:
+                    print("Password is incorrect")
+                    status = 400
+                    resp = {"message":"Fail in check password","status":status}  
         else:
             print("missing credential on sign up ")
             status = 400
@@ -539,16 +537,16 @@ def user_delete():
         if name != "" and surname !="" and user_number != "" and user_type != "":
             database  = mongo.db.patients.find_one({"name":f"{patient_name}","surname":f"{patient_surnmae}","id_number":f"{patient_id_number}"})
             if database != None:
-                print("patient is in database ")
+                print("user is in database ")
                 patient_database_id  = patient_in_database["_id"]
                 print(patient_database_id)
                 if patient_database_id != "":
                     mongo.db.patients.delete_one({"_id":f"{patient_database_id}"})
                     status =200
-                    resp = {"message":"Patient profile has been deleted","status":status}
+                    resp = {"message":"User profile has been deleted","status":status}
                 else:
                     status =400
-                    resp = {"message":"Could not get patient _id ","status":status}
+                    resp = {"message":"Could not get User _id ","status":status}
 
             else:
                 status =400
