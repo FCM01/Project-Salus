@@ -310,12 +310,12 @@ def login_user():
         password = request.json.get("password")
         print(user_number,password)
         if user_number != "" and password != "":
-            teacher = mongo.db.teacher.find({"staff_number":f"{user_number}"})
-            admin = mongo.db.teacher.find({ "admin_number":f"{user_number}"})
-            student = mongo.db.student.find({"student_number":f"{user_number}"})
+            teacher = mongo.db.teacher.find_one({"staff_number":f"{user_number}"})
+            admin = mongo.db.teacher.find_one({ "admin_number":f"{user_number}"})
+            student = mongo.db.student.find_one({"student_number":f"{user_number}"})
             domestic = mongo.db.domestic.find_one({"staff_number":f"{user_number}"})
-            security = mongo.db.security.find({"staff_number":f"{user_number}"})
-            visitor = mongo.db.visitor.find({"visitor_number":f"{user_number}"})
+            security = mongo.db.security.find_one({"staff_number":f"{user_number}"})
+            visitor = mongo.db.visitor.find_one({"visitor_number":f"{user_number}"})
             print(parse_json(domestic))
             print(parse_json(teacher))
             if parse_json(teacher) != []:
@@ -413,14 +413,15 @@ def generate_token():
         #user_number is not SA id number its user specific number 
         user_number = request.json.get("user_number")
         user_type = request.json.get("user_type")
+        print(user_number,user_type)
         if user_number != "" and user_type != "":
 
             if user_type == "staff":
-                teacher = mongo.db.teacher.find({"staff_number":f"{user_number}"})
-                security = mongo.db.domestic.find({"staff_number":f"{user_number}"})
-                domestic = mongo.db.security.find({"staff_number":f"{user_number}"})
-
-                if teacher != None:
+                teacher = mongo.db.teacher.find_one({"staff_number":f"{user_number}"})
+                security = mongo.db.security.find_one({"staff_number":f"{user_number}"})
+                domestic = mongo.db.domestic.find_one({"staff_number":f"{user_number}"})
+                print(parse_json(domestic))
+                if parse_json(teacher) != []:
                     qr = tools()
                     token = qr.generate_token(teacher,user_number)
                     email = teacher["email"]
@@ -430,7 +431,7 @@ def generate_token():
                     status = 400 
                     resp = {"message":"User not found","status":f"{status}"}
                 
-                if security != None:
+                if parse_json(security) != []:
                     qr = tools()
                     token = qr.generate_token(security,user_number)
                     email = security["email"]
@@ -440,7 +441,8 @@ def generate_token():
                     status = 400 
                     resp = {"message":"User not found","status":f"{status}"}
 
-                if domestic != None:
+                if parse_json(domestic) != []:
+                    print("Domestic")
                     qr = tools()
                     token = qr.generate_token(domestic,user_number)
                     email = domestic["email"]
@@ -451,8 +453,8 @@ def generate_token():
                     token = resp = {"message":"User not found","status":f"{status}"}
 
             elif user_type == "student":
-                student = mongo.db.student.find({"student_number":f"{user_number}"})
-                if  student != None :
+                student = mongo.db.student.find_one({"student_number":f"{user_number}"})
+                if  parse_json(student) != [] :
                     qr = tools()
                     token = qr.generate_token(student,user_number)
                     email = student["email"]
@@ -463,8 +465,8 @@ def generate_token():
                     resp = {"message":"User not found","status":f"{status}"}
             
             elif user_type == "vistor":
-                visitor = mongo.db.visitor.find({"visitor_number":f"{user_number}"})
-                if visitor  != None:
+                visitor = mongo.db.visitor.find_one({"visitor_number":f"{user_number}"})
+                if parse(visitor)  != []:
                     qr = tools()
                     token = qr.generate_token(visitor,user_number)
                     email = visitor["email"]
@@ -474,9 +476,9 @@ def generate_token():
                     status = 400 
                     resp = {"message":"User not found","status":f"{status}"}
 
-            elif admin_type  == "admin":
-                admin = mongo.db.teacher.find({ "admin_number":f"{user_number}"})
-                if admin != None:
+            elif user_type  == "admin":
+                admin = mongo.db.teacher.find_one({ "admin_number":f"{user_number}"})
+                if parse_json(admin) != []:
                     qr = tools()
                     token = qr.generate_token(admin,user_number)
                     email = admin["email"]
