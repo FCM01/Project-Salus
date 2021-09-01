@@ -385,7 +385,7 @@ def login_user():
 
             if parse_json(visitor) != []:
                 print("Vistor")
-               data = parse_json(visitor)
+                data = parse_json(visitor)
                 database_password = data["password"]   
                 if database_password  == password:
                     print("welcome user")
