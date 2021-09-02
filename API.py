@@ -39,7 +39,7 @@ def a_signup():
             # admin_number = uuid_number.id_number_genrator() 
             signup_payload = {
                 "name":f"{name}",
-                "surnmae":f"{surname}",
+                "surname":f"{surname}",
                 "id_number":f"{id_number}",
                 "date_of_birth": f"{date_of_birth}",
                 "email":f"{email}",
@@ -82,7 +82,7 @@ def t_signup():
             # staff_number = uuid_number.id_number_genrator() 
             signup_payload = {
                 "name":f"{name}",
-                "surnmae":f"{surname}",
+                "surname":f"{surname}",
                 "id_number":f"{id_number}",
                 "date_of_birth": f"{date_of_birth}",
                 "email":f"{email}",
@@ -127,7 +127,7 @@ def se_signup():
             # staff_number = uuid_number.id_number_genrator() 
             signup_payload = {
                 "name":f"{name}",
-                "surnmae":f"{surname}",
+                "surname":f"{surname}",
                 "id_number":f"{id_number}",
                 "date_of_birth": f"{date_of_birth}",
                 "email":f"{email}",
@@ -171,7 +171,7 @@ def dom_signup():
             # staff_number = uuid_number.id_number_genrator() 
             signup_payload = {
                 "name":f"{name}",
-                "surnmae":f"{surname}",
+                "surname":f"{surname}",
                 "id_number":f"{id_number}",
                 "date_of_birth": f"{date_of_birth}",
                 "email":f"{email}",
@@ -275,7 +275,7 @@ def v_signup():
             visitor_number = uuid_number.id_number_genrator() 
             signup_payload = {
                 "name":f"{name}",
-                "surnmae":f"{surname}",
+                "surname":f"{surname}",
                 "id_number":f"{id_number}",
                 "date_of_birth": f"{date_of_birth}",
                 "email":f"{email}",
@@ -420,58 +420,76 @@ def generate_token():
                 teacher = mongo.db.teacher.find_one({"staff_number":f"{user_number}"})
                 security = mongo.db.security.find_one({"staff_number":f"{user_number}"})
                 domestic = mongo.db.domestic.find_one({"staff_number":f"{user_number}"})
+                print(parse_json(teacher))
+                print(parse_json(security))
                 print(parse_json(domestic))
-                if parse_json(teacher) != []:
+
+                if parse_json(teacher) != None:
+                    data = parse_json(teacher)
                     qr = tools()
-                    token = qr.generate_token(teacher,user_number)
-                    email = teacher["email"]
-                    name = teacher["name"] 
-                    qr.emailing_services(email,name,"qr_code",token)
+                    token = qr.generate_token(data,user_number)
+                    email = data["email"]
+                    name = data["name"] 
+                    qr.emailing_services(email,name,user_number,"qr_code",token)
+                    status = 200 
+                    resp = {"message":"Toke sent","status":f"{status}"}
                 else :
                     status = 400 
                     resp = {"message":"User not found","status":f"{status}"}
                 
-                if parse_json(security) != []:
+                if parse_json(security) != None:
+                    data = parse_json(security)
                     qr = tools()
-                    token = qr.generate_token(security,user_number)
-                    email = security["email"]
-                    name = security["name"] 
-                    qr.emailing_services(email,name,"qr_code",token)
+                    token = qr.generate_token(data,user_number)
+                    email = data["email"]
+                    name = data["name"] 
+                    qr.emailing_services(email,name,user_number,"qr_code",token)
+                    status = 200 
+                    resp = {"message":"Toke sent","status":f"{status}"}
                 else :
                     status = 400 
                     resp = {"message":"User not found","status":f"{status}"}
 
-                if parse_json(domestic) != []:
+                if parse_json(domestic) != None:
                     print("Domestic")
+                    data = parse_json(domestic)
                     qr = tools()
-                    token = qr.generate_token(domestic,user_number)
-                    email = domestic["email"]
-                    name = domestic["name"] 
-                    qr.emailing_services(email,name,"qr_code",token)
+                    print(data)
+                    token = qr.generate_token(data,user_number)
+                    email = data["email"]
+                    name = data["name"] 
+                    qr.emailing_services(email,name,user_number,"qr_code",token)
+                    status = 200 
+                    resp = {"message":"Toke sent","status":f"{status}"}
                 else :
                     status = 400 
                     token = resp = {"message":"User not found","status":f"{status}"}
 
             elif user_type == "student":
                 student = mongo.db.student.find_one({"student_number":f"{user_number}"})
-                if  parse_json(student) != [] :
+                if  parse_json(student) != None:
                     qr = tools()
                     token = qr.generate_token(student,user_number)
                     email = student["email"]
                     name = student["name"] 
                     qr.emailing_services(email,name,"qr_code",token)
+                    status = 200 
+                    resp = {"message":"Toke sent","status":f"{status}"}
                 else :
                     status = 400 
                     resp = {"message":"User not found","status":f"{status}"}
             
             elif user_type == "vistor":
                 visitor = mongo.db.visitor.find_one({"visitor_number":f"{user_number}"})
-                if parse(visitor)  != []:
+                if parse(visitor)  != None:
+                    data = parse_json(visitor)
                     qr = tools()
-                    token = qr.generate_token(visitor,user_number)
-                    email = visitor["email"]
-                    name = visitor["name"] 
-                    qr.emailing_services(email,name,"qr_code",token)
+                    token = qr.generate_token(data,user_number)
+                    email = data["email"]
+                    name = data["name"] 
+                    qr.emailing_services(email,name,user_number,"qr_code",token)
+                    status = 200 
+                    resp = {"message":"Toke sent","status":f"{status}"}
                 else :
                     status = 400 
                     resp = {"message":"User not found","status":f"{status}"}
@@ -479,11 +497,14 @@ def generate_token():
             elif user_type  == "admin":
                 admin = mongo.db.teacher.find_one({ "admin_number":f"{user_number}"})
                 if parse_json(admin) != []:
+                    data = parse_json(admin)
                     qr = tools()
-                    token = qr.generate_token(admin,user_number)
-                    email = admin["email"]
-                    name = admin["name"] 
-                    qr.emailing_services(email,name,"qr_code",token)
+                    token = qr.generate_token(data,user_number)
+                    email = data["email"]
+                    name = data["name"] 
+                    qr.emailing_services(email,name,user_number,"qr_code",token)
+                    status = 200 
+                    resp = {"message":"Toke sent","status":f"{status}"}
                 else :
                     status = 400 
                     resp = {"message":"User not found","status":f"{status}"}
@@ -491,7 +512,7 @@ def generate_token():
     except Exception as e :
         status = 400
         resp = {"message":"ERROR on /generate/token","status":f"{status}",}
-        print("ERROR:/User/login-->",e)
+        print("ERROR:/generate/token-->",e)
     return jsonify(resp),status
 ##############################################################################
 #######################################################################
@@ -566,22 +587,36 @@ def user_delete():
 
 # Forget password and Change password 
 
-# @app.route("/forgot/passowrd",methods=["POST"]):
-# def forgot_password():
-#     status =200
-#     resp = {}
-#     try:
-#         print("fogotten password")
-#     except Exception as e:
-#         status  = 400
-#         resp={"message":f"{e}","status":status}  
-#         print("ERORR (/delete/user route)--->",e)
-#     return jsonify(resp),status
+@app.route("/forgot/passowrd",methods=["POST"])
+def forgot_password():
+    status =200
+    resp = {}
+    try:
+        print("fogotten password")
+        email =  request.json.get("email")
+        if email != "":
+            teacher = mongo.db.teacher.find_one({"staff_number":f"{email}"})
+            admin = mongo.db.teacher.find_one({ "admin_number":f"{email}"})
+            student = mongo.db.student.find_one({"student_number":f"{email}"})
+            domestic = mongo.db.domestic.find_one({"staff_number":f"{email}"})
+            security = mongo.db.security.find_one({"staff_number":f"{email}"})
+            visitor = mongo.db.visitor.find_one({"visitor_number":f"{email}"})
+
+        else:
+            status = 400
+            resp = {"message":"Missing credential","status":status}
+    except Exception as e:
+        status  = 400
+        resp={"message":f"{e}","status":status}  
+        print("ERORR (/delete/user route)--->",e)
+    return jsonify(resp),status
 
 ########################################################################
 ########################################################
 #########################################
 #QR code checking area
+
+# @app.route("/QR/check", methods=["POST"])
 
 if __name__  =="__main__":
     app.run(debug=True)

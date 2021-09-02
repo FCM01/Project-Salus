@@ -18,17 +18,24 @@ class tools :
             print(id_number)
             return id_number
 
-        def generate_token(self, profile,user_number):
+        def generate_token(self,profile,user_number):
             image = ""
+            print(profile,user_number)
             qr_id = uuid.uuid1()
             try:
                 if profile != "" and user_number != "": 
                     name = profile["name"]
                     surname = profile["surname"]
-                    creation_point = datetime.datetime.now()
+                    creation_point = datetime.now()
                     payload_image= f"NAME:{name}, SURNAME:{surname}, USER NUMBER:{user_number}, CREATED:{creation_point}, QR CODE ID:{qr_id},"
-                    text =qrcode.make(payload)
+                    # text =qrcode.make(payload)
                     #image creation 
+                    qr = qrcode.QRCode(
+                        version=1,
+                        error_correction=qrcode.constants.ERROR_CORRECT_H,
+                        box_size=10,
+                        border=4,
+                    )
                     qr.add_data(payload_image)
                     qr.make(fit=True)
                     image = qr.make_image(fill_color="black", back_color="white").convert('RGB')
@@ -44,10 +51,16 @@ class tools :
             qr_id = uuid.uuid1()
             try:
                 if class_subject != "" and teacher_name != "" and qr_id !="":
-                    creation_point = datetime.datetime.now()
+                    creation_point = datetime.now()
                     payload_image= f"CLASS:{class_subject}, TEACHER:{teacher_name}, CREATED:{creation_point}, QR CODE ID:{qr_id},"
 
                     #image creation 
+                    qr = qrcode.QRCode(
+                        version=1,
+                        error_correction=qrcode.constants.ERROR_CORRECT_H,
+                        box_size=10,
+                        border=4,
+                    )
                     qr.add_data(payload_image)
                     qr.make(fit=True)
                     image = qr.make_image(fill_color="black", back_color="white").convert('RGB')
@@ -64,14 +77,12 @@ class tools :
             print(retval)
             print(points)
             print(straight_qrcode)
-        def emailing_services(self,reciver_email,name,type,token = "",verification_password=""):
+        def emailing_services(self,reciver_email,name,user_number,type,token = "",verification_password=""):
             try:
                 
                 email_address  ="dummyjackson8@gmail.com"
                 email_password  ="dummy101@1"
-                email_recieve = reciver_email
-
-              
+                email_recieve = reciver_email  
                 
                 if type == "signup":
                     msg = EmailMessage()
@@ -100,12 +111,12 @@ class tools :
                         msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name)
                 elif type == "qr_code":
                     print("qr_code")
-                    # token.save(f"QRcodes/{user_number}.png")
+                    token.save(f"QRcodes/{user_number}.png")
                     msg = EmailMessage()
                     msg['Subject'] = 'QR Token '
                     msg['From'] = email_address
                     msg['To']= email_recieve
-                    msg.set_content ( f'You have been issed a Token to enter grounds{name}  you may enter school grounds as soon as your QR code has been scanned ')
+                    msg.set_content ( f'You have been issed a Token to enter grounds {name}  you may enter school grounds as soon as your QR code has been scanned ')
                     msg.add_alternative(f"""
                         <!DOCTYPE html>
                         <html>
@@ -118,13 +129,14 @@ class tools :
                             </body>
                         </html>
                         """,subtype= "html")
-                    files = [f"{token}"]
+                    files = [f"{user_number}.png"]
                     for images in files:
-                        with open(f"C:/Users/farai/OneDrive/Documents/personal work/startup/Flow/resources/{images}","rb") as image :
+                        with open(f"QRcodes/{images}","rb") as image :
                             file_data = image.read()
                             file_type = imghdr.what(image.name)
                             file_name= image.name
                         msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name)
+
                 elif type == "forgot_passoword":
                     print("forgot passowrd")
                     msg = EmailMessage()
