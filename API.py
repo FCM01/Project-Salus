@@ -481,7 +481,7 @@ def generate_token():
             
             elif user_type == "vistor":
                 visitor = mongo.db.visitor.find_one({"visitor_number":f"{user_number}"})
-                if parse(visitor)  != None:
+                if parse_json(visitor)  != None:
                     data = parse_json(visitor)
                     qr = tools()
                     token = qr.generate_token(data,user_number)
