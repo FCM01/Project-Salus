@@ -1,1 +1,26 @@
-<p>login works!</p>
+<form>
+    <h1>Welcome</h1>
+    <p>Please enter in your credentials</p>
+    <div class = "mb-main">
+        <div class="row">
+            <div class="col-md-6 offset-md-3 mt-4">
+               
+                <br>
+                <div class="mb-3">
+                <label for="usernumber">User Number</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" #user_number>
+                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" #password>
+                </div>
+                <div class="mb-3 form-check">
+                <a routerLink = "/forgotpassword">Forgot Password ??</a>
+                </div>
+                <button type="submit" class="btn btn-primary" (click)="setValues(user_number.value,password.value)">Submit</button>
+
+            </div>
+        </div>  
+</div>
+  </form>

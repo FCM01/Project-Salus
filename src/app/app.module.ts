@@ -9,6 +9,8 @@ import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { ContactComponent } from './contact/contact.component';
 import { BreachalarmComponent } from './breachalarm/breachalarm.component';
+import {HttpClientModule} from '@angular/common/http';
+import {FormsModule, ReactiveFormsModule}from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -22,7 +24,10 @@ import { BreachalarmComponent } from './breachalarm/breachalarm.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    HttpClientModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

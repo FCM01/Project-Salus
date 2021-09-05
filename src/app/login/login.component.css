@@ -1,0 +1,35 @@
+
+body {
+    
+	background: #666;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+	overflow: hidden;
+    
+}
+.mb-main {
+    font-family: "Anton", sans-serif;
+    font-family: "Raleway", sans-serif;
+    text-align: left;
+      display:block;
+      padding:2em;
+      width: 80%;
+      margin: 0 auto;
+      margin-bottom: 1em;
+      background-color: antiquewhite;
+}
+.mb-3 
+{
+    text-align: center;
+    margin: .5em;
+    padding: .7em;
+} 
+.mb-3 .form-control {
+    margin-left: .7em;
+    width: 50%;
+  height: 2em;
+  border: 1px solid black;
+    
+}
