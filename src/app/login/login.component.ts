@@ -15,6 +15,8 @@ export class LoginComponent implements OnInit {
   public responce:any ;
   public user_number ="" ;
   public password ="";
+  public i = 0;
+  public temp:any ;
   private final_payload ={};
   public titleAlert: string = "Please enter in your email"
   public titleAlert2 :string ="Please enter in an password"
@@ -39,6 +41,12 @@ export class LoginComponent implements OnInit {
     this.responce=this.log.LoginCredentialSend(this.final_payload)
       .subscribe()
     console.log("what the subcribed observable gave back ==>",this.responce);
+    this.temp =this.responce["_subscriptions"]
+    console.log(this.temp)
+
+    for(this.i = 0; this.i <5;this.i++){
+      console.log(this.responce["_subscriptions"][this.i]);
+    }
   }
  
 }

@@ -9,12 +9,12 @@ import { catchError, retry } from 'rxjs/operators';
 export class SalusloginService {
   public url = "http://localhost:5000"
   public payload={};
+  public response :any;
   constructor(public http: HttpClient) { }
 
   LoginCredentialSend(final_payload:any)
   {
     this.payload= JSON.stringify(final_payload) 
-    console.log(final_payload)
    return this.http.post(this.url+"/User/login",this.payload)
   }
 }

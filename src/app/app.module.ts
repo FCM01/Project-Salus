@@ -11,6 +11,7 @@ import { ContactComponent } from './contact/contact.component';
 import { BreachalarmComponent } from './breachalarm/breachalarm.component';
 import {HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule}from "@angular/forms";
+import { RegistercheckComponent } from './registercheck/registercheck.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import {FormsModule, ReactiveFormsModule}from "@angular/forms";
     LoginComponent,
     SignupComponent,
     ContactComponent,
-    BreachalarmComponent
+    BreachalarmComponent,
+    RegistercheckComponent
   ],
   imports: [
     BrowserModule,

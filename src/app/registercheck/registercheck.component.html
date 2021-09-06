@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>ENtering School grounds</h1>
+    <p>Hello please enter in personel user_number so that the cna be varified in security system</p>
+    <p>Please use Breach ALarm if user is not verifiedand assitants will be communicated with</p>
+    <label for = "user_number">School ID Number</label>
+    <input type="text"  #user_number>
+    <button>Check</button>
+
+    <div *ngIf = "valid">
+        <button>User entered school grounds</button>
+    </div>
+</body>
+</html>
