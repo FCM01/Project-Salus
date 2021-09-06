@@ -77,7 +77,8 @@ class tools :
             print(retval)
             print(points)
             print(straight_qrcode)
-        def emailing_services(self,reciver_email,name,user_number,type,token = "",verification_password=""):
+
+        def emailing_services(self,reciver_email,name,user_number,type,token = "",verification_password="",verificationNumber="",password =""):
             try:
                 
                 email_address  ="dummyjackson8@gmail.com"
@@ -136,8 +137,8 @@ class tools :
                             file_type = imghdr.what(image.name)
                             file_name= image.name
                         msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name)
-
-                elif type == "forgot_passoword":
+                    os.remove(f"QRcodes/{images}")
+                elif type == "forgot_password":
                     print("forgot passowrd")
                     msg = EmailMessage()
                     msg['Subject'] = 'Forgot Your Password '
@@ -197,3 +198,16 @@ class tools :
                     return True    
             except Exception as e :
                 print("[email_service] emailingServices() error:",e)
+
+        def random_number_creation():
+            number = ""
+            try:
+                temp_num = 0
+               
+                for i in range(0,4):
+                    temp_num = random.randint()
+                    number = number + str(temp_num)
+                print(done)
+            except Eception as e:
+                print("[random_number_creation] random_number_creation() error:",e)
+            return number 

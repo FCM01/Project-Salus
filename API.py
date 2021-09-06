@@ -306,8 +306,9 @@ def login_user():
     status = 200
     resp = {}
     try:
-        user_number = request.json.get("user_number")
-        password = request.json.get("password")
+        data = request.get_json("data")
+        user_number = data["data"]["user_number"]
+        password = data["data"]["password"]
         print(user_number,password)
         if user_number != "" and password != "":
             teacher = mongo.db.teacher.find_one({"staff_number":f"{user_number}"})
@@ -318,7 +319,7 @@ def login_user():
             visitor = mongo.db.visitor.find_one({"visitor_number":f"{user_number}"})
             print(parse_json(domestic))
             print(parse_json(teacher))
-            if parse_json(teacher) != []:
+            if parse_json(teacher) != None:
                 print("Teacher")
                 data = parse_json(teacher)
                 database_password = data["password"]   
@@ -331,7 +332,7 @@ def login_user():
                     status = 400
                     resp = {"message":"Fail in check password","status":status}  
             
-            if parse_json(admin) != []:
+            if parse_json(admin) != None:
                 print("Admin")
                 data = parse_json(admin)
                 database_password = data["password"]   
@@ -344,7 +345,7 @@ def login_user():
                     status = 400
                     resp = {"message":"Fail in check password","status":status} 
 
-            if parse_json(student) != []:
+            if parse_json(student) != None:
                 print("Student")
                 data = parse_json(student)
                 database_password = data["password"]   
@@ -357,7 +358,7 @@ def login_user():
                     status = 400
                     resp = {"message":"Fail in check password","status":status} 
 
-            if parse_json(security) != []:
+            if parse_json(security) != None:
                 print("Security")
                 data = parse_json(security)
                 database_password = data["password"]   
@@ -370,7 +371,7 @@ def login_user():
                     status = 400
                     resp = {"message":"Fail in check password","status":status}  
 
-            if parse_json(domestic) != []:
+            if parse_json(domestic) != None:
                 print("Domestic")
                 data = parse_json(domestic)
                 database_password = data["password"]   
@@ -383,7 +384,7 @@ def login_user():
                     status = 400
                     resp = {"message":"Fail in check password","status":status}  
 
-            if parse_json(visitor) != []:
+            if parse_json(visitor) != None:
                 print("Vistor")
                 data = parse_json(visitor)
                 database_password = data["password"]   
@@ -411,8 +412,9 @@ def generate_token():
     resp= {}
     try:
         #user_number is not SA id number its user specific number 
-        user_number = request.json.get("user_number")
-        user_type = request.json.get("user_type")
+        data = request.json_get("data")
+        user_number = data["data"]["user_number"]
+        user_type = data["data"]["user_type"]
         print(user_number,user_type)
         if user_number != "" and user_type != "":
 
@@ -524,7 +526,7 @@ def get_patient_list():
     status = 200
     resp  = {}
     try:
-        database_name = request.json.get("datbase_name")
+        database_name = request.json.get("database_name")
         if database_name != "":
             patients = mongo.db.database_name
             response  = patients.find()
@@ -552,10 +554,11 @@ def user_delete():
     status = 200
     resp  ={}
     try:
-        name = request.json.get("name")
-        surname = request.json.get("surname")
-        user_number= request.json.get("user_number")
-        user_type =request.json.get("user_type")
+        data = request.json_get("data")
+        name = data["data"]["name"]
+        surname = data["data"]["surname"]
+        user_number= data["data"]["user_number"]
+        user_type =data["data"]["user_type"]
 
         if name != "" and surname !="" and user_number != "" and user_type != "":
             database  = mongo.db.patients.find_one({"name":f"{patient_name}","surname":f"{patient_surnmae}","id_number":f"{patient_id_number}"})
@@ -587,13 +590,14 @@ def user_delete():
 
 # Forget password and Change password 
 
-@app.route("/forgot/passowrd",methods=["POST"])
-def forgot_password():
+@app.route("/forgot/passowrd1",methods=["POST"])
+def forgot_password1():
     status =200
     resp = {}
     try:
         print("fogotten password")
-        email =  request.json.get("email")
+        data = request.json_get("data")
+        email = data["data"]["email"]
         if email != "":
             teacher = mongo.db.teacher.find_one({"staff_number":f"{email}"})
             admin = mongo.db.teacher.find_one({ "admin_number":f"{email}"})
@@ -602,14 +606,231 @@ def forgot_password():
             security = mongo.db.security.find_one({"staff_number":f"{email}"})
             visitor = mongo.db.visitor.find_one({"visitor_number":f"{email}"})
 
+            if parse_json(teacher) != None:
+                print("Teacher")
+                data = parse_json(teacher)
+                email = data["email"]
+                name = data["name"]
+                user_number  = data["user_number"]
+                password = data["password"]
+                #getting a token
+                q1 = tools()
+                number = q1.random_number_creation()
+                if number != "":
+                    q1.emailing_services(email,name,user_number,"forgot_password","","",number)
+                    forgot_user_payload={
+                        "name":f"{name}",
+                        "email":f"{email}",
+                        "user_number":f"{user_number}",
+                        "verification_number":f"{number}",
+                        "password":f"{password}"
+                    }
+                    mongo.db.insert(forgot_user_payload)
+                else:
+                    print("Verification number was not created")
+                    status = 400
+                    resp = {"message":"Verification number was not created","status":status} 
+            else :
+                print("Email does not exsist in database")
+                status = 400
+                resp = {"message":"Email does not exsist in database","status":status} 
+
+            if parse_json(admin) != None:
+                print("Admin")
+                data = parse_json(admin)
+                email = data["email"]
+                name = data["name"]
+                user_number  = data["user_number"]
+                password = data["password"]
+                #getting a token
+                q1 = tools()
+                number = q1.random_number_creation()
+                if number != "":
+                    q1.emailing_services(email,name,user_number,"forgot_password","","",number)
+                    forgot_user_payload={
+                        "name":f"{name}",
+                        "email":f"{email}",
+                        "user_number":f"{user_number}",
+                        "verification_number":f"{number}",
+                        "password":f"{password}"
+
+                    }
+                    mongo.db.insert(forgot_user_payload)
+                else:
+                    print("Verification number was not created")
+                    status = 400
+                    resp = {"message":"Verification number was not created","status":status} 
+            else :
+                print("Email does not exsist in database")
+                status = 400
+                resp = {"message":"Email does not exsist in database","status":status} 
+
+            if parse_json(student) != None:
+                print("Student")
+                data = parse_json(student)
+                email = data["email"]
+                name = data["name"]
+                user_number  = data["user_number"]
+                password = data["password"]
+                #getting a token
+                q1 = tools()
+                number = q1.random_number_creation()
+                if number != "":
+                    q1.emailing_services(email,name,user_number,"forgot_password","","",number)
+                    forgot_user_payload={
+                        "name":f"{name}",
+                        "email":f"{email}",
+                        "user_number":f"{user_number}",
+                        "verification_number":f"{number}",
+                        "password":f"{password}"
+                    }
+                    mongo.db.forgot.insert(forgot_user_payload)
+                else:
+                    print("Verification number was not created")
+                    status = 400
+                    resp = {"message":"Verification number was not created","status":status} 
+            else :
+                print("Email does not exsist in database")
+                status = 400
+                resp = {"message":"Email does not exsist in database","status":status} 
+
+            if parse_json(security) != None:
+                print("Security")
+                data = parse_json(security)
+                email = data["email"]
+                name = data["name"]
+                user_number  = data["user_number"]
+                password = data["password"]
+                #getting a token
+                q1 = tools()
+                number = q1.random_number_creation()
+                if number != "":
+                    q1.emailing_services(email,name,user_number,"forgot_password","","",number)
+                    forgot_user_payload={
+                        "name":f"{name}",
+                        "email":f"{email}",
+                        "user_number":f"{user_number}",
+                        "verification_number":f"{number}",
+                        "password":f"{password}"
+                    }
+                    mongo.db.forgot.insert(forgot_user_payload)
+                else:
+                    print("Verification number was not created")
+                    status = 400
+                    resp = {"message":"Verification number was not created","status":status} 
+            else :
+                print("Email does not exsist in database")
+                status = 400
+                resp = {"message":"Email does not exsist in database","status":status}  
+
+            if parse_json(domestic) != None:
+                print("Domestic")
+                data = parse_json(domestic)
+                email = data["email"]
+                name = data["name"]
+                user_number  = data["user_number"]
+                password = data["password"]
+                #getting a token
+                q1 = tools()
+                number = q1.random_number_creation()
+                if number != "":
+                    q1.emailing_services(email,name,user_number,"forgot_password","","",number)
+                    forgot_user_payload={
+                        "name":f"{name}",
+                        "email":f"{email}",
+                        "user_number":f"{user_number}",
+                        "verification_number":f"{number}",
+                        "password":f"{password}"
+                    }
+                    mongo.db.forgot.insert(forgot_user_payload)
+                else:
+                    print("Verification number was not created")
+                    status = 400
+                    resp = {"message":"Verification number was not created","status":status} 
+            else :
+                print("Email does not exsist in database")
+                status = 400
+                resp = {"message":"Email does not exsist in database","status":status}  
+
+            if parse_json(visitor) != None:
+                print("Vistor")
+                data = parse_json(visitor)
+                email = data["email"]
+                name = data["name"]
+                user_number  = data["user_number"]
+                password = data["password"]
+                #getting a token
+                q1 = tools()
+                number = q1.random_number_creation()
+                if number != "":
+                    q1.emailing_services(email,name,user_number,"forgot_password","","",number)
+                    forgot_user_payload={
+                        "name":f"{name}",
+                        "email":f"{email}",
+                        "user_number":f"{user_number}",
+                        "verification_number":f"{number}",
+                        "password":f"{password}"
+                    }
+                    mongo.db.forgot.insert(forgot_user_payload)
+                else:
+                    print("Verification number was not created")
+                    status = 400
+                    resp = {"message":"Verification number was not created","status":status} 
+            else :
+                print("Email does not exsist in database")
+                status = 400
+                resp = {"message":"Email does not exsist in database","status":status} 
+
         else:
             status = 400
             resp = {"message":"Missing credential","status":status}
     except Exception as e:
         status  = 400
         resp={"message":f"{e}","status":status}  
-        print("ERORR (/delete/user route)--->",e)
+        print("ERORR (/forgot/passowrd1 route)--->",e)
     return jsonify(resp),status
+
+
+@app.route("/forgot/passowrd/send",methods=["POST"])
+def forgot_paswword_send():
+    status = 200
+    resp ={}
+    try:
+        data = request.json_get("data")
+        verification_number = data["data"]["verification_number"]
+        if verification_number != "":
+            forgort_password_user = mongo.db.forgot.find_one({"verification_number":f"{verification_number}"})
+            if parson_json(forgort_password_user) != None:
+                data  = parson_json(forgort_password_user) 
+                database_veri_num = data["verification_number"]
+                if verification_number == database_veri_num:
+                    email = data["email"]
+                    name = data["name"]
+                    user_number  = data["user_number"] 
+                    password  = data["password"]
+                    q1 = tools()
+                    q1.emailing_services(email,name,user_number,"forgot_password_send","","",number,password)
+                    status = 200
+                    resp = {"message":"success","status":status}
+                else:
+                    print("verification number incorect not found")
+                    status = 400
+                    resp = {"message":"verification number incorect not found","response":"false","status":status}
+
+            else:
+                print("forgort_password_user not found")
+                status = 400
+                resp = {"message":"forgort_password_user not found","status":status}
+
+        else:
+            print("Data payload is  empty")
+            status = 400
+            resp = {"message":"Data payload is  empty","status":status}
+
+    except Exception as e:
+        status  = 400
+        resp={"message":f"{e}","status":status}  
+        print("ERORR (/forgot/passowrd1 route)--->",e)
 
 ########################################################################
 ########################################################
