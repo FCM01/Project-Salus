@@ -1,4 +1,70 @@
-<form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div class="wrapper fadeInDown">
+    <div id="formContent">
+      <!-- Tabs Titles -->
+      <h2 class="active">Login</h2>
+      <h2 class="inactive underlineHover">Sign Up </h2>
+  
+      <!-- Login Form -->
+      <form [formGroup]="loginForm" (ngSubmit)="setValues(user_number.value,password.value)">
+        <input type="text" id="login"formControlName="User_number" class="fadeIn second" name="login" placeholder="login" #user_number>
+        <div *ngIf="User_number.invalid && (User_number.touched || User_number.dirty)">
+          <span class="error" *ngIf="User_number.errors?.required">*User_number is required.</span>
+          <span class="error" *ngIf="User_number.errors?.pattern">*Enter only numbers</span>
+        </div>
+        <input type="text" id="password" formControlName="Password" class="fadeIn third" name="login" placeholder="password"#password>
+        <div *ngIf="Password.invalid && (Password.touched || Password.dirty)">
+          <span class="error" *ngIf="Password.errors?.required">*Password is required.</span>
+          <span class="error" *ngIf="Password.errors?.pattern">*Enter Correct Password</span>
+        </div>
+        <input [disabled]="loginForm.invalid" type="submit" class="fadeIn fourth" value="Log In">
+      </form>
+  
+      <!-- Remind Passowrd -->
+      <div id="formFooter">
+        <a class="underlineHover" href="#">Forgot Password?</a>
+      </div>
+  
+    </div>
+  </div>
+  
+  <!-- <section class="Login">
+    <div class="Login col-lg-4 m-auto shadow-lg">
+        <form class="content" [formGroup]="loginForm" (ngSubmit)="setValues(user_number.value,password.value)">
+            <div>
+              <input type="User_number" formControlName="User_number" id="login" class="fadeIn second" placeholder="Enter User_number" #user_number>
+              <div *ngIf="User_number.invalid && (User_number.touched || User_number.dirty)">
+                <span class="error" *ngIf="User_number.errors?.required">*User_number is required.</span>
+                <span class="error" *ngIf="User_number.errors?.pattern">*Enter only numbers</span>
+              </div>
+            </div>
+            <div>
+              <input type="password" formControlName="Password" id="password" class="fadeIn third" placeholder="Enter password" #password>
+              <div *ngIf="Password.invalid && (Password.touched || Password.dirty)">
+                <span class="error" *ngIf="Password.errors?.required">*Password is required.</span>
+                <span class="error" *ngIf="Password.errors?.pattern">*Enter Correct Password</span>
+              </div>
+            </div>
+            <button [disabled]="loginForm.invalid" class="fadeIn fourth">Login</button>
+        </form>
+        <div id="formFooter">
+              <a class="underlineHover" href="#">Forgot Password?</a>
+        </div>
+    </div>
+</section> -->
+  
+</body>
+</html>
+
+<!-- <form>
     <h1>Welcome</h1>
     <p>Please enter in your credentials</p>
     <p>{{responce}}</p>
@@ -24,4 +90,5 @@
             </div>
         </div>  
 </div>
-  </form>
+  </form> -->
+

@@ -7,7 +7,7 @@ import { catchError, retry } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class SalusloginService {
-  public url = "http://localhost:5000"
+  public url = " http://127.0.0.1:5000"
   public payload={};
   public response :any;
   constructor(public http: HttpClient) { }
