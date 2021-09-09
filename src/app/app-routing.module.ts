@@ -5,13 +5,19 @@ import { ContactComponent } from './contact/contact.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
+import { StaffsuComponent } from './staffsu/staffsu.component';
+import { SecuritysuComponent } from './securitysu/securitysu.component';
+import { StudentsuComponent } from './studentsu/studentsu.component';
 
 const routes: Routes = [
-  {path:"home",component :HomeComponent},
+  {path:"",component :HomeComponent},
   {path:"contact",component :ContactComponent},
   {path:"login",component:LoginComponent},
   {path:"signup",component:SignupComponent},
-  {path :"breachalarm",component:BreachalarmComponent}
+  {path :"studentsignup",component:StudentsuComponent},
+  {path :"staffsignup",component:StaffsuComponent},
+  {path :"securitysignup",component:SecuritysuComponent}
+
 ];
 
 @NgModule({

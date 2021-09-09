@@ -3,15 +3,12 @@ import { SalusloginService } from '../saluslogin.service';
 import { Router } from '@angular/router';
 import { FormBuilder,FormControl, FormGroup, Validators } from "@angular/forms"
 
-
-
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: 'app-staffsu',
+  templateUrl: './staffsu.component.html',
+  styleUrls: ['./staffsu.component.css']
 })
-export class LoginComponent implements OnInit {
-  // public rForm: FormGroup;
+export class StaffsuComponent implements OnInit {
   public responce:any ;
   public User_number :any;
   public Password :any;
@@ -19,33 +16,17 @@ export class LoginComponent implements OnInit {
   public temp:any ;
   private final_payload ={};
   public loginForm: any;
-
-
-  constructor(private log :SalusloginService,private router: Router,private fb: FormBuilder) 
-  {
-    
-      this.loginForm = new FormGroup({
-        "User_number": new FormControl(null,[Validators.required, Validators.pattern('[0-9]*')]),
-        "Password": new FormControl(null, [Validators.required, Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+')])
-      });
-   
-  }
+  constructor(private log :SalusloginService,private router: Router,private fb: FormBuilder) { }
 
   ngOnInit(): void {
-
   }
-
   setValues(user_num :any ,pass:any){
     this.User_number = user_num;
     this.Password = pass;
     this.final_payload = {"data":{"user_number":this.User_number,"password":this.Password}}
     console.log("what the subcribed observable gave back ==>",this.final_payload );
     this.responce=this.log.LoginCredentialSend(this.final_payload)
-      .subscribe(
-        (data) => {
-          console.log(data);
-       }
-      )
+      .subscribe()
     
     this.temp =this.responce["_subscriptions"]
     console.log(this.temp)
@@ -53,6 +34,6 @@ export class LoginComponent implements OnInit {
     for(this.i = 0; this.i <5;this.i++){
       console.log(this.responce["_subscriptions"][this.i]);
     }
-  }
- 
+
+}
 }

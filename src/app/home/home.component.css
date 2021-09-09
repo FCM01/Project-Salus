@@ -20,10 +20,15 @@ html {
 
 .home img
 {
-    width: 100%;
+    width: 50%;
     height: 600px;
+    border-radius:20px 20px 20px 20px ;
     object-position: center;
     object-fit: fill;
+}
+.home .image {
+  text-align: center;
+  margin: 1em;
 }
 
 h1
@@ -33,7 +38,7 @@ h1
 }
 
 a {
-    color: #92badd;
+    color: #4897dd;
     display:inline-block;
     text-decoration: none;
     font-weight: 400;
@@ -51,4 +56,12 @@ a {
     -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
     box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
     text-align:left;
+}
+#formFooter {
+  background-color: #f6f6f6;
+  border-top: 1px solid #56baed;
+  padding: 25px;
+  text-align: center;
+  -webkit-border-radius: 0 0 10px 10px;
+  border-radius: 0 0 10px 10px;
 }

@@ -11,11 +11,11 @@
     <div id="formContent">
       <!-- Tabs Titles -->
       <h2 class="active">Login</h2>
-      <h2 class="inactive underlineHover">Sign Up </h2>
+      <h2 class="inactive underlineHover" routerLink ="/signup">Sign Up </h2>
   
       <!-- Login Form -->
       <form [formGroup]="loginForm" (ngSubmit)="setValues(user_number.value,password.value)">
-        <input type="text" id="login"formControlName="User_number" class="fadeIn second" name="login" placeholder="login" #user_number>
+        <input type="text" id="login" formControlName="User_number" class="fadeIn second" name="login" placeholder="login" #user_number>
         <div *ngIf="User_number.invalid && (User_number.touched || User_number.dirty)">
           <span class="error" *ngIf="User_number.errors?.required">*User_number is required.</span>
           <span class="error" *ngIf="User_number.errors?.pattern">*Enter only numbers</span>

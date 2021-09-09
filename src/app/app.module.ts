@@ -12,6 +12,9 @@ import { BreachalarmComponent } from './breachalarm/breachalarm.component';
 import {HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule}from "@angular/forms";
 import { RegistercheckComponent } from './registercheck/registercheck.component';
+import { StudentsuComponent } from './studentsu/studentsu.component';
+import { StaffsuComponent } from './staffsu/staffsu.component';
+import { SecuritysuComponent } from './securitysu/securitysu.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +25,10 @@ import { RegistercheckComponent } from './registercheck/registercheck.component'
     SignupComponent,
     ContactComponent,
     BreachalarmComponent,
-    RegistercheckComponent
+    RegistercheckComponent,
+    StudentsuComponent,
+    StaffsuComponent,
+    SecuritysuComponent
   ],
   imports: [
     BrowserModule,
