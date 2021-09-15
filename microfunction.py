@@ -80,6 +80,7 @@ class tools :
 
         def emailing_services(self,reciver_email,name,user_number,type,token = "",verification_password="",verificationNumber="",password =""):
             try:
+                print(verificationNumber)
                 
                 email_address  ="dummyjackson8@gmail.com"
                 email_password  ="dummy101@1"
@@ -152,15 +153,16 @@ class tools :
                                 <h1 style ="color:#96c8cc;">Forgot your password</h1> 
                                 <h2 style ="color:#96c8cc;">Hello {name}</h2>
                                 <p>A sign in attempt requires further verification because we did not recognize your device. To complete the sign in, enter the verification code on the unrecognized device.</p>
-                                <p>Here is your verification code :{verification_password}</p>
+                                <p>Here is your verification code :</p>
+                                <h1 style ="color:#96c8cc;">{verificationNumber}</h1>
                                 <p>Yours sincerly</p>
                                 <p>The Salus team</p>
                             </body>
                         </html>
                         """,subtype= "html")
-                    files = ["Screenshot 2021-07-11 220843.png","download.jpg"]
+                    files = ["saluswithname.jpg"]
                     for images in files:
-                        with open(f"C:/Users/farai/OneDrive/Documents/personal work/startup/Flow/resources/{images}","rb") as image :
+                        with open(f"{images}","rb") as image :
                             file_data = image.read()
                             file_type = imghdr.what(image.name)
                             file_name= image.name
@@ -199,15 +201,15 @@ class tools :
             except Exception as e :
                 print("[email_service] emailingServices() error:",e)
 
-        def random_number_creation():
+        def random_number_creation(self):
             number = ""
             try:
                 temp_num = 0
                
                 for i in range(0,4):
-                    temp_num = random.randint()
+                    temp_num = random.randint(1,10)
                     number = number + str(temp_num)
-                print(done)
-            except Eception as e:
+                print("done")
+            except Exception as e:
                 print("[random_number_creation] random_number_creation() error:",e)
             return number 
