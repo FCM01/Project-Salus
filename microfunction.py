@@ -167,6 +167,35 @@ class tools :
                             file_type = imghdr.what(image.name)
                             file_name= image.name
                         msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name)
+                elif type == "forgot_password_send":
+                    print("forgot passowrd send")
+                    msg = EmailMessage()
+                    msg['Subject'] = 'Forgot Your Password '
+                    msg['From'] = email_address
+                    msg['To']= email_recieve
+                    msg.set_content ( f'A sign in attempt requires further verification because we did not recognize your device. To complete the sign in, enter the verification code on the unrecognized device. Here is your verification code :{verification_password}')
+                    msg.add_alternative(f"""
+                        <!DOCTYPE html>
+                        <html>
+                            <body>
+                                <h1 style ="color:#96c8cc;">Forgot your password</h1> 
+                                <h2 style ="color:#96c8cc;">Hello {name}</h2>
+                                <p>A sign in attempt that requires further verification has identified a forgotten passsword</p>
+                                <p>We recieved your request and have verified you as the holder for the account assigned to :{email_recieve}.</p>
+                                <h1 style ="color:#96c8cc;">Your account password :{password}</h1>
+                                <p>Disclaimer: we are not liable for any misconduct if this email is not meant for you please send it to email.</p>
+                                <p>Yours sincerly</p>
+                                <p>The Salus team</p>
+                            </body>
+                        </html>
+                        """,subtype= "html")
+                    files = ["saluswithname.jpg"]
+                    for images in files:
+                        with open(f"{images}","rb") as image :
+                            file_data = image.read()
+                            file_type = imghdr.what(image.name)
+                            file_name= image.name
+                        msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name)
                 elif type == "change_password" : 
                     print("change_password")
                     msg = EmailMessage()

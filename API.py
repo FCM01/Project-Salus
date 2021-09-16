@@ -626,6 +626,7 @@ def forgot_password1():
                 name = data["name"]
                 user_number  = data["staff_number"]
                 password = data["password"]
+                #checinking if code has been made
                 #getting a token
                 q1 = tools()
                 number = q1.random_number_creation()
@@ -799,12 +800,12 @@ def forgot_paswword_send():
     status = 200
     resp ={}
     try:
-        data = request.json_get("data")
+        data = request.get_json("data")
         verification_number = data["data"]["verification_number"]
         if verification_number != "":
             forgort_password_user = mongo.db.forgot.find_one({"verification_number":f"{verification_number}"})
-            if parson_json(forgort_password_user) != None:
-                data  = parson_json(forgort_password_user) 
+            if parse_json(forgort_password_user) != None:
+                data  = parse_json(forgort_password_user) 
                 database_veri_num = data["verification_number"]
                 if verification_number == database_veri_num:
                     email = data["email"]
@@ -812,9 +813,10 @@ def forgot_paswword_send():
                     user_number  = data["user_number"] 
                     password  = data["password"]
                     q1 = tools()
-                    q1.emailing_services(email,name,user_number,"forgot_password_send","","",number,password)
+                    q1.emailing_services(email,name,user_number,"forgot_password_send","","","",password)
+                    mongo.db.forgot.delete_many({"email":f"{email}"})
                     status = 200
-                    resp = {"message":"success","status":status}
+                    resp = {"message":"sucess","status":status}
                 else:
                     print("verification number incorect not found")
                     status = 400
@@ -834,7 +836,7 @@ def forgot_paswword_send():
         status  = 400
         resp={"message":f"{e}","status":status}  
         print("ERORR (/forgot/passowrd1 route)--->",e)
-
+    return jsonify(resp),status
 ########################################################################
 ########################################################
 #########################################
