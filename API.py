@@ -25,18 +25,17 @@ def a_signup():
     status= 200
     resp ={}
     try:
-        name = request.json.get("name")
-        surname = request.json.get("surname")
-        id_number = request.json.get("id_number")
-        date_of_birth = request.json.get("date_of_birth")
-        email = request.json.get("email")
-        phone_number= request.json.get("phone_number")
-        address= request.json.get("address")
-        password = request.json.get("password")
-        admin_number = request.json.get("admin_number")
-        if name!= "" and email !="" and password !="" and   id_number  != "":
-            # uuid_number = tools()
-            # admin_number = uuid_number.id_number_genrator() 
+        data =request.get_json("data")
+        name = data["data"]["name"]
+        surname = data["data"]["surname"]
+        id_number = data["data"]["id_number"]
+        date_of_birth = data["data"]["date_of_birth"]
+        email = data["data"]["email"]
+        phone_number= data["data"]["phone_number"]
+        address= data["data"]["address"]
+        password = data["data"]["password"]
+        admin_number = data["data"]["admin_number"]
+        if name!= "" and email !="" and password !="" and   id_number  != "": 
             signup_payload = {
                 "name":f"{name}",
                 "surname":f"{surname}",
@@ -65,21 +64,20 @@ def t_signup():
     status= 200
     resp ={}
     try:
-        name = request.json.get("name")
-        surname = request.json.get("surname")
-        id_number = request.json.get("id_number")
-        date_of_birth = request.json.get("date_of_birth")
-        email = request.json.get("email")
-        phone_number= request.json.get("phone_number")
-        address= request.json.get("address")
-        password = request.json.get("password")
-        staff_number = request.json.get("staff_number")
-        position= request .json.get("position")
-        subject= request.json.get("subject")
-        register_class = request.json.get("register_class")
+        data = request.get_json("data")
+        name = data["data"]["name"]
+        surname = data["data"]["surname"]
+        id_number = data["data"]["id_number"]
+        date_of_birth = data["data"]["date_of_birth"]
+        email = data["data"]["email"]
+        phone_number= data["data"]["phone_number"]
+        address= data["data"]["address"]
+        password = data["data"]["password"]
+        staff_number = data["data"]["staff_number"]
+        position= data["data"]["position"]
+        subject= data["data"]["subject"]
+        register_class = data["data"]["register_class"]
         if name!= "" and email !="" and password !="" and   id_number  != "":
-            # uuid_number = tools()
-            # staff_number = uuid_number.id_number_genrator() 
             signup_payload = {
                 "name":f"{name}",
                 "surname":f"{surname}",
@@ -112,16 +110,17 @@ def se_signup():
     status= 200
     resp ={}
     try:
-        name = request.json.get("name")
-        surname = request.json.get("surname")
-        id_number = request.json.get("id_number")
-        date_of_birth = request.json.get("date_of_birth")
-        email = request.json.get("email")
-        phone_number= request.json.get("phone_number")
-        address= request.json.get("address")
-        password = request.json.get("password")
-        position= request .json.get("position")
-        petrol_sector = request.json.get("petrol_sector") 
+        data = request.get_json("data")
+        name = data["data"]["name"]
+        surname = data["data"]["surname"]
+        id_number = data["data"]["id_number"]
+        date_of_birth = data["data"]["date_of_birth"]
+        email = data["data"]["email"]
+        phone_number= data["data"]["phone_number"]
+        address= data["data"]["address"]
+        password = data["data"]["password"]
+        position= data["data"]["position"]
+        petrol_sector = data["data"]["petrol_sector"]
         if name!= "" and email !="" and password !="" and   id_number  != "":
             # uuid_number = tools()
             # staff_number = uuid_number.id_number_genrator() 
@@ -155,20 +154,19 @@ def dom_signup():
     status= 200
     resp ={}
     try:
-        name = request.json.get("name")
-        surname = request.json.get("surname")
-        id_number = request.json.get("id_number")
-        date_of_birth = request.json.get("date_of_birth")
-        email = request.json.get("email")
-        phone_number= request.json.get("phone_number")
-        address= request.json.get("address")
-        password = request.json.get("password")
-        staff_number= request.json.get("staff_number")
-        position= request .json.get("position")
-        job_title = request.json.get("job_title") 
+        data = request.get_json("data")
+        name = data["data"]["name"]
+        surname = data["data"]["surname"]
+        id_number = data["data"]["id_number"]
+        date_of_birth = data["data"]["date_of_birth"]
+        email = data["data"]["email"]
+        phone_number= data["data"]["phone_number"]
+        address= data["data"]["address"]
+        password = data["data"]["password"]
+        staff_number= data["data"]["staff_number"]
+        position= data["data"]["position"]
+        job_title = data["data"]["job_title"]
         if name!= "" and email !="" and password !="" and   id_number  != "":
-            # uuid_number = tools()
-            # staff_number = uuid_number.id_number_genrator() 
             signup_payload = {
                 "name":f"{name}",
                 "surname":f"{surname}",
@@ -197,27 +195,26 @@ def dom_signup():
 
 @app.route("/Student/Signup",methods=["POST"])
 def stu_signup():
-    print("hello")
     status= 200
     resp ={}
     try:
-        name = request.json.get("name")
-        print(name)
-        surname = request.json.get("surname")
-        id_number = request.json.get("id_number")
-        date_of_birth = request.json.get("date_of_birth")
-        email = request.json.get("email")
-        phone_number= request.json.get("phone_number")
-        address= request.json.get("address")
-        password = request.json.get("password")
-        student_number = request.json.get("student_number")
-        register_class = request.json.get("register_class")
-        subject_combo = request.json.get("subject_combo")
-        time_table = request.json.get("time_table")
-        guardian_name  = request.json.get("guardian_name")
-        guardian_surname = request.json.get("guardian_surname")
-        gaurdian_email  = request.json.get(" gaurdian_email")
-        gaurdian_phone_number = request.json.get("gaurdian_phone_number")
+        data = request.get_json("data")
+        name = data["data"]["name"]
+        surname = data["data"]["surname"]
+        id_number = data["data"]["id_number"]
+        date_of_birth = data["data"]["date_of_birth"]
+        email = data["data"]["email"]
+        phone_number= data["data"]["phone_number"]
+        address= data["data"]["address"]
+        password = data["data"]["password"]
+        student_number = data["data"]["student_number"]
+        register_class = data["data"]["register_class"]
+        subject_combo = data["data"]["subject_combo"]
+        time_table = data["data"]["time_table"]
+        guardian_name  = data["data"]["guardian_name"]
+        guardian_surname = data["data"]["guardian_surname"]
+        gaurdian_email  = data["data"][" gaurdian_email"]
+        gaurdian_phone_number = data["data"]["gaurdian_phone_number"]
         
         if name!= "" and email !="" and password !="" and   id_number  != "":
             # uuid_number = tools()
@@ -259,17 +256,18 @@ def v_signup():
     status= 200
     resp ={}
     try:
-        name = request.json.get("name")
-        surname = request.json.get("surname")
-        id_number = request.json.get("id_number")
-        date_of_birth = request.json.get("date_of_birth")
-        email = request.json.get("email")
-        phone_number= request.json.get("phone_number")
-        address= request.json.get("address")
-        password = request.json.get("password")
-        purpose_of_visit= request.json.get("purpose_of_visit")
-        time_in = request.json.get("time_in") 
-        time_out = request.json.get("time_out") 
+        data = request.get_json("data")
+        name = data["data"]["name"]
+        surname = data["data"]["surname"]
+        id_number = data["data"]["id_number"]
+        date_of_birth = data["data"]["date_of_birth"]
+        email = data["data"]["email"]
+        phone_number= data["data"]["phone_number"]
+        address= data["data"]["address"]
+        password = data["data"]["password"]
+        purpose_of_visit= data["data"]["purpose_of_visit"]
+        time_in = data["data"]["time_in"]
+        time_out = data["data"]["time_out"] 
         if name!= "" and email !="" and password !="" and   id_number  != "":
             uuid_number = tools()
             visitor_number = uuid_number.id_number_genrator() 
