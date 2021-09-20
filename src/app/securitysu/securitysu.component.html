@@ -1,1 +1,51 @@
-<p>securitysu works!</p>
+<app-navbar></app-navbar>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <h1> Security Staff Sign-up </h1>
+                <form [formGroup]="signupForm" >
+                    <h1>General Infomation</h1>
+                
+                    <input type="text" #soxname placeholder= "First Name ">
+    
+                    <input type = "text" placeholder = "Last Name" #soxsurname>
+            
+                    <input type = "text" placeholder ="Position"#soxposition>
+                   
+                    <input type = "text" placeholder = "Staff Number " #soxstaffnr>
+    
+                    <input type = "email" placeholder = "Email " #soxemail>
+                  
+    
+                    <h1>Password</h1>
+                    <input type = "password" placeholder="Create Password" required #soxpass>
+    
+                    
+                    <input type = "password" placeholder="Confirm Password" required #soxcpass>
+                
+                    <h1>Contact details</h1>
+                    <input type = "tel" placeholder = "Contact Number" #soxcnr>
+                    <h1>Address</h1>
+                    <input type = "text" placeholder = "Physical address" #soxadres>
+                    <input type = "text" placeholder = "City" #soxcity>
+                    <input type = "number" placeholder = " Postal code" #soxpcode>
+
+                    <input [disabled]="signupForm.invalid" type="submit" class="fadeIn fourth" value="Sign Up">
+                </form>
+                <div id="formFooter">
+                    <a class="underlineHover" routerLink = "/signup">Go back</a>
+                </div>
+          
+        </div>
+    </div>
+    
+</body>
+</html>

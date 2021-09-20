@@ -11,22 +11,28 @@ import { FormBuilder,FormControl, FormGroup, Validators } from "@angular/forms"
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  // public rForm: FormGroup;
-  public responce:any ;
+  public loginForm: FormGroup;
   public User_number :any;
   public Password :any;
+  public token:any;
   public i = 0;
   public temp:any ;
+  public response:any;
+  public request:any;
   private final_payload ={};
-  public loginForm: any;
+  public type_user:any;
+  public error_message:any;
+  public user_check_false= false;
+  public titleAlert1 :string ="This field is required"
 
 
   constructor(private log :SalusloginService,private router: Router,private fb: FormBuilder) 
   {
     
-      this.loginForm = new FormGroup({
-        "User_number": new FormControl(null,[Validators.required, Validators.pattern('[0-9]*')]),
-        "Password": new FormControl(null, [Validators.required, Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+')])
+      this.loginForm = fb.group({
+        "User_number":['',Validators.required],
+        "Password": ['', Validators.compose([Validators.required, Validators.maxLength(8)])],
+        "validate": ''
       });
    
   }
@@ -35,24 +41,53 @@ export class LoginComponent implements OnInit {
 
   }
 
-  setValues(user_num :any ,pass:any){
-    this.User_number = user_num;
-    this.Password = pass;
+  setValues(post:any){
+    this.User_number = post.User_number;
+    this.Password = post.Password;
     this.final_payload = {"data":{"user_number":this.User_number,"password":this.Password}}
-    console.log("what the subcribed observable gave back ==>",this.final_payload );
-    this.responce=this.log.LoginCredentialSend(this.final_payload)
-      .subscribe(
-        (data) => {
-          console.log(data);
-       }
-      )
+    this.request = this.log.LoginCredentialSend(this.final_payload)
     
-    this.temp =this.responce["_subscriptions"]
-    console.log(this.temp)
+      .subscribe(
+        (data) => { 
+          if(data["token"] == "active" )
+        {
+          if (data["type_user"]=="student"){
+            this.router.navigate(['/studentdash'])
+          }
+          else if(data["type_user"]=="teacher")
+          {
+            this.router.navigate(['/teacherdash'])
+          }
+          else if(data["type_user"]=="domestic")
+          {
+            this.router.navigate(['/domesticdash'])
+          }
+          else if(data["type_user"]=="security")
+          {
+            this.router.navigate(['/securitydash'])
+          }
+          else if(data["type_user"]=="visitor")
+          {
+            this.router.navigate(['/visitordash'])
+          }
+          else if(data["type_user"]=="admin")
+          {
+            this.router.navigate(['/admindash'])
+          }
+    
+        }
+        else(data["token"] == "down")
+        {
+          this.user_check_false = true
+          this.error_message =data["message"]
+    
+        }
+         
+       },
+      )
+      console.log(this.response)
+   
 
-    for(this.i = 0; this.i <5;this.i++){
-      console.log(this.responce["_subscriptions"][this.i]);
-    }
   }
  
 }

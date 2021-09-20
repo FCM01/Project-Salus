@@ -6,6 +6,7 @@ html {
     font-family: "Poppins", sans-serif;
     height: 100%;
     text-align: center;
+    background-color: #56baed;
   }
 
 .wrapper {
@@ -20,11 +21,10 @@ html {
 
 .home img
 {
-    width: 50%;
-    height: 600px;
-    border-radius:20px 20px 20px 20px ;
-    object-position: center;
-    object-fit: fill;
+  width: 30%;
+  border-radius: 50%;
+  object-position: center;
+  object-fit: fill;
 }
 .home .image {
   text-align: center;
@@ -64,4 +64,10 @@ a {
   text-align: center;
   -webkit-border-radius: 0 0 10px 10px;
   border-radius: 0 0 10px 10px;
+}
+ .content{
+  width: 80%;
+  margin: 0em auto;
+  text-align: left;
+  background-color:#56baed ;
 }

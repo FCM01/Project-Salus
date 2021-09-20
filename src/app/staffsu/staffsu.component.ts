@@ -9,31 +9,70 @@ import { FormBuilder,FormControl, FormGroup, Validators } from "@angular/forms"
   styleUrls: ['./staffsu.component.css']
 })
 export class StaffsuComponent implements OnInit {
-  public responce:any ;
-  public User_number :any;
-  public Password :any;
-  public i = 0;
-  public temp:any ;
-  private final_payload ={};
-  public loginForm: any;
-  constructor(private log :SalusloginService,private router: Router,private fb: FormBuilder) { }
+
+  public signupForm : FormGroup;
+  public payload:any;
+  public titleAlert2 :string ="Please enter in an password that is 8 charaters long"
+  public titleAlert1 :string ="This field is required"
+  constructor(private log :SalusloginService,private router: Router,private fb: FormBuilder) {
+    this.signupForm = fb.group({
+      "name": ['', Validators.required],
+      "surname": ['', Validators.required],
+      "id_number": ['', Validators.required],
+      "date_of_birth": ['', Validators.required],
+      "subject": ['', Validators.required],
+      "register_class": ['', Validators.required],
+      "position": ['', Validators.required],
+      "staffnum": ['',Validators.required],
+      "email": ['', Validators.email],
+      "password": ['', Validators.compose([Validators.required, Validators.maxLength(8)])],
+      "passwordconfirm": ['', Validators.compose([Validators.required, Validators.maxLength(8)])],
+      "cnr": ['',Validators.required],
+      "address": ['',Validators.required],
+      "city": ['',Validators.required],
+      "pcode": ['',Validators.required],
+      "validate": ''
+    })
+
+   
+  }
+
 
   ngOnInit(): void {
   }
-  setValues(user_num :any ,pass:any){
-    this.User_number = user_num;
-    this.Password = pass;
-    this.final_payload = {"data":{"user_number":this.User_number,"password":this.Password}}
-    console.log("what the subcribed observable gave back ==>",this.final_payload );
-    this.responce=this.log.LoginCredentialSend(this.final_payload)
-      .subscribe()
+  setValues(post:any){
+    console.log("working")
+    this.payload ={
+      "data":{
+                "name":post.name,
+                "surname":post.surname,
+                "id_number":post.id_number,
+                "date_of_birth":post.date_of_birth,
+                "email":post.email,
+                "phone_number":post.cnr,
+                "address":post.address,
+                "city":post.city,
+                "pcode":post.pcode,
+                "password":post.passwordconfirm,
+                "staff_number":post.staffnum,
+                "position":post.position,
+                "subject":post.subject,
+                "register_class":post.register_class,
+      }
     
-    this.temp =this.responce["_subscriptions"]
-    console.log(this.temp)
-
-    for(this.i = 0; this.i <5;this.i++){
-      console.log(this.responce["_subscriptions"][this.i]);
+    
     }
-
+    this.log.TeacherSignUp(this.payload)
+        .subscribe(
+          (data)=>{
+            console.log(data);
+            if (data["message"]=="succeessful")
+            {
+              
+            }
+          }
+        )
+    
+  
 }
 }

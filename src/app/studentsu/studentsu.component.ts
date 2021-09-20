@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { SalusloginService } from '../saluslogin.service';
+import { Router } from '@angular/router';
+import { FormBuilder,FormControl, FormGroup, Validators } from "@angular/forms"
 
 @Component({
   selector: 'app-studentsu',
@@ -7,6 +10,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class StudentsuComponent implements OnInit {
 
+  public signupForm:any;
   constructor() { }
 
   ngOnInit(): void {

@@ -15,6 +15,17 @@ import { RegistercheckComponent } from './registercheck/registercheck.component'
 import { StudentsuComponent } from './studentsu/studentsu.component';
 import { StaffsuComponent } from './staffsu/staffsu.component';
 import { SecuritysuComponent } from './securitysu/securitysu.component';
+import { ForgetpasswordComponent } from './forgetpassword/forgetpassword.component';
+import { StudentdasboardComponent } from './studentdasboard/studentdasboard.component';
+import { TeacherdashbaoardComponent } from './teacherdashbaoard/teacherdashbaoard.component';
+import { DomesticdashboardComponent } from './domesticdashboard/domesticdashboard.component';
+import { SecuritydashboardComponent } from './securitydashboard/securitydashboard.component';
+import { AdmindashboardComponent } from './admindashboard/admindashboard.component';
+import { VisitordashboardComponent } from './visitordashboard/visitordashboard.component';
+import { ForgetpasswordverifyComponent } from './forgetpasswordverify/forgetpasswordverify.component';
+import { VisitorssuComponent } from './visitorssu/visitorssu.component';
+import { DomesticsuComponent } from './domesticsu/domesticsu.component';
+import { AdminsuComponent } from './adminsu/adminsu.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +39,18 @@ import { SecuritysuComponent } from './securitysu/securitysu.component';
     RegistercheckComponent,
     StudentsuComponent,
     StaffsuComponent,
-    SecuritysuComponent
+    SecuritysuComponent,
+    ForgetpasswordComponent,
+    StudentdasboardComponent,
+    TeacherdashbaoardComponent,
+    DomesticdashboardComponent,
+    SecuritydashboardComponent,
+    AdmindashboardComponent,
+    VisitordashboardComponent,
+    ForgetpasswordverifyComponent,
+    VisitorssuComponent,
+    DomesticsuComponent,
+    AdminsuComponent
   ],
   imports: [
     BrowserModule,

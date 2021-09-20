@@ -1,9 +1,11 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins');
 html,
 body {
-  margin: 0;
+  margin-top:0 ;
   padding: 0;
   font-size: 18px;
+  background-color: #5fbae9;
+  
   font-family: "Poppins", sans-serif;
 
 }
@@ -13,9 +15,10 @@ body {
 .container {
   width: 80%;
   margin: 0 auto;
+  margin-bottom: 4em;
 }
 .header {
-  background:#8BAAAD;
+  background:#5fbae9;
   padding: 1em 0;
 }
 .header .container a {
@@ -37,10 +40,13 @@ body {
   padding: 1em;
 }
 a:hover {
-  background:  #87e4ec;
+  background:  white;
+  border-radius: 0em 0em 0.5em 0.5em;
   
 }
 .h1 {
-  margin-top: 2 em;
+  margin-top: 2em;
 }
+
+
 

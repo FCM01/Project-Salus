@@ -1,3 +1,4 @@
+<app-navbar></app-navbar>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,23 +15,21 @@
       <h2 class="inactive underlineHover" routerLink ="/signup">Sign Up </h2>
   
       <!-- Login Form -->
-      <form [formGroup]="loginForm" (ngSubmit)="setValues(user_number.value,password.value)">
-        <input type="text" id="login" formControlName="User_number" class="fadeIn second" name="login" placeholder="login" #user_number>
-        <div *ngIf="User_number.invalid && (User_number.touched || User_number.dirty)">
-          <span class="error" *ngIf="User_number.errors?.required">*User_number is required.</span>
-          <span class="error" *ngIf="User_number.errors?.pattern">*Enter only numbers</span>
+      <form [formGroup]="loginForm" (ngSubmit)="setValues(loginForm.value)">
+        <input type="text" id="login" formControlName="User_number" class="fadeIn second" name="login" placeholder="User Number">
+        <div class="alert" *ngIf="!loginForm.controls['User_number'].valid && loginForm.controls['User_number'].touched">
+          <span>{{titleAlert1}} </span>
         </div>
-        <input type="text" id="password" formControlName="Password" class="fadeIn third" name="login" placeholder="password"#password>
-        <div *ngIf="Password.invalid && (Password.touched || Password.dirty)">
-          <span class="error" *ngIf="Password.errors?.required">*Password is required.</span>
-          <span class="error" *ngIf="Password.errors?.pattern">*Enter Correct Password</span>
+        <input type="password" id="password" formControlName="Password" class="fadeIn third" name="login" placeholder="Password">
+        <div class="alert" *ngIf="!loginForm.controls['Password'].valid && loginForm.controls['Password'].touched">
+          <span>{{titleAlert1}} </span>
         </div>
-        <input [disabled]="loginForm.invalid" type="submit" class="fadeIn fourth" value="Log In">
+        <input [disabled]="!loginForm.valid" type="submit" class="fadeIn fourth" value="Log In">
       </form>
   
       <!-- Remind Passowrd -->
       <div id="formFooter">
-        <a class="underlineHover" href="#">Forgot Password?</a>
+        <a class="underlineHover" routerLink="/forgotpassword">Forgot Password?</a>
       </div>
   
     </div>
