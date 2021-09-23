@@ -10,12 +10,18 @@
 <body>
     <div class="wrapper fadeInDown">
         <div id="formContent">
-        <form [formGroup]="databaseForm" (ngSubmit)="setValues(databaseForm.value)">
-            <input type="password" id="password" formControlName="database_name" class="fadeIn third" name="login" placeholder="Database Name">
-            <div class="alert" *ngIf="!databaseForm.controls['database_name'].valid &&databaseForm.controls['database_name'].touched">
-              <span>{{titleAlert1}} </span>
-            </div>
-            <input [disabled]="!databaseForm.valid" type="submit" class="fadeIn fourth" value="Search">
+          <ul>
+            LIST 1
+            <li 
+              *ngFor="let item of list1" 
+              [class.item-selected]="item.selected"
+              (click)="toggleSelection(item, 1)">{{item.text}}</li>
+          </ul>
+        <form [formGroup]="databaseForm" (ngSubmit)="setValues()">
+           <h1>
+             {{databaseselected}}
+           </h1>
+            <input type="submit" class="fadeIn fourth" value="Search">
         </form>
         <table>
             <thead>
@@ -26,25 +32,19 @@
                   <th scope="col">Handle</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody  *ngFor= "let user of userarray">
                 <tr>
-                  <th scope="row">1</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
+                  <th scope="row">{{num + 1}}</th>
+                  <td>{{user.name}}</td>
+                  <td>{{user.surname}}</td>
+                  <td>{{user.email}}</td>
                 </tr>
-                <tr>
+                <!-- <tr>
                   <th scope="row">2</th>
                   <td>Jacob</td>
                   <td>Thornton</td>
                   <td>@fat</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Larry</td>
-                  <td>the Bird</td>
-                  <td>@twitter</td>
-                </tr>
+                </tr> -->
               </tbody>
         </table>
             <!-- <div class="names" id="presentData" *ngFor="let items of data" >

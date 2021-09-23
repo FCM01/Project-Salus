@@ -8,6 +8,7 @@ import { catchError, map, retry } from 'rxjs/operators';
 })
 export class SalusloginService {
   public url = "http://127.0.0.1:5000"
+  // public url ="http://143.160.105.127:5000"
   public payload={};
   public response :any;
   public data:any;
@@ -65,14 +66,13 @@ export class SalusloginService {
     );
 
   }
-
-  GetUsers(final_payload:any)
+  VisitorSignUp(final_payload:any)
   {
     const requestOptions: Object = {
       //If your response is text not json
       responseType: 'json'
     }   
-    return this.http.post<any>(this.url+"/retrieve/User",final_payload,requestOptions).pipe(map((data: any,error: any) => {
+    return this.http.post<any>(this.url+"/Visitor/Signup",final_payload,requestOptions).pipe(map((data: any,error: any) => {
       if(data){
         return data;
       }
@@ -83,6 +83,43 @@ export class SalusloginService {
     );
 
   }
+
+  GetUsers(final_payload:any)
+  {
+    const requestOptions: Object = {
+      //If your response is text not json
+      responseType: 'json'
+    }   
+    return this.http.post<any>(this.url+"/retrieve/users",final_payload,requestOptions).pipe(map((data: any,error: any) => {
+      if(data){
+        return data;
+      }
+      else{
+        return error;
+      }
+    })
+    );
+
+  }
+  
+onUpload(final_payload:any)
+{
+
+  const requestOptions: Object = {
+    //If your response is text not json
+    responseType: 'json'
+  }   
+  return this.http.post<any>(this.url+"/add/attendence",final_payload,requestOptions).pipe(map((data: any,error: any) => {
+    if(data){
+      return data;
+    }
+    else{
+      return error;
+    }
+  })
+  );
+
+}
 
 
   LoginCredentialSend(final_payload:any)

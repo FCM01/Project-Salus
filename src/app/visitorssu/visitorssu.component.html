@@ -1,4 +1,3 @@
-<app-navbar></app-navbar>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +7,70 @@
     <title>Document</title>
 </head>
 <body>
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <h1> Visitor Sign-up </h1>
+                <form [formGroup]="signupForm" (ngSubmit)="setValues(signupForm.value)" >
+                    <h1>General Infomation</h1>
+                
+                    <input type="text"  formControlName="name" #name placeholder= "First Name ">
+                    <div class="alert" *ngIf="!signupForm.controls['name'].valid && signupForm.controls['name'].touched">
+                        {{titleAlert1}} </div>
+                    <input type = "text" placeholder = "Last Name"  formControlName="surname">
+                    <div class="alert" *ngIf="!signupForm.controls['surname'].valid && signupForm.controls['surname'].touched">
+                        {{titleAlert1}} </div>
+                    <input type="text"  formControlName="id_number" #name placeholder= "SA ID number">
+                    <div class="alert" *ngIf="!signupForm.controls['id_number'].valid && signupForm.controls['id_number'].touched">
+                            {{titleAlert1}} </div>
+                    <br>
+                    <h2>Date of Birth</h2>
+                    <br>
+                    <input type="date"  formControlName="date_of_birth" #name placeholder= "Date of Birth">
+                    <div class="alert" *ngIf="!signupForm.controls['date_of_birth'].valid && signupForm.controls['date_of_birth'].touched">
+                            {{titleAlert1}} </div>
+    
+                    <input type = "email" placeholder = "Email "  formControlName="email">
+                    <div class="alert" *ngIf="!signupForm.controls['email'].valid && signupForm.controls['email'].touched">
+                                {{titleAlert1}} </div>
+                    
+                    <h1>General details</h1>
+                    <input type = "text" placeholder ="Purpose of Visit" formControlName="purpose">
+                    <div class="alert" *ngIf="!signupForm.controls['purpose'].valid && signupForm.controls['purpose'].touched">
+                            {{titleAlert1}} </div>
+                    <h1>Password</h1>
+                    <input type = "password" placeholder="Create Password"  formControlName="password">
+                    <div class="alert" *ngIf="!signupForm.controls['password'].valid && signupForm.controls['password'].touched">
+                                {{titleAlert2}} </div>
+                            
+                    <input type = "password" placeholder="Confirm Password"  formControlName="passwordconfirm">
+                    <div class="alert" *ngIf="!signupForm.controls['passwordconfirm'].valid && signupForm.controls['passwordconfirm'].touched">
+                            {{titleAlert2}} </div>
+                    <h1>Contact details</h1>
+                    <input type = "tel" placeholder = "Contact Number"  formControlName="cnr">
+                    <div class="alert" *ngIf="!signupForm.controls['cnr'].valid && signupForm.controls['cnr'].touched">
+                        {{titleAlert1}} </div>
+                    <h1>Address</h1>
+                    <input type = "text" placeholder = "Physical address"  formControlName="address">
+                    <div class="alert" *ngIf="!signupForm.controls['address'].valid && signupForm.controls['address'].touched">
+                            {{titleAlert1}} </div>
+
+                    <input type = "text" placeholder = "City"  formControlName="city">
+                    <div class="alert" *ngIf="!signupForm.controls['city'].valid && signupForm.controls['city'].touched">
+                            {{titleAlert1}} </div>
+                    <input type = "number" placeholder = " Postal code"  formControlName="pcode">
+                    <div class="alert" *ngIf="!signupForm.controls['pcode'].valid && signupForm.controls['pcode'].touched">
+                            {{titleAlert1}} </div>
+
+                    <input [disabled]="!signupForm.valid" type="submit" class="fadeIn fourth" value="Sign Up">
+
+                </form>
+                <div id="formFooter">
+                    <a class="underlineHover" routerLink = "/signup">Go back</a>
+                </div>
+          
+        </div>
+    </div>
     
 </body>
 </html>
+

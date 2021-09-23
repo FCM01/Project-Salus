@@ -23,7 +23,9 @@
                     <input type="text"  formControlName="id_number" #name placeholder= "SA ID number">
                     <div class="alert" *ngIf="!signupForm.controls['id_number'].valid && signupForm.controls['id_number'].touched">
                         {{titleAlert1}} </div>
-
+                    <br>
+                    <h2>Date of Birth</h2>
+                    <br>
                     <input type="date"  formControlName="date_of_birth" #name placeholder= "Date of Birth">
                     <div class="alert" *ngIf="!signupForm.controls['date_of_birth'].valid && signupForm.controls['date_of_birth'].touched">
                             {{titleAlert1}} </div>
