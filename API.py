@@ -917,6 +917,47 @@ def register_add():
     return jsonify(resp),status
 # @app.route("/QR/check", methods=["POST"])
 
+
+
+##############################################################
+###############################################################
+##################################################################
+###############################################
+# BREACH ALARM section 
+
+@app.route("/breachalarm",methods= ["POST"])
+def make_alarm():
+    status = 200
+    resp = {}
+    try:
+    except Exception as e :
+        status  = 400
+        resp={"message":f"{e}","status":status}  
+        print("ERORR (/breachalarm route)--->",e)
+    return jsonify(resp),status
+
+@app.route("/breachalarm/check",methods= ["GET"])
+def make_alarm():
+    status = 200
+    resp = {}
+    try:
+    except Exception as e :
+        status  = 400
+        resp={"message":f"{e}","status":status}  
+        print("ERORR (/breachalarm/check route)--->",e)
+    return jsonify(resp),status
+
+@app.route("/breachalarm/delete",methods= ["DELETE"])
+def make_alarm():
+    status = 200
+    resp = {}
+    try:
+    except Exception as e :
+        status  = 400
+        resp={"message":f"{e}","status":status}  
+        print("ERORR (/breachalarm/delete route)--->",e)
+    return jsonify(resp),status
+
 if __name__  =="__main__":
     app.run(debug=True)
     # app.run(host='0.0.0.0',port=5000)
