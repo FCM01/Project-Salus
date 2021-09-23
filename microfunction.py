@@ -99,14 +99,16 @@ class tools :
                                 <h1 style ="color:#96c8cc;">Account Made</h1> 
                                 <h2 style ="color:#96c8cc;">Thank you {name}</h2>
                                 <p>Welcome to Salus we happy to provide u a new way to get onto your school grounds to with safety and secure tracking while maintaining you safety on school gounds and notifying you of issues on school grounds</p>
-                                <p>Please be feel safe under Salus</p>
+                                <p>Please  feel safe under Salus</p>
                                 <p> We care about your well being </p>
+                                <p>Yours sincerly</p>
+                                <p>The Salus team</p>
                             </body>
                         </html>
                         """,subtype= "html")
-                    files = ["Screenshot 2021-07-11 220843.png","download.jpg"]
+                    files = ["saluswithname.jpg"]
                     for images in files:
-                        with open(f"C:/Users/farai/OneDrive/Documents/personal work/startup/Flow/resources/{images}","rb") as image :
+                        with open(f"{images}","rb") as image :
                             file_data = image.read()
                             file_type = imghdr.what(image.name)
                             file_name= image.name

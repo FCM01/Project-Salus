@@ -33,6 +33,8 @@ def a_signup():
         email = data["data"]["email"]
         phone_number= data["data"]["phone_number"]
         address= data["data"]["address"]
+        city= data["data"]["city"]
+        pcode= data["data"]["pcode"]
         password = data["data"]["password"]
         admin_number = data["data"]["admin_number"]
         if name!= "" and email !="" and password !="" and   id_number  != "": 
@@ -44,12 +46,16 @@ def a_signup():
                 "email":f"{email}",
                 "phone_number":f"{phone_number}",
                 "address":f"{address}",
+                "city":f"{city}",
+                "pcode":f"{pcode}",
                 "password":f"{password}",
                 "admin_number":f"{admin_number}",
                 "acess_level":0,
                 "token":[]
             }
             teacher  = mongo.db.admin.insert(signup_payload)
+            q1= tools()
+            q1.emailing_services(email,name,admin_number,"signup","","","","")
             status = 200
             resp = {"message":"succeessful","status":f"{status}"}       
     except Exception as e:
@@ -72,6 +78,8 @@ def t_signup():
         email = data["data"]["email"]
         phone_number= data["data"]["phone_number"]
         address= data["data"]["address"]
+        city= data["data"]["city"]
+        pcode= data["data"]["pcode"]
         password = data["data"]["password"]
         staff_number = data["data"]["staff_number"]
         position= data["data"]["position"]
@@ -86,6 +94,8 @@ def t_signup():
                 "email":f"{email}",
                 "phone_number":f"{phone_number}",
                 "address":f"{address}",
+                "city":f"{city}",
+                "pcode":f"{pcode}",
                 "password":f"{password}",
                 "staff_number":f"{staff_number}",
                 "position":f"{position}",
@@ -94,7 +104,9 @@ def t_signup():
                 "acess_level":2,
                 "token":[]
             }
-            teacher  = mongo.db.teacher.insert(signup_payload)
+            teacher  = mongo.db.teacher.insert_one(signup_payload)
+            q1= tools()
+            q1.emailing_services(email,name,staff_number,"signup","","","","")
             status = 200
             resp = {"message":"succeessful","status":f"{status}"}       
     except Exception as e:
@@ -114,10 +126,13 @@ def se_signup():
         name = data["data"]["name"]
         surname = data["data"]["surname"]
         id_number = data["data"]["id_number"]
+        staff_number = data["data"]["staff_number"]
         date_of_birth = data["data"]["date_of_birth"]
         email = data["data"]["email"]
         phone_number= data["data"]["phone_number"]
         address= data["data"]["address"]
+        city= data["data"]["city"]
+        pcode= data["data"]["pcode"]
         password = data["data"]["password"]
         position= data["data"]["position"]
         petrol_sector = data["data"]["petrol_sector"]
@@ -132,6 +147,8 @@ def se_signup():
                 "email":f"{email}",
                 "phone_number":f"{phone_number}",
                 "address":f"{address}",
+                "city":f"{city}",
+                "pcode":f"{pcode}",
                 "password":f"{password}",
                 "staff_number":f"{staff_number}",
                 "position":f"{position}",
@@ -140,6 +157,8 @@ def se_signup():
                 "token":[]
             }
             teacher  = mongo.db.security.insert(signup_payload)
+            q1= tools()
+            q1.emailing_services(email,name,staff_number,"signup","","","","")
             status = 200
             resp = {"message":"succeessful","status":f"{status}"}       
     except Exception as e:
@@ -162,6 +181,8 @@ def dom_signup():
         email = data["data"]["email"]
         phone_number= data["data"]["phone_number"]
         address= data["data"]["address"]
+        city= data["data"]["city"]
+        pcode= data["data"]["pcode"]
         password = data["data"]["password"]
         staff_number= data["data"]["staff_number"]
         position= data["data"]["position"]
@@ -175,6 +196,8 @@ def dom_signup():
                 "email":f"{email}",
                 "phone_number":f"{phone_number}",
                 "address":f"{address}",
+                "city":f"{city}",
+                "pcode":f"{pcode}",
                 "password":f"{password}",
                 "staff_number":f"{staff_number}",
                 "position":f"{position}",
@@ -183,6 +206,8 @@ def dom_signup():
                 "token":[]
             }
             teacher  = mongo.db.domestic.insert(signup_payload)
+            q1= tools()
+            q1.emailing_services(email,name,staff_number,"signup","","","","")
             status = 200
             resp = {"message":"succeessful","status":f"{status}"}       
     except Exception as e:
@@ -206,6 +231,8 @@ def stu_signup():
         email = data["data"]["email"]
         phone_number= data["data"]["phone_number"]
         address= data["data"]["address"]
+        city= data["data"]["city"]
+        pcode= data["data"]["pcode"]
         password = data["data"]["password"]
         student_number = data["data"]["student_number"]
         register_class = data["data"]["register_class"]
@@ -217,9 +244,6 @@ def stu_signup():
         gaurdian_phone_number = data["data"]["gaurdian_phone_number"]
         
         if name!= "" and email !="" and password !="" and   id_number  != "":
-            # uuid_number = tools()
-            # student_number = uuid_number.id_number_genrator()
-            # print("st-->",student_number) 
             signup_payload = {
                 "name":f"{name}",
                 "surname":f"{surname}",
@@ -228,6 +252,8 @@ def stu_signup():
                 "email":f"{email}",
                 "phone_number":f"{phone_number}",
                 "address":f"{address}",
+                "city":f"{city}",
+                "pcode":f"{pcode}",
                 "password":f"{password}",
                 "student_number":f"{student_number}",
                 "register_class":f"{register_class}",
@@ -240,8 +266,9 @@ def stu_signup():
                 "acess_level":0,
                 "token":[]
             }
-            print(signup_payload)
             teacher  = mongo.db.student.insert(signup_payload)
+            q1= tools()
+            q1.emailing_services(email,name,student_number,"signup","","","","")
             status = 200
             resp = {"message":"succeessful","status":f"{status}"}       
     except Exception as e:
@@ -264,10 +291,10 @@ def v_signup():
         email = data["data"]["email"]
         phone_number= data["data"]["phone_number"]
         address= data["data"]["address"]
+        city= data["data"]["city"]
+        pcode= data["data"]["pcode"]
         password = data["data"]["password"]
         purpose_of_visit= data["data"]["purpose_of_visit"]
-        time_in = data["data"]["time_in"]
-        time_out = data["data"]["time_out"] 
         if name!= "" and email !="" and password !="" and   id_number  != "":
             uuid_number = tools()
             visitor_number = uuid_number.id_number_genrator() 
@@ -279,16 +306,19 @@ def v_signup():
                 "email":f"{email}",
                 "phone_number":f"{phone_number}",
                 "address":f"{address}",
+                "city":f"{city}",
+                "pcode":f"{pcode}",
                 "password":f"{password}",
                 "visitor_number":f"{visitor_number}",
                 "purpose_of_visit":f"{purpose_of_visit}",
-                "time_in":f"{time_in}",
-                "time_out":f"{time_out}",
+                "visits":[],
                 "acess_level":0,
                 "token":[]
             }
             print(signup_payload)
             teacher  = mongo.db.visitor.insert(signup_payload)
+            q1= tools()
+            q1.emailing_services(email,name,visitor_number,"signup","","","","")
             status = 200
             resp = {"message":"succeessful","status":f"{status}"}       
     except Exception as e:
@@ -443,7 +473,7 @@ def generate_token():
                     token = qr.generate_token(data,user_number)
                     email = data["email"]
                     name = data["name"] 
-                    qr.emailing_services(email,name,user_number,"qr_code",token)
+                    qr.emailing_services(email,name,user_number,"qr_code",token,"","","")
                     status = 200 
                     resp = {"message":"Toke sent","status":f"{status}"}
                 else :
@@ -456,7 +486,7 @@ def generate_token():
                     token = qr.generate_token(data,user_number)
                     email = data["email"]
                     name = data["name"] 
-                    qr.emailing_services(email,name,user_number,"qr_code",token)
+                    qr.emailing_services(email,name,user_number,"qr_code",token,"","","")
                     status = 200 
                     resp = {"message":"Toke sent","status":f"{status}"}
                 else :
@@ -471,7 +501,7 @@ def generate_token():
                     token = qr.generate_token(data,user_number)
                     email = data["email"]
                     name = data["name"] 
-                    qr.emailing_services(email,name,user_number,"qr_code",token)
+                    qr.emailing_services(email,name,user_number,"qr_code",token,"","","")
                     status = 200 
                     resp = {"message":"Toke sent","status":f"{status}"}
                 else :
@@ -485,7 +515,7 @@ def generate_token():
                     token = qr.generate_token(student,user_number)
                     email = student["email"]
                     name = student["name"] 
-                    qr.emailing_services(email,name,"qr_code",token)
+                    qr.emailing_services(email,name,user_number,"qr_code",token,"","","")
                     status = 200 
                     resp = {"message":"Toke sent","status":f"{status}"}
                 else :
@@ -500,7 +530,7 @@ def generate_token():
                     token = qr.generate_token(data,user_number)
                     email = data["email"]
                     name = data["name"] 
-                    qr.emailing_services(email,name,user_number,"qr_code",token)
+                    qr.emailing_services(email,name,user_number,"qr_code",token,"","","")
                     status = 200 
                     resp = {"message":"Toke sent","status":f"{status}"}
                 else :
@@ -515,7 +545,7 @@ def generate_token():
                     token = qr.generate_token(data,user_number)
                     email = data["email"]
                     name = data["name"] 
-                    qr.emailing_services(email,name,user_number,"qr_code",token)
+                    qr.emailing_services(email,name,user_number,"qr_code",token,"","","")
                     status = 200 
                     resp = {"message":"Toke sent","status":f"{status}"}
                 else :
@@ -532,25 +562,57 @@ def generate_token():
 ################################################
 #RETRIVE USER SECTION
 
-@app.route("/retrieve/User",methods=["POST","GET"])
+@app.route("/retrieve/users",methods=["POST"])
 def get_patient_list():
     status = 200
     resp  = {}
     try:
-        database_name = request.json.get("database_name")
-        if database_name != "":
-            patients = mongo.db.database_name
-            response  = patients.find()
+        data = request.get_json("data")
+        database_name = data["data"]["database_name"]
+        if database_name == "domestic":
+            users = mongo.db.domestic
+            response  = users.find()
             if response != None:
+                print("working d")
                 status = 200
-                patients_array =[]
-                for i in response:
-                    patients_array.append(i)
-                return_response = parse_json(patients_array)
+                return_response = parse_json(response)
                 resp = {"response":return_response,"message":"patients retieved","status":status}
-        else:
-            status  = 400
-            resp={"message":"missing database name to retrieve from","status":status}
+        elif database_name == "teacher":
+            users = mongo.db.teacher
+            response  = users.find()
+            if response != None:
+                print("working t")
+                status = 200
+                return_response = parse_json(response)
+                resp = {"response":return_response,"message":"patients retieved","status":status}
+
+        elif database_name == "student":
+            users = mongo.db.student
+            response  = users.find()
+            if response != None:
+                print("working st")
+                status = 200
+                return_response = parse_json(response)
+                resp = {"response":return_response,"message":"patients retieved","status":status}
+
+        elif database_name == "security":
+            users = mongo.db.security
+            response  = users.find()
+            if response != None:
+                print("working se")
+                status = 200
+                return_response = parse_json(response)
+                resp = {"response":return_response,"message":"patients retieved","status":status}
+
+        elif database_name == "visitor":
+            users = mongo.db.visitor
+            response  = users.find()
+            if response != None:
+                print("working v")
+                status = 200
+                return_response = parse_json(response)
+                print(return_response)
+                resp = {"response":return_response,"message":"patients retieved","status":status}
     except Exception as e :
         status  = 400
         resp={"message":f"{e}","status":status}  
@@ -611,12 +673,11 @@ def forgot_password1():
         email = data["data"]["email"]
         if email != "":
             teacher = mongo.db.teacher.find_one({"email":f"{email}"})
-            admin = mongo.db.teacher.find_one({ "email":f"{email}"})
+            admin = mongo.db.admin.find_one({ "email":f"{email}"})
             student = mongo.db.student.find_one({"email":f"{email}"})
             domestic = mongo.db.domestic.find_one({"email":f"{email}"})
             security = mongo.db.security.find_one({"email":f"{email}"})
             visitor = mongo.db.visitor.find_one({"email":f"{email}"})
-            print(parse_json(domestic))
             if parse_json(teacher) != None:
                 print("Teacher")
                 data = parse_json(teacher)
@@ -839,7 +900,21 @@ def forgot_paswword_send():
 ########################################################
 #########################################
 #QR code checking area
-
+# student add to attedndence 
+@app.route("/add/attendence",methods=["POST"])
+def register_add():
+    status =200;
+    resp = {}
+    try:
+        data= request.get_json("data") 
+        if data != None:
+            resp = {"message":"working "}
+            status = 200 
+    except Exception as e :
+        status  = 400
+        resp={"message":f"{e}","status":status}  
+        print("ERORR (/add/attendence route)--->",e)
+    return jsonify(resp),status
 # @app.route("/QR/check", methods=["POST"])
 
 if __name__  =="__main__":
