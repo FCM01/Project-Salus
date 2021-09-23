@@ -930,6 +930,7 @@ def make_alarm():
     status = 200
     resp = {}
     try:
+        data = request.get_json("data")
     except Exception as e :
         status  = 400
         resp={"message":f"{e}","status":status}  
@@ -937,10 +938,11 @@ def make_alarm():
     return jsonify(resp),status
 
 @app.route("/breachalarm/check",methods= ["GET"])
-def make_alarm():
+def check_alarm():
     status = 200
     resp = {}
     try:
+        data = request.get_json("data")
     except Exception as e :
         status  = 400
         resp={"message":f"{e}","status":status}  
@@ -948,10 +950,11 @@ def make_alarm():
     return jsonify(resp),status
 
 @app.route("/breachalarm/delete",methods= ["DELETE"])
-def make_alarm():
+def delete_alarm():
     status = 200
     resp = {}
     try:
+        data = request.get_json("data")
     except Exception as e :
         status  = 400
         resp={"message":f"{e}","status":status}  
