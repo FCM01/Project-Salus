@@ -903,7 +903,7 @@ def forgot_paswword_send():
 # student add to attedndence 
 @app.route("/add/attendence",methods=["POST"])
 def register_add():
-    status =200;
+    status =200
     resp = {}
     try:
         data= request.get_json("data") 
@@ -931,6 +931,25 @@ def make_alarm():
     resp = {}
     try:
         data = request.get_json("data")
+        name = data["data"]["name"]
+        surname = data["data"]["surname"]
+        id_number = data["data"]["id_number"]
+        password = data["data"]["password"]
+        email = data["data"]["email"]
+        quadrant = data["data"]["quadrant"]
+        breach_type = data["data"]["breach type"]
+
+        if name!= "" and email !="" and password !="" and   id_number  != "":
+            breachAlarm_payload = {
+                "name":f"{name}",
+                "surname":f"{surname}",
+                "id_number":f"{id_number}",
+                "password": f"{password}",
+                "email":f"{email}",
+                "phone_number":f"{quadrant}",
+                "breach type":f"{breach_type}"
+            }
+
     except Exception as e :
         status  = 400
         resp={"message":f"{e}","status":status}  
@@ -943,6 +962,25 @@ def check_alarm():
     resp = {}
     try:
         data = request.get_json("data")
+        database_name = data["data"]["database_name"]
+        if database_name == "breach_alarm":
+            users = mongo.db.breach_alarm
+            response  = users.find()
+            if response != None:
+                print("working d")
+                status = 200
+                return_response = parse_json(response)
+                resp = {"response":return_response,"message":"Report found","status":status}
+
+            else:
+                status  = 400
+                resp={"message":f"{e}","status":status}  
+                print("ERORR (/breachalarm/check route)--->",e)
+                return jsonify(resp),status
+            
+        else:
+            print("no report found for that database")
+
     except Exception as e :
         status  = 400
         resp={"message":f"{e}","status":status}  
@@ -955,6 +993,25 @@ def delete_alarm():
     resp = {}
     try:
         data = request.get_json("data")
+        name = data["data"]["name"]
+        surname = data["data"]["surname"]
+        user_number= data["data"]["user_number"]
+        user_type =data["data"]["user_type"]
+
+        if name != "" and surname !="" and user_number != "" and user_type != "":
+            database  = mongo.db.patients.find_one({"name":f"{user_name}","surname":f"{user_surnmae}","id_number":f"{user_id_number}"})
+            if database_name != "breach_alarm":
+                print("user is in database ")
+                user_database_id  = patient_in_database["_id"]
+                print(user_database_id)
+                if user_database_id != "":
+                    mongo.db.patients.delete_one({"_id":f"{patient_database_id}"})
+                    status =200
+                    resp = {"message":"User profile has been deleted","status":status}
+                else:
+                    status =400
+                    resp = {"message":"Could not get User _id ","status":status}
+
     except Exception as e :
         status  = 400
         resp={"message":f"{e}","status":status}  
