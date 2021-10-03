@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins');
+.navbar {
+    overflow: hidden;
+    background-color: white;
+    font-family: Arial;
+    box-shadow: black 2em;
+    border-radius: 0.5em;
+    font-family: "Poppins", sans-serif;
+    
+  }
+  
+  .navbar a {
+    float: left;
+    font-size: 16px;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+  
+  .dropdown {
+    float: left;
+    overflow: hidden;
+  }
+  
+  .dropdown .dropbtn {
+    font-size: 16px;
+    border: none;
+    outline: none;
+    color: black;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0; 
+  }
+  
+
+  .navbar nav {
+    float: right;
+  }
+  .navbar ul {
+    list-style-type: none;
+    margin: 0;
+    display: flex;
+  }
+  .navbar li a {
+    padding: 0.5em;
+  }
+  
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    border-radius: 0.5em;
+    z-index: 1;
+  }
+  
+
+  .dropdown-content a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+  }
+  
+  /* .dropdown-content a:hover {
+    background-color: #56baed;
+  } */
+
+  a.inactive {
+    color: #cccccc;
+  }
+  a {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    display:inline-block;
+    color: #cccccc;
+  }
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+
+  .underlineHover:after {
+    display: block;
+    left: 0;
+    bottom: -10px;
+    width: 0;
+    height: 2px;
+    background-color: #56baed;
+    content: "";
+    transition: width 0.2s;
+  }
+  
+  .underlineHover:hover {
+    color: #0d0d0d;
+  }
+  
+  .underlineHover:hover:after{
+    width: 100%;
+  }
+  
+  

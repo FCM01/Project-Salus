@@ -20,12 +20,13 @@ import { StudentdasboardComponent } from './studentdasboard/studentdasboard.comp
 import { TeacherdashbaoardComponent } from './teacherdashbaoard/teacherdashbaoard.component';
 import { DomesticdashboardComponent } from './domesticdashboard/domesticdashboard.component';
 import { SecuritydashboardComponent } from './securitydashboard/securitydashboard.component';
-import { AdmindashboardComponent } from './admindashboard/admindashboard.component';
 import { VisitordashboardComponent } from './visitordashboard/visitordashboard.component';
 import { ForgetpasswordverifyComponent } from './forgetpasswordverify/forgetpasswordverify.component';
 import { VisitorssuComponent } from './visitorssu/visitorssu.component';
 import { DomesticsuComponent } from './domesticsu/domesticsu.component';
 import { AdminsuComponent } from './adminsu/adminsu.component';
+import { AdmindashboardComponent } from './admindashboard/admindashboard.component';
+import { ToolbarComponent } from './toolbar/toolbar.component';
 
 @NgModule({
   declarations: [
@@ -45,12 +46,13 @@ import { AdminsuComponent } from './adminsu/adminsu.component';
     TeacherdashbaoardComponent,
     DomesticdashboardComponent,
     SecuritydashboardComponent,
-    AdmindashboardComponent,
     VisitordashboardComponent,
     ForgetpasswordverifyComponent,
     VisitorssuComponent,
     DomesticsuComponent,
-    AdminsuComponent
+    AdminsuComponent,
+    AdmindashboardComponent,
+    ToolbarComponent
   ],
   imports: [
     BrowserModule,

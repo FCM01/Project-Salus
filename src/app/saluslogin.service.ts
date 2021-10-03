@@ -7,6 +7,7 @@ import { catchError, map, retry } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class SalusloginService {
+  public user_profile : any;
   public url = "http://127.0.0.1:5000"
   // public url ="http://143.160.105.127:5000"
   public payload={};
@@ -14,6 +15,7 @@ export class SalusloginService {
   public data:any;
   constructor(public http: HttpClient) { }
 
+ 
   SendForgetpasword(final_payload:any)
   {
     const requestOptions: Object = {
@@ -83,6 +85,74 @@ export class SalusloginService {
     );
 
   }
+  DomesticSignUp(final_payload:any)
+  {
+    const requestOptions: Object = {
+      //If your response is text not json
+      responseType: 'json'
+    }   
+    return this.http.post<any>(this.url+"/Domestic/Signup",final_payload,requestOptions).pipe(map((data: any,error: any) => {
+      if(data){
+        return data;
+      }
+      else{
+        return error;
+      }
+    })
+    );
+
+  }
+  StudentSignUp(final_payload:any)
+  {
+    const requestOptions: Object = {
+      //If your response is text not json
+      responseType: 'json'
+    }   
+    return this.http.post<any>(this.url+"/Student/Signup",final_payload,requestOptions).pipe(map((data: any,error: any) => {
+      if(data){
+        return data;
+      }
+      else{
+        return error;
+      }
+    })
+    );
+
+  }
+  SecuritySignUp(final_payload:any)
+  {
+    const requestOptions: Object = {
+      //If your response is text not json
+      responseType: 'json'
+    }   
+    return this.http.post<any>(this.url+"/Student/Signup",final_payload,requestOptions).pipe(map((data: any,error: any) => {
+      if(data){
+        return data;
+      }
+      else{
+        return error;
+      }
+    })
+    );
+
+  }
+AdminSignUp(final_payload:any)
+  {
+    const requestOptions: Object = {
+      //If your response is text not json
+      responseType: 'json'
+    }   
+    return this.http.post<any>(this.url+"/Admin/Signup",final_payload,requestOptions).pipe(map((data: any,error: any) => {
+      if(data){
+        return data;
+      }
+      else{
+        return error;
+      }
+    })
+    );
+
+  }
 
   GetUsers(final_payload:any)
   {
@@ -138,4 +208,24 @@ onUpload(final_payload:any)
   })
   );
 }
+
+DeleteUser(final_payload:any)
+{
+  const requestOptions: Object = {
+    //If your response is text not json
+    responseType: 'json'
+  }    
+  return this.http.post<any>(this.url+"/Delete/User", final_payload).pipe(map((data: any,error: any) => {
+    if(data){
+      return data;
+    }
+    else{
+      return error;
+    }
+  })
+  );
 }
+
+}
+
+

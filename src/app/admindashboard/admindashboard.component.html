@@ -1,1 +1,94 @@
-<p>admindashboard works!</p>
+<app-toolbar></app-toolbar>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  <div class="content">
+    <h1>Welcome {{user_profile["name"]}} {{user_profile["surname"]}}</h1>
+    <p>Keep Safe with SALUS</p>
+  </div>
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+          <ul>
+            <h1>Databses Select</h1>
+            <p>please select type of user </p>
+            <a 
+              *ngFor="let item of list1" 
+              [class.item-selected]="item.selected"
+              (click)="toggleSelection(item, 1)" id="formFooter">{{item.text}}</a>
+          </ul>
+        <form [formGroup]="databaseForm" (ngSubmit)="setValues()">
+           <h1>
+             {{databaseselected}}
+           </h1>
+            <input type="submit" class="fadeIn fourth" value="Search">
+        </form>
+        <table>
+            <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">First</th>
+                  <th scope="col">Last</th>
+                  <th scope="col">Handle</th>
+                </tr>
+              </thead>
+              <tbody  *ngFor= "let user of userarray">
+                <tr>
+                  <th scope="row">{{num + 1}}</th>
+                  <td>{{user.name}}</td>
+                  <td>{{user.surname}}</td>
+                  <td>{{user.email}}</td>
+                  <input type="submit" class="fadeIn fourth" value="Delete" (click)="deletUser(user.name,user.surname)">
+                  <input type="submit" class="fadeIn fourth" value="Edit">
+                  <input type="submit" class="fadeIn fourth" value="More Information">
+                  <br>
+                  <br>
+                </tr>
+              </tbody>
+        </table>
+        </div>
+    </div> 
+
+    <div class="wrapper fadeInDown">
+      <div id="formContent">
+          <div class="form-container">
+            <h1>GENRATE ENTERANCE TOKEN</h1>
+            <h2>This token allows you to enter school grounds</h2>
+            <h2>Please produce to designated personel</h2>
+            <img src="assets/images/pexels-travis-saylor-951375.jpg" >
+            </div>
+            <div class = "formFooter">
+              <h2>FOR: {{user_profile.name}}</h2>
+              <br>
+              <h2>USER NUMBER: {{user_profile.admin_number}}</h2>
+              <br>
+              <h2>TIME OF CREATION: {{datetime}}</h2> 
+              <br>
+              <input type="submit" class="fadeIn fourth" value="Generate" (click)= "GenerateToken()">
+              <span *ngIf = "status != '' ">
+                {{status}}
+              </span>
+            </div>
+        </div>
+      </div> 
+    <div class="wrapper fadeInDown">
+      <div id="formContent">
+          <div class="form-container">
+            <h1>Messages</h1>
+            <div class="names" id="presentData" *ngFor="let items of messages" >
+                <h4> {{items.name}}</h4>
+                <p>> {{items.message}}</p>
+                <input type="submit" class="fadeIn fourth" value="Delete" >
+                <input type="submit" class="fadeIn fourth" value="Reply">
+             </div>
+            </div> 
+        </div>
+      </div>
+  
+</body>
+</html>

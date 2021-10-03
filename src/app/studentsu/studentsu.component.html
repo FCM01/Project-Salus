@@ -14,33 +14,67 @@
                 <form [formGroup]="signupForm" >
                     <h1>General Infomation</h1>
                 
-                    <input type="text" #soxname placeholder= "First Name ">
-    
-                    <input type = "text" placeholder = "Last Name" #soxsurname>
-                   
-                    <input type = "text" placeholder = " Student Number " #soxstaffnr>
-    
-                    <input type = "email" placeholder = "Email " #soxemail>
-                  
+                    <input type="text"  formControlName="name" #name placeholder= "First Name ">
+                    <div class="alert" *ngIf="!signupForm.controls['name'].valid && signupForm.controls['name'].touched">
+                        {{titleAlert1}} </div>
+                    <input type = "text" placeholder = "Last Name"  formControlName="surname">
+                    <div class="alert" *ngIf="!signupForm.controls['surname'].valid && signupForm.controls['surname'].touched">
+                        {{titleAlert1}} </div>
+                    <input type="text"  formControlName="id_number" #name placeholder= "Student ID number">
+                    <div class="alert" *ngIf="!signupForm.controls['id_number'].valid && signupForm.controls['id_number'].touched">
+                        {{titleAlert1}} </div>
+                    <br>
+                    <h2>Date of Birth</h2>
+                    <br>
+                    <input type="date"  formControlName="date_of_birth" #name placeholder= "Date of Birth">
+                    <div class="alert" *ngIf="!signupForm.controls['date_of_birth'].valid && signupForm.controls['date_of_birth'].touched">
+                            {{titleAlert1}} </div>
+                    <input type = "text" placeholder = " Student Number "  formControlName="studentnum">
+                    <div class="alert" *ngIf="!signupForm.controls['studentnum'].valid && signupForm.controls['studentnum'].touched">
+                        {{titleAlert1}} </div>
+                    <input type = "email" placeholder = "Email "  formControlName="email">
+                    <div class="alert" *ngIf="!signupForm.controls['email'].valid && signupForm.controls['email'].touched">
+                        {{titleAlert1}} </div>
     
                     <h1>Password</h1>
-                    <input type = "password" placeholder="Create Password" required #soxpass>
-    
+                    <input type = "password" placeholder="Create Password"  formControlName="password">
+                    <div class="alert" *ngIf="!signupForm.controls['password'].valid && signupForm.controls['password'].touched">
+                        {{titleAlert2}} </div>
                     
-                    <input type = "password" placeholder="Confirm Password" required #soxcpass>
-                
+                    <input type = "password" placeholder="Confirm Password"  formControlName="passwordconfirm">
+                    <div class="alert" *ngIf="!signupForm.controls['passwordconfirm'].valid && signupForm.controls['passwordconfirm'].touched">
+                        {{titleAlert2}} </div>
                     <h1>Contact details</h1>
-                    <input type = "tel" placeholder = "Contact Number" #soxcnr>
+                    <input type = "tel" placeholder = "Contact Number"  formControlName="cnr">
+                    <div class="alert" *ngIf="!signupForm.controls['cnr'].valid && signupForm.controls['cnr'].touched">
+                        {{titleAlert1}} </div>
                     <h1>Address</h1>
-                    <input type = "text" placeholder = "Physical address" #soxadres>
-                    <input type = "text" placeholder = "City" #soxcity>
-                    <input type = "number" placeholder = " Postal code" #soxpcode>
+                    <input type = "text" placeholder = "Physical address"  formControlName="address">
+                    <div class="alert" *ngIf="!signupForm.controls['address'].valid && signupForm.controls['address'].touched">
+                        {{titleAlert1}} </div>
+                    <input type = "text" placeholder = "City"  formControlName="city">
+                    <div class="alert" *ngIf="!signupForm.controls['city'].valid && signupForm.controls['city'].touched">
+                        {{titleAlert1}} </div>
+                    <input type = "number" placeholder = " Postal code"  formControlName="pcode">
+                    <div class="alert" *ngIf="!signupForm.controls['pcode'].valid && signupForm.controls['pcode'].touched">
+                        {{titleAlert1}} </div>
 
                     <h1>Parents details</h1>
-                    <input type = "text" placeholder = "Parent's/Gaurdian First Name" #soxadres>
-                    <input type = "text" placeholder = "Parent's/Gaurdian  Last Name" #soxcity>
-                    <input type = "tel" placeholder = "Parent's/Gaurdian  contact Number" #soxpcode>
-                    <input type = "email" placeholder = "Parent's/Gaurdian  Email " #soxemail>
+                    <input type = "text" placeholder = "Parent's/Gaurdian First Name" formControlName ="pg_name">
+                    <div class="alert" *ngIf="!signupForm.controls['pg_name'].valid && signupForm.controls['pg_name'].touched">
+                        {{titleAlert1}} </div>
+                    <input type = "text" placeholder = "Parent's/Gaurdian  Last Name" formControlName ="pg_surname">
+                    <div class="alert" *ngIf="!signupForm.controls['pg_surname'].valid && signupForm.controls['pg_surname'].touched">
+                        {{titleAlert1}} </div>
+                    <input type = "text" placeholder = "Parent's/Gaurdian ID number" formControlName ="pg_id_number">
+                    <div class="alert" *ngIf="!signupForm.controls['pg_id_number'].valid && signupForm.controls['pg_id_number'].touched">
+                            {{titleAlert1}} </div>
+                    <input type = "tel" placeholder = "Parent's/Gaurdian  contact Number" formControlName ="pg_cnum">
+                    <div class="alert" *ngIf="!signupForm.controls['pg_cnum'].valid && signupForm.controls['pg_cnum'].touched">
+                        {{titleAlert1}} </div>
+                    <input type = "email" placeholder = "Parent's/Gaurdian  Email " formControlName ="pg_email">
+                    <div class="alert" *ngIf="!signupForm.controls['pg_email'].valid && signupForm.controls['pg_email'].touched">
+                        {{titleAlert1}} </div>
 
                     <input [disabled]="signupForm.invalid" type="submit" class="fadeIn fourth" value="Sign Up">
                 </form>

@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
   public request:any;
   private final_payload ={};
   public type_user:any;
-  public error_message:any;
+  public error_message ='';
   public user_check_false= false;
   public titleAlert1 :string ="This field is required"
 
@@ -48,7 +48,9 @@ export class LoginComponent implements OnInit {
     this.request = this.log.LoginCredentialSend(this.final_payload)
     
       .subscribe(
-        (data) => { 
+        (data) => {
+          console.log(data["user"])
+          localStorage.setItem('user_profile',JSON.stringify(data["user"])); 
           if(data["token"] == "active" )
         {
           if (data["type_user"]=="student"){
@@ -56,10 +58,10 @@ export class LoginComponent implements OnInit {
           }
           else if(data["type_user"]=="teacher")
           {
-            this.router.navigate(['/teacherdash'])
+            this.router.navigate(['/teacherdash']) 
           }
           else if(data["type_user"]=="domestic")
-          {
+          { 
             this.router.navigate(['/domesticdash'])
           }
           else if(data["type_user"]=="security")
@@ -79,7 +81,7 @@ export class LoginComponent implements OnInit {
         else(data["token"] == "down")
         {
           this.user_check_false = true
-          this.error_message =data["message"]
+          this.error_message = data["message"]
     
         }
          

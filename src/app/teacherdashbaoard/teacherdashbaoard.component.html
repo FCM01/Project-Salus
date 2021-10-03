@@ -1,1 +1,45 @@
-<p>teacherdashbaoard works!</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+          
+            <h1>Student Database Select</h1>
+        <table>
+            <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">First</th>
+                  <th scope="col">Last</th>
+                  <th scope="col">Handle</th>
+                </tr>
+              </thead>
+              <tbody  *ngFor= "let user of userarray">
+                <tr>
+                  <th scope="row">{{num + 1}}</th>
+                  <td>{{user.name}}</td>
+                  <td>{{user.surname}}</td>
+                  <td>{{user.email}}</td>
+                </tr>
+              </tbody>
+        </table>
+        <div *ngIf ="userarray != null">
+          <input type="submit" class="fadeIn fourth" value="Edit">
+          <input type="submit" class="fadeIn fourth" value="Delete">
+          <input type="submit" class="fadeIn fourth" value="More Information">
+        </div>
+            <!-- <div class="names" id="presentData" *ngFor="let items of data" >
+                <div class="comments" *ngFor="let comment of items.comments">
+                  <h4 *ngIf="items.comments !== [] ">-> {{items.name}}</h4>
+                  <p>> {{comment}}</p>
+            </div> -->
+        </div>
+    </div>  
+</body>
+</html>

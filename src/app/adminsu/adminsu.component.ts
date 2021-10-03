@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { SalusloginService } from '../saluslogin.service';
+import { Router } from '@angular/router';
 import { FormBuilder,FormControl, FormGroup, Validators } from "@angular/forms"
-
 
 @Component({
   selector: 'app-adminsu',
@@ -10,52 +9,64 @@ import { FormBuilder,FormControl, FormGroup, Validators } from "@angular/forms"
   styleUrls: ['./adminsu.component.css']
 })
 export class AdminsuComponent implements OnInit {
-  public databaseForm: FormGroup;
-  public payload = {};
-  public num = 0;
-  public userarray:any;
-  public databaseselected:any; 
+ 
+  public signupForm : FormGroup;
+  public payload:any;
+  public titleAlert2 :string ="Please enter in an password that is 8 charaters long"
   public titleAlert1 :string ="This field is required"
-  list1 = [
-    { text: 'Domestic', selected: false, value:"domestic"},
-    { text: 'Security', selected: false, value:"security"},
-    { text: 'Student', selected: false,  value:"student"},
-    { text: 'Teacher', selected: false,  value:"teacher"},
-    { text: 'Visitor', selected: false,  value:"visitor"}
-  ];
-  constructor(private log :SalusloginService,private router: Router,private fb: FormBuilder) { 
-    this.databaseForm = fb.group(
-      { "database_name":['',Validators.required],})
+  constructor(private log :SalusloginService,private router: Router,private fb: FormBuilder) {
+    this.signupForm = fb.group({
+      "name": ['', Validators.required],
+      "surname": ['', Validators.required],
+      "id_number": ['', Validators.required],
+      "date_of_birth": ['', Validators.required],
+      "admin_number": ['',Validators.required],
+      "email": ['', Validators.email],
+      "password": ['', Validators.compose([Validators.required, Validators.maxLength(8)])],
+      "passwordconfirm": ['', Validators.compose([Validators.required, Validators.maxLength(8)])],
+      "cnr": ['',Validators.required],
+      "address": ['',Validators.required],
+      "city": ['',Validators.required],
+      "pcode": ['',Validators.required],
+      "validate": ''
+    })
+
+   
   }
+
 
   ngOnInit(): void {
   }
-  public toggleSelection(item:any, list:any) {
-    item.selected = !item.selected;
-    this.databaseselected= item.value;
-
-  }
-
-  setValues()
-  {
-    console.log(this.databaseselected)
-    this.payload = {
+  setValues(post:any){
+    console.log("working")
+    this.payload ={
       "data":{
-        "database_name":this.databaseselected
-      }
+                "name":post.name,
+                "surname":post.surname,
+                "id_number":post.id_number,
+                "date_of_birth":post.date_of_birth,
+                "email":post.email,
+                "phone_number":post.cnr,
+                "address":post.address,
+                "city":post.city,
+                "pcode":post.pcode,
+                "password":post.passwordconfirm,
+                "admin_number":post.admin_number,
+      }  
+    
     }
-    this.log.GetUsers(this.payload)
-      .subscribe(
-        (data)=>{
-
-          if (data["response"] != "")
-          {
-            this.userarray =data["response"]
+    this.log.AdminSignUp(this.payload)
+        .subscribe(
+          (data)=>{
+            console.log(data);
+            if (data["message"]=="succeessful")
+            {
+              this.router.navigate(["/admindash"])
+            }
           }
-
-        }
-      )
-      console.log (this.userarray)
-
+        )
+    
+  
 }
+
 }

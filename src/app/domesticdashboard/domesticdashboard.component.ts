@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { SalusloginService } from '../saluslogin.service';
+import { FormBuilder,FormControl, FormGroup, Validators } from "@angular/forms"
 
 @Component({
   selector: 'app-domesticdashboard',
@@ -7,9 +10,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DomesticdashboardComponent implements OnInit {
 
-  constructor() { }
+  public User:any;
+ 
+  constructor(private log :SalusloginService,private router: Router,private fb: FormBuilder) { 
+ 
+  }
 
   ngOnInit(): void {
+    sessionStorage.getItem('id');
+  
   }
+  
+
+
 
 }
