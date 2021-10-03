@@ -1058,7 +1058,7 @@ def forgot_paswword_send():
 # student add to attedndence 
 @app.route("/add/attendence",methods=["POST"])
 def register_add():
-    status =200;
+    status =200
     resp = {}
     try:
         data= request.get_json("data") 
