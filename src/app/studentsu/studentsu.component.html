@@ -11,7 +11,7 @@
     <div class="wrapper fadeInDown">
         <div id="formContent">
             <h1> Student Sign-up </h1>
-                <form [formGroup]="signupForm" >
+                <form [formGroup]="signupForm"  (ngSubmit)=" setValues(signupForm.value)">
                     <h1>General Infomation</h1>
                 
                     <input type="text"  formControlName="name" #name placeholder= "First Name ">
@@ -32,6 +32,9 @@
                     <input type = "text" placeholder = " Student Number "  formControlName="studentnum">
                     <div class="alert" *ngIf="!signupForm.controls['studentnum'].valid && signupForm.controls['studentnum'].touched">
                         {{titleAlert1}} </div>
+                    <input type = "text" placeholder ="Register Class" formControlName="register_class">
+                    <div class="alert" *ngIf="!signupForm.controls['register_class'].valid && signupForm.controls['register_class'].touched">
+                                {{titleAlert1}} </div>
                     <input type = "email" placeholder = "Email "  formControlName="email">
                     <div class="alert" *ngIf="!signupForm.controls['email'].valid && signupForm.controls['email'].touched">
                         {{titleAlert1}} </div>
@@ -76,7 +79,7 @@
                     <div class="alert" *ngIf="!signupForm.controls['pg_email'].valid && signupForm.controls['pg_email'].touched">
                         {{titleAlert1}} </div>
 
-                    <input [disabled]="signupForm.invalid" type="submit" class="fadeIn fourth" value="Sign Up">
+                    <input [disabled]="!signupForm.valid" type="submit" class="fadeIn fourth" value="Sign Up">
                 </form>
                 <div id="formFooter">
                     <a class="underlineHover" routerLink = "/signup">Go back</a>

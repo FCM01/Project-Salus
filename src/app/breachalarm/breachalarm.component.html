@@ -1,1 +1,71 @@
-<p>breachalarm works!</p>
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+<div class="wrapper fadeInDown">
+<div id="formContent">
+<br>
+<h1> Breach alarm </h1> 
+
+<br> 
+<br>
+
+<p> Please select the location of the breach </p>
+<div id = "quads">
+<div>
+<input #q1 type = "button" value = "Quadrant 1" (click)= "GetQuadrent(q1.value)"> 
+<input  type = "button" value = "Quadrant 2"> 
+</div>
+
+<div> 
+<input type = "button" value = "Quadrant 3"> 
+<input  type = "button" value = "Quadrant 4">
+</div>
+
+</div>
+
+<br>
+
+<!-- <div>
+<mat-form-field>
+<input matInput [matDatepicker] = "breachdate" placeholder = "Please insert the date">
+<mat-datepicker-toggle [for] = "breachdate" matSuffix> </mat-datepicker-toggle>
+<mat-datepicker #breachdate> </mat-datepicker>
+</mat-form-field>
+
+<p> Date must match {{myDate | date: 'yyyy-MM-dd'}} </p>
+
+</div> -->
+<br>
+<br>
+
+
+<p> Please enter the type of breach </p>
+
+<div>
+<input list = "bt" type="text" place-holder = "Breach Type">
+<datalist id = "bt">
+<option value = "Robery">
+<option value = "Intruder">
+<option value = "Fire">
+<option value = "Missing Student">
+<option value = "Missing Staff Member">
+<option value = "Medical Emergency">
+</datalist>
+</div>
+
+<br>
+<br>
+
+<div>
+<input  type="button" class="fadeIn fourth" value="Report breach" click = "getBreachType(bt.value); getDate(breachdate.value)">
+</div>
+
+<div id="formFooter">
+<a class="underlineHover" routerLink = "/login"> Log out </a>
+</div>
+
+</div>
+
+</div>
+</body>
