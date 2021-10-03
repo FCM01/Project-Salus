@@ -137,8 +137,7 @@ def se_signup():
         position= data["data"]["position"]
         petrol_sector = data["data"]["petrol_sector"]
         if name!= "" and email !="" and password !="" and   id_number  != "":
-            # uuid_number = tools()
-            # staff_number = uuid_number.id_number_genrator() 
+        
             signup_payload = {
                 "name":f"{name}",
                 "surname":f"{surname}",
@@ -238,10 +237,11 @@ def stu_signup():
         register_class = data["data"]["register_class"]
         subject_combo = data["data"]["subject_combo"]
         time_table = data["data"]["time_table"]
-        guardian_name  = data["data"]["guardian_name"]
-        guardian_surname = data["data"]["guardian_surname"]
-        gaurdian_email  = data["data"][" gaurdian_email"]
-        gaurdian_phone_number = data["data"]["gaurdian_phone_number"]
+        pg_name = data["data"]["pg_name"]
+        pg_surname= data["data"]["pg_surname"]
+        pg_email  = data["data"]["pg_email"]
+        pg_id_number =data["data"]["pg_id_number"]
+        pg_phone_number = data["data"]["pg_cnum"]
         
         if name!= "" and email !="" and password !="" and   id_number  != "":
             signup_payload = {
@@ -259,16 +259,18 @@ def stu_signup():
                 "register_class":f"{register_class}",
                 "subject_combo":f"{subject_combo}",
                 "time_table":time_table,
-                "guardian_name":f"{guardian_name}",
-                "guardian_surname":f"{guardian_surname}",
-                "gaurdian_email":f"{gaurdian_email}",
-                "gaurdian_phone_number":f"{gaurdian_phone_number}",
+                "pg_name":f"{pg_name}",
+                "pg_surname":f"{pg_surname}",
+                "pg_email":f"{pg_email}",
+                "pg_id_number":f"{pg_id_number}",
+                "pg_phone_number ":f"{pg_phone_number}",
                 "acess_level":0,
                 "token":[]
             }
             teacher  = mongo.db.student.insert(signup_payload)
             q1= tools()
             q1.emailing_services(email,name,student_number,"signup","","","","")
+            q1.emailing_services(gaurdian_email,guardian_name,"","pg_signup","","","","")
             status = 200
             resp = {"message":"succeessful","status":f"{status}"}       
     except Exception as e:
@@ -340,12 +342,12 @@ def login_user():
         print(user_number,password)
         if user_number != "" and password != "":
             teacher = mongo.db.teacher.find_one({"staff_number":f"{user_number}"})
-            admin = mongo.db.teacher.find_one({ "admin_number":f"{user_number}"})
+            admin = mongo.db.admin.find_one({ "admin_number":f"{user_number}"})
             student = mongo.db.student.find_one({"student_number":f"{user_number}"})
             domestic = mongo.db.domestic.find_one({"staff_number":f"{user_number}"})
             security = mongo.db.security.find_one({"staff_number":f"{user_number}"})
             visitor = mongo.db.visitor.find_one({"visitor_number":f"{user_number}"})
-            print(parse_json(domestic))
+            print(parse_json(admin))
             print(parse_json(teacher))
             if parse_json(teacher) != None:
                 print("Teacher")
@@ -359,9 +361,6 @@ def login_user():
                     print("Password is incorrect")
                     status = 400
                     resp = {"message":"Fail in check password","status":status}  
-            # else:
-            #     status = 400
-            #     resp = {"message":"Your does not exsist","status":status,"token":"down"}
             if parse_json(admin) != None:
                 print("Admin")
                 data = parse_json(admin)
@@ -374,9 +373,6 @@ def login_user():
                     print("Password is incorrect")
                     status = 400
                     resp = {"message":"Fail in check password","status":status} 
-            # else:
-            #     status = 400
-            #     resp = {"message":"Your does not exsist","status":status,"token":"down"}
             if parse_json(student) != None:
                 print("Student")
                 data = parse_json(student)
@@ -389,9 +385,6 @@ def login_user():
                     print("Password is incorrect")
                     status = 400
                     resp = {"message":"Fail in check password","status":status} 
-            # else:
-            #     status = 400
-            #     resp = {"message":"Your does not exsist","status":status,"token":"down"}
             if parse_json(security) != None:
                 print("Security")
                 data = parse_json(security)
@@ -404,9 +397,6 @@ def login_user():
                     print("Password is incorrect")
                     status = 400
                     resp = {"message":"Fail in check password","status":status}  
-            # else:
-            #     status = 400
-            #     resp = {"message":"Your does not exsist","status":status,"token":"down"}
             if parse_json(domestic) != None:
                 print("Domestic")
                 data = parse_json(domestic)
@@ -419,9 +409,6 @@ def login_user():
                     print("Password is incorrect")
                     status = 400
                     resp = {"message":"Fail in check password","status":status}  
-            # else:
-            #     status = 400
-            #     resp = {"message":"Your does not exsist","status":status,"token":"down"}
             if parse_json(visitor) != None:
                 print("Vistor")
                 data = parse_json(visitor)
@@ -434,9 +421,6 @@ def login_user():
                     print("Password is incorrect")
                     status = 400
                     resp = {"message":"Fail in check password","status":status}  
-            # else:
-            #     status = 400
-            #     resp = {"message":"Your does not exsist","status":status,"token":"down"}
         else:
             print("missing credential on sign up ")
             status = 400
@@ -447,13 +431,14 @@ def login_user():
         print("ERROR:/User/login-->",e)
     return jsonify(resp),status
 
-@app.route("/generate/token",methods=["POST"])
+@app.route("/Generate/Token",methods=["POST"])
 def generate_token():
     status  = 200
     resp= {}
     try:
         #user_number is not SA id number its user specific number 
-        data = request.json_get("data")
+        data = request.get_json("data")
+        print(data)
         user_number = data["data"]["user_number"]
         user_type = data["data"]["user_type"]
         print(user_number,user_type)
@@ -538,16 +523,28 @@ def generate_token():
                     resp = {"message":"User not found","status":f"{status}"}
 
             elif user_type  == "admin":
-                admin = mongo.db.teacher.find_one({ "admin_number":f"{user_number}"})
+                admin = mongo.db.admin.find_one({"admin_number":f"{user_number}"})
                 if parse_json(admin) != []:
                     data = parse_json(admin)
+                    print("profile ==>",data)
                     qr = tools()
                     token = qr.generate_token(data,user_number)
                     email = data["email"]
                     name = data["name"] 
                     qr.emailing_services(email,name,user_number,"qr_code",token,"","","")
-                    status = 200 
-                    resp = {"message":"Toke sent","status":f"{status}"}
+                    #adding token record to database
+                    admin = mongo.db.admin.find_one({"admin_number":f"{user_number}"})
+                    if parse_json(admin) != []:
+                        user = parse_json(admin)
+                        #token adding
+                        array =[]
+                        for i in user["token"]:
+                            array.append(i)
+                        array.append(token)
+                        #saving
+                        mongo.db.admin.update_one({"admin_number":f"{user_number}"},{ "$set": { "token": f"{array}" } })
+                        status = 200 
+                        resp = {"message":"Toke sent","status":f"{status}"}
                 else :
                     status = 400 
                     resp = {"message":"User not found","status":f"{status}"}
@@ -561,9 +558,100 @@ def generate_token():
 #######################################################################
 ################################################
 #RETRIVE USER SECTION
+# @app.route("/Retrieve/User",methods=["POST"])
+# def get_user():
+#     status = 200
+#     resp  = {}
+#     try:
+#         data = request.get_json("data")
+#         database_name = data["data"]["user_number"]
+#         teacher = mongo.db.teacher.find_one({"staff_number":f"{user_number}"})
+#         student = mongo.db.student.find_one({"student_number":f"{user_number}"})
+#         domestic = mongo.db.domestic.find_one({"staff_number":f"{user_number}"})
+#         security = mongo.db.security.find_one({"staff_number":f"{user_number}"})
+#         visitor = mongo.db.visitor.find_one({"visitor_number":f"{user_number}"})
+       
+#         if parse_json(teacher) != None:
+#             print("Teacher")
+#             user_profile = parse_json(teacher)
+#              status = 200
+#             resp = {"message":"Welcome","status":status,"token":"active","user":data,"type_user":"teacher"}
+   
+            
+#                     print("welcome user")
+                   
+#                 else:
+#                     print("Password is incorrect")
+#                     status = 400
+#                     resp = {"message":"Fail in check password","status":status}  
+#         if parse_json(admin) != None:
+#                 print("Admin")
+#                 data = parse_json(admin)
+#                 database_password = data["password"]   
+#                 if database_password  == password:
+#                     print("welcome user")
+#                     status = 200
+#                     resp = {"message":"Welcome","status":status,"token":"active","user":data,"type_user":"admin"}
+#                 else:
+#                     print("Password is incorrect")
+#                     status = 400
+#                     resp = {"message":"Fail in check password","status":status} 
+#         if parse_json(student) != None:
+#                 print("Student")
+#                 data = parse_json(student)
+#                 database_password = data["password"]   
+#                 if database_password  == password:
+#                     print("welcome user")
+#                     status = 200
+#                     resp = {"message":"Welcome","status":status,"token":"active","user":data,"type_user":"student"}
+#                 else:
+#                     print("Password is incorrect")
+#                     status = 400
+#                     resp = {"message":"Fail in check password","status":status} 
+#         if parse_json(security) != None:
+#                 print("Security")
+#                 data = parse_json(security)
+#                 database_password = data["password"]   
+#                 if database_password  == password:
+#                     print("welcome user")
+#                     status = 200
+#                     resp = {"message":"Welcome","status":status,"token":"active","user":data,"type_user":"security"}
+#                 else:
+#                     print("Password is incorrect")
+#                     status = 400
+#                     resp = {"message":"Fail in check password","status":status}  
+#         if parse_json(domestic) != None:
+#                 print("Domestic")
+#                 data = parse_json(domestic)
+#                 database_password = data["password"]   
+#                 if database_password  == password:
+#                     print("welcome user")
+#                     status = 200
+#                     resp = {"message":"Welcome","status":status,"token":"active","user":data,"type_user":"domestic"}
+#                 else:
+#                     print("Password is incorrect")
+#                     status = 400
+#                     resp = {"message":"Fail in check password","status":status}  
+#         if parse_json(visitor) != None:
+#                 print("Vistor")
+#                 data = parse_json(visitor)
+#                 database_password = data["password"]   
+#                 if database_password  == password:
+#                     print("welcome user")
+#                     status = 200
+#                     resp = {"message":"Welcome","status":status,"token":"active","user":data}
+#                 else:
+#                     print("Password is incorrect")
+#                     status = 400
+#                     resp = {"message":"Fail in check password","status":status}
+#     except Exception as e : 
+#         status = 400
+#         resp = {"message":"ERROR on/Retrieve/User","status":f"{status}",}
+#         print("ERROR:/Retrieve/User-->",e)
+
 
 @app.route("/retrieve/users",methods=["POST"])
-def get_patient_list():
+def get_user_list():
     status = 200
     resp  = {}
     try:
@@ -576,7 +664,7 @@ def get_patient_list():
                 print("working d")
                 status = 200
                 return_response = parse_json(response)
-                resp = {"response":return_response,"message":"patients retieved","status":status}
+                resp = {"response":return_response,"message":"user retieved","status":status}
         elif database_name == "teacher":
             users = mongo.db.teacher
             response  = users.find()
@@ -584,7 +672,7 @@ def get_patient_list():
                 print("working t")
                 status = 200
                 return_response = parse_json(response)
-                resp = {"response":return_response,"message":"patients retieved","status":status}
+                resp = {"response":return_response,"message":"user retieved","status":status}
 
         elif database_name == "student":
             users = mongo.db.student
@@ -593,7 +681,7 @@ def get_patient_list():
                 print("working st")
                 status = 200
                 return_response = parse_json(response)
-                resp = {"response":return_response,"message":"patients retieved","status":status}
+                resp = {"response":return_response,"message":"user retieved","status":status}
 
         elif database_name == "security":
             users = mongo.db.security
@@ -602,7 +690,7 @@ def get_patient_list():
                 print("working se")
                 status = 200
                 return_response = parse_json(response)
-                resp = {"response":return_response,"message":"patients retieved","status":status}
+                resp = {"response":return_response,"message":"user retieved","status":status}
 
         elif database_name == "visitor":
             users = mongo.db.visitor
@@ -612,44 +700,111 @@ def get_patient_list():
                 status = 200
                 return_response = parse_json(response)
                 print(return_response)
-                resp = {"response":return_response,"message":"patients retieved","status":status}
+                resp = {"response":return_response,"message":"user retieved","status":status}
     except Exception as e :
         status  = 400
         resp={"message":f"{e}","status":status}  
-        print("ERORR (patients retrieve route)--->",e)
+        print("ERORR (user retrieve route)--->",e)
     return jsonify(resp),status
 #############################################################################
 #########################################################
 #############################################
 #Delete user area
-@app.route("/delete/user",methods=["DELETE"])
+@app.route("/Delete/User",methods=["POST"])
 def user_delete():
     status = 200
     resp  ={}
     try:
-        data = request.json_get("data")
+        data = request.get_json("data")
+        print(data)
         name = data["data"]["name"]
         surname = data["data"]["surname"]
-        user_number= data["data"]["user_number"]
         user_type =data["data"]["user_type"]
 
-        if name != "" and surname !="" and user_number != "" and user_type != "":
-            database  = mongo.db.patients.find_one({"name":f"{patient_name}","surname":f"{patient_surnmae}","id_number":f"{patient_id_number}"})
-            if database != None:
-                print("user is in database ")
-                patient_database_id  = patient_in_database["_id"]
-                print(patient_database_id)
-                if patient_database_id != "":
-                    mongo.db.patients.delete_one({"_id":f"{patient_database_id}"})
-                    status =200
-                    resp = {"message":"User profile has been deleted","status":status}
-                else:
-                    status =400
-                    resp = {"message":"Could not get User _id ","status":status}
+        if name != "" and surname !="" and user_type != "":
+            if user_type == "domestic":              
+                users = mongo.db.domestic
+                response  = users.find_one({"name":f"{name}","surname":f"{surname}"})
+                if response != None:
+                    print("working d")
+                    status = 200
+                    return_response = parse_json(response)
+                    user_database_id  = return_response["_id"]
+                    if user_database_id != "":
+                        mongo.db.domestic.delete_one({"name":f"{name}","surname":f"{surname}"})
+                        status =200
+                        resp = {"message":"deleted","status":status}
+                    else:
+                        status =400
+                        resp = {"message":"Could not get User _id ","status":status}
+            elif user_type == "teacher":
+                users = mongo.db.teacher
+                response  = users.find_one({"name":f"{name}","surname":f"{surname}"})
+                if response != None:
+                    print("working t")
+                    status = 200
+                    return_response = parse_json(response)
+                    user_database_id  = return_response["_id"]
+                    if user_database_id != "":
+                        mongo.db.teacher.delete_one({"name":f"{name}","surname":f"{surname}"})
+                        status =200
+                        resp = {"message":"deleted","status":status}
+                    else:
+                        status =400
+                        resp = {"message":"Could not get User _id ","status":status}
 
+            elif user_type == "student":
+                users = mongo.db.student
+                response  = users.find_one({"name":f"{name}","surname":f"{surname}"})
+                if response != None:
+                    print("working st")
+                    status = 200
+                    return_response = parse_json(response)
+                    print(return_response)
+                    user_database_id  = return_response["_id"]
+                    if user_database_id != "":
+                        mongo.db.student.delete_one({"name":f"{name}","surname":f"{surname}"})
+                        status =200
+                        resp = {"message":"deleted","status":status}
+                    else:
+                        status =400
+                        resp = {"message":"Could not get User _id ","status":status}
+
+            elif user_type == "security":
+                users = mongo.db.security
+                response  = users.find_one({"name":f"{name}","surname":f"{surname}"})
+                if response != None:
+                    print("working se")
+                    status = 200
+                    return_response = parse_json(response)
+                    user_database_id  = return_response["_id"]
+                    if user_database_id != "":
+                        mongo.db.security.delete_one({"name":f"{name}","surname":f"{surname}"})
+                        status =200
+                        resp = {"message":"deleted","status":status}
+                    else:
+                        status =400
+                        resp = {"message":"Could not get User _id ","status":status}
+
+            elif user_type == "visitor":
+                users = mongo.db.visitor
+                response  = users.find_one({"name":f"{name}","surname":f"{surname}"})
+                if response != None:
+                    print("working v")
+                    status = 200
+                    return_response = parse_json(response)
+                    print(return_response)
+                    user_database_id  = return_response["_id"]
+                    if user_database_id != "":
+                        mongo.db.visitor.delete_one({"name":f"{name}","surname":f"{surname}"})
+                        status =200
+                        resp = {"message":"deleted","status":status}
+                    else:
+                        status =400
+                        resp = {"message":"Could not get User _id ","status":status}
             else:
                 status =400
-                resp = {"message":"There is no patient in the database with these credentials","status":status}
+                resp = {"message":"There is no user in the database with these credentials","status":status}
         else:
             status = 500
             resp = {"message":"Missing credential to make query","status":status}
@@ -788,7 +943,7 @@ def forgot_password1():
                     status = 400
                     resp = {"message":"Verification number was not created","status":status} 
 
-            if parse_json(domestic) != []:
+            if parse_json(domestic) != None:
                 print("Domestic")
                 data = parse_json(domestic)
                 email = data["email"]
@@ -931,6 +1086,25 @@ def make_alarm():
     resp = {}
     try:
         data = request.get_json("data")
+        name = data["data"]["name"]
+        surname = data["data"]["surname"]
+        id_number = data["data"]["id_number"]
+        password = data["data"]["password"]
+        email = data["data"]["email"]
+        quadrant = data["data"]["quadrant"]
+        breach_type = data["data"]["breach type"]
+
+        if name!= "" and email !="" and password !="" and   id_number  != "":
+            breachAlarm_payload = {
+                "name":f"{name}",
+                "surname":f"{surname}",
+                "id_number":f"{id_number}",
+                "password": f"{password}",
+                "email":f"{email}",
+                "phone_number":f"{quadrant}",
+                "breach type":f"{breach_type}"
+            }
+
     except Exception as e :
         status  = 400
         resp={"message":f"{e}","status":status}  
@@ -943,6 +1117,25 @@ def check_alarm():
     resp = {}
     try:
         data = request.get_json("data")
+        database_name = data["data"]["database_name"]
+        if database_name == "breach_alarm":
+            users = mongo.db.breach_alarm
+            response  = users.find()
+            if response != None:
+                print("working d")
+                status = 200
+                return_response = parse_json(response)
+                resp = {"response":return_response,"message":"Report found","status":status}
+
+            else:
+                status  = 400
+                resp={"message":f"{e}","status":status}  
+                print("ERORR (/breachalarm/check route)--->",e)
+                return jsonify(resp),status
+            
+        else:
+            print("no report found for that database")
+
     except Exception as e :
         status  = 400
         resp={"message":f"{e}","status":status}  
@@ -955,11 +1148,156 @@ def delete_alarm():
     resp = {}
     try:
         data = request.get_json("data")
+        name = data["data"]["name"]
+        surname = data["data"]["surname"]
+        user_number= data["data"]["user_number"]
+        user_type =data["data"]["user_type"]
+
+        if name != "" and surname !="" and user_number != "" and user_type != "":
+            database  = mongo.db.patients.find_one({"name":f"{user_name}","surname":f"{user_surnmae}","id_number":f"{user_id_number}"})
+            if database_name != "breach_alarm":
+                print("user is in database ")
+                user_database_id  = patient_in_database["_id"]
+                print(user_database_id)
+                if user_database_id != "":
+                    mongo.db.patients.delete_one({"_id":f"{patient_database_id}"})
+                    status =200
+                    resp = {"message":"User profile has been deleted","status":status}
+                else:
+                    status =400
+                    resp = {"message":"Could not get User _id ","status":status}
+
     except Exception as e :
         status  = 400
         resp={"message":f"{e}","status":status}  
         print("ERORR (/breachalarm/delete route)--->",e)
     return jsonify(resp),status
+
+
+#####################################################
+##################################################
+################################################
+##############################################
+# SUB functions
+
+@app.route("/Leave/comment", methods=["POST"])
+def leave_comment():
+    status=200
+    resp ={}
+    try:
+        data = request.get_json("data")
+        if data != {}:
+            print(data)
+            name = data["data"]["name"]
+            message = data["data"]["message"]
+            email = data["data"]["email"]
+            print(name,message,email)
+            if name != "" and message  !="" and  email != "":
+                payload  ={
+                        "name":f"{name}",
+                        "email":f"{email}",
+                        "message":f"{message}"
+                    }
+                print(payload)
+                mongo.db.messages.insert(payload)
+                q1= tools()
+                q1.emailing_services(email,name,"","message","","","","")
+                status = 200
+                resp = {"message":"successful", "status":status}
+                # mongo.db.craeteCollection(messages)
+                # number = mongo.db.messages.count()
+                # meassage_number = int(number) + 1 
+                # if (number != null):
+                #     payload  ={
+                #         "name":f"{name}",
+                #         "email":f"{email}",
+                #         "message":f"{message}"
+                #     }
+                #     mongo.db.messages.insert(payload)
+                #     q1= tools()
+                #     q1.emailing_services(email,name,"","message","","","","")
+                #     status = 200
+                #     resp = {"message":"successful", "status":status}
+
+                # else :
+                #     print("collection count flail please check")   
+
+        else:
+            status = 400
+            resp = {"message": "message was not added"}
+    except Exception as e:
+        status  = 400
+        resp={"message":f"{e}","status":status}  
+        print("ERORR (/Leave/comment route)--->",e)
+    return jsonify(resp),status
+
+@app.route ("/Delete/Messages",methods=["Delete"])
+def delete_messages():
+    status = 200
+    resp ={}
+    try:
+        data = request.get_json("data")
+        messsage_number  = data["data"]["message_number"]
+        if message_number != "":
+            messages = mongo.db.messages.find_one({"message_number":f"{message_number}"})
+            if messages != None:
+                status = 200
+                return_response = parse_json(messages)
+                user_database_id  = return_response["_id"]
+                if user_database_id != "":
+                    mongo.db.visitor.delete_one({"_id":f"{user_database_id}"})
+                    status =200
+                    resp = {"message":"user profile has been deleted","status":status}
+                else:
+                    status =400
+                    resp = {"message":"Could not get messsage _id ","status":status}
+        else :
+            status = 400
+            resp ={"message": "The message number is no in the database please verify","status":status}
+    
+    except Exception as e :
+        status  = 400
+        resp={"message":f"{e}","status":status}  
+        print("ERORR (/Delete/Messagese route)--->",e)
+    return jsonify(resp),status
+
+@app.route("/Message/Response",methods=["POST"])
+def respose_to_messages():
+    status =200
+    resp = {}
+    try:
+        data  = request.get_json("data")
+        if data != "":
+            message_number 
+            response_message 
+        else:
+            status=400
+            resp = {"message":"no response recieved ","status":status}
+        
+    except Exception as e:
+        status  = 400
+        resp={"message":f"{e}","status":status}  
+        print("ERORR (/Retrieve/Messages route)--->",e)
+
+@app.route("/Retrieve/Messages", methods=["GET"])
+def messages():
+    status  = 200
+    resp = {}
+    try:
+        messages_r = mongo.db.messages.find()
+        if messages_r != None :
+            status = 200
+            messages = parse_json(messages_r)
+            resp = {"response":messages,"message":"messages retieved","status":status}
+        else:
+            status = 400
+            resp = {"message": "messges not found  ", "status":status}
+    except Exception as e :
+        status  = 400
+        resp={"message":f"{e}","status":status}  
+        print("ERORR (/Retrieve/Messages route)--->",e)
+    return jsonify(resp),status
+    
 
 if __name__  =="__main__":
     app.run(debug=True)

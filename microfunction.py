@@ -80,7 +80,7 @@ class tools :
 
         def emailing_services(self,reciver_email,name,user_number,type,token = "",verification_password="",verificationNumber="",password =""):
             try:
-                print(verificationNumber)
+                
                 
                 email_address  ="dummyjackson8@gmail.com"
                 email_password  ="dummy101@1"
@@ -113,6 +113,62 @@ class tools :
                             file_type = imghdr.what(image.name)
                             file_name= image.name
                         msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name)
+                elif type == "pg_signup":
+                        msg = EmailMessage()
+                        msg['Subject'] = 'Welcome to Salus'
+                        msg['From'] = email_address
+                        msg['To']= email_recieve
+                        msg.set_content ('Welcome to Salus we happy to provide you a new way to get onto your school grounds to with safety and secure tracking while maintaining you safety on school gounds and notifying you of issues on school grounds')
+                        msg.add_alternative(f"""
+                            <!DOCTYPE html>
+                            <html>
+                                <body>
+                                    <h1 style ="color:#96c8cc;">Account Made</h1> 
+                                    <h2 style ="color:#96c8cc;">Thank you Parent of Gaudian of {name}</h2>
+                                    <p>Your child has signed up for an account with Salus they will be in good hands</p>
+                                    <p>Welcome to Salus we happy to provide u a new way to get onto your school grounds to with safety and secure tracking while maintaining you safety on school gounds and notifying you of issues on school grounds</p>
+                                    <p>Please  feel safe under Salus</p>
+                                    <p> We care about your well being </p>
+                                    <p>Yours sincerly</p>
+                                    <p>The Salus team</p>
+                                </body>
+                            </html>
+                            """,subtype= "html")
+                        files = ["saluswithname.jpg"]
+                        for images in files:
+                            with open(f"{images}","rb") as image :
+                                file_data = image.read()
+                                file_type = imghdr.what(image.name)
+                                file_name= image.name
+                            msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name)
+                elif type == "message":
+                        msg = EmailMessage()
+                        msg['Subject'] = 'Salus has recieved your Messsage'
+                        msg['From'] = email_address
+                        msg['To']= email_recieve
+                        msg.set_content ('Welcome to Salus we have recived your message and we promptly get back to you as soon as we have either read or fixed any issues you may have incountered .We thank you for you patrionage ')
+                        msg.add_alternative(f"""
+                            <!DOCTYPE html>
+                            <html>
+                                <body>
+                                    <h1 style ="color:#96c8cc;">Message Recieved</h1> 
+                                    <h2 style ="color:#96c8cc;">Thank you {name}</h2>
+                                    <p>Welcome to Salus we have recived your message and we promptly get back to you as soon as we have either read or fixed any issues you may have incountered </p>
+                                    <pWe thank you for you patrionage</p>
+                                    <p>Please  feel safe under Salus</p>
+                                    <p>We care about your well being </p>
+                                    <p>Yours sincerly</p>
+                                    <p>The Salus team</p>
+                                </body>
+                            </html>
+                            """,subtype= "html")
+                        files = ["saluswithname.jpg"]
+                        for images in files:
+                            with open(f"{images}","rb") as image :
+                                file_data = image.read()
+                                file_type = imghdr.what(image.name)
+                                file_name= image.name
+                            msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name)
                 elif type == "qr_code":
                     print("qr_code")
                     token.save(f"QRcodes/{user_number}.png")
@@ -231,6 +287,55 @@ class tools :
                     return True    
             except Exception as e :
                 print("[email_service] emailingServices() error:",e)
+
+
+        def breach_alram_email_service(self ,type_alram,message,sender):
+            try:
+                email_address  ="dummyjackson8@gmail.com"
+                email_password  ="dummy101@1"
+                # email_recieve = ""
+                # if type_alarm == " ":
+                # elif type_alarm == " ":
+                # elif type_alarm == " ":
+                # elif type_alarm == " ":
+                # elif type_alarm == " ":
+                    
+                email_recieve = reciver_email 
+               
+
+                msg = EmailMessage()
+                msg['Subject'] = 'Welcome to Salus'
+                msg['From'] = email_address
+                msg['To']= email_recieve
+                msg.set_content ('Welcome to Salus we happy to provide u a new way to get onto your school grounds to with safety and secure tracking while maintaining you safety on school gounds and notifying you of issues on school grounds')
+                msg.add_alternative(f"""
+                        <!DOCTYPE html>
+                        <html>
+                            <body>
+                                <h1 style ="color:#96c8cc;">Security Breach</h1> 
+                                <h2 style ="color:#96c8cc;">{type_alram}</h2>
+                                <p>There has been a breach.</p>
+                                <p>This email has been sent to inform you that a breach of the type above has occured on shool campus with has be idetified as a danger to persons of this facility</p>
+                                <p>Response</p>
+                                <p>Yours sincerly</p>
+                                <p>The Salus team</p>
+                                <p>Please  feel safe under Salus</p>
+                                <p> We care about your well being </p>
+                                <p>Yours sincerly</p>
+                                <p>The Salus team</p>
+                            </body>
+                        </html>
+                        """,subtype= "html")                    
+                files = ["saluswithname.jpg"]
+                for images in files:
+                    with open(f"{images}","rb") as image :
+                        file_data = image.read()
+                        file_type = imghdr.what(image.name)
+                        file_name= image.name
+                        msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name) 
+
+            except Exception as  e :
+                print("[breach_alram_email_service] breach_alram_email_service() error:",e)
 
         def random_number_creation(self):
             number = ""
