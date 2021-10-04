@@ -25,9 +25,8 @@ class tools :
             try:
                 if profile != "" and user_number != "": 
                     name = profile["name"]
-                    surname = profile["surname"]
                     creation_point = datetime.now()
-                    payload_image= f"NAME:{name}, SURNAME:{surname}, USER NUMBER:{user_number}, CREATED:{creation_point}, QR CODE ID:{qr_id},"
+                    payload_image= f"{name},{user_number};{creation_point}"
                     # text =qrcode.make(payload)
                     #image creation 
                     qr = qrcode.QRCode(
@@ -44,7 +43,73 @@ class tools :
                     print("Missing credentials to create qr code")
             except Exception as e :
                 print("[generate_token] generate_token() error:",e)
-            return image 
+            return image, qr 
+
+        def genrate_grounds_qr(self):
+                image = ""
+                print(profile,user_number)
+                qr_id = uuid.uuid1()
+                try:
+                    if profile != "" and user_number != "": 
+                        name = profile["name"]
+                        creation_point = datetime.now()
+                        payload_image= "http://localhost:4200/registercheck"
+                        # text =qrcode.make(payload)
+                        #image creation 
+                        qr = qrcode.QRCode(
+                            version=1,
+                            error_correction=qrcode.constants.ERROR_CORRECT_H,
+                            box_size=10,
+                            border=4,
+                        )
+                        qr.add_data(payload_image)
+                        qr.make(fit=True)
+                        image = qr.make_image(fill_color="black", back_color="white").convert('RGB')
+                        # image.save(f"QRcodes/{user_number}.png")
+                    else :
+                        print("Missing credentials to create qr code")
+                except Exception as e :
+                    print("[generate_token] generate_token() error:",e)
+                return image, qr 
+                
+        def retreive_qr_info(self,log):
+            info1=""
+            user_number =""
+            creation_date = ""
+            try:
+                image = log.make_image(fill_color="black", back_color="white").convert('RGB')
+                image.save("QRcodes/test1.png")
+                #qr data reading area 
+                im = cv.imread("QRcodes/test1.png")
+                det = cv.QRCodeDetector()
+                retval, points, straight_qrcode = det.detectAndDecode(im)
+                message  = retval 
+
+                split_point = 0
+                split_point2 = 0
+                for i in range (0,len(message)):
+
+                    if message[i] == ",":
+                        split_point = i 
+                    if message[i] == ";":
+                        split_point2 = i 
+                ## info1
+                for i  in range (0,split_point):
+                    info1 = info1 + message[i] 
+                ##user_number
+                for i in range (split_point + 1,split_point2):
+                    user_number = user_number + message[i]
+                ## date of creation
+                for i in range (split_point2 + 1,len(message)):
+                    creation_date = creation_date + message[i]
+
+                print(info1)
+                print(user_number)
+                print(creation_date)
+                                
+            except Exception as e :
+                print("[generate_token] generate_token() error:",e)
+            return info1,user_number,creation_date
 
         def class_register_qr_code(self,class_subject,teacher_name,qr_id ):
             image = ""
@@ -91,7 +156,7 @@ class tools :
                     msg['Subject'] = 'Welcome to Salus'
                     msg['From'] = email_address
                     msg['To']= email_recieve
-                    msg.set_content ('Welcome to Salus we happy to provide u a new way to get onto your school grounds to with safety and secure tracking while maintaining you safety on school gounds and notifying you of issues on school grounds')
+                    msg.set_content ('Welcome to Salus we happy to provide you a new way to get onto your school grounds to with safety and secure tracking while maintaining you safety on school gounds and notifying you of issues on school grounds')
                     msg.add_alternative(f"""
                         <!DOCTYPE html>
                         <html>
@@ -124,7 +189,7 @@ class tools :
                             <html>
                                 <body>
                                     <h1 style ="color:#96c8cc;">Account Made</h1> 
-                                    <h2 style ="color:#96c8cc;">Thank you Parent of Gaudian of {name}</h2>
+                                    <h2 style ="color:#96c8cc;">Thank you Parent or Gaudian of {name}</h2>
                                     <p>Your child has signed up for an account with Salus they will be in good hands</p>
                                     <p>Welcome to Salus we happy to provide u a new way to get onto your school grounds to with safety and secure tracking while maintaining you safety on school gounds and notifying you of issues on school grounds</p>
                                     <p>Please  feel safe under Salus</p>
@@ -336,6 +401,43 @@ class tools :
 
             except Exception as  e :
                 print("[breach_alram_email_service] breach_alram_email_service() error:",e)
+
+        def emailing_service_grounds_qr(self,reciver_email,name,token):
+            try:
+                email_address  ="dummyjackson8@gmail.com"
+                email_password  ="dummy101@1"
+                email_recieve = reciver_email
+                creation_point = datetime.now()   
+                token.save(f"QRcodes/{creation_point}ongrounds.png")
+
+                msg = EmailMessage()
+                msg['Subject'] = 'QR Token '
+                msg['From'] = email_address
+                msg['To']= email_recieve
+                msg.set_content ( f'You have been issed a Token to enter grounds {name}  you may enter school grounds as soon as your QR code has been scanned ')
+                msg.add_alternative(f"""
+                        <!DOCTYPE html>
+                        <html>
+                            <body>
+                                <h1 style ="color:#96c8cc;">School Grounds Enter link Token</h1> 
+                                <h2 style ="color:#96c8cc;">{name}</h2>
+                                <p>Please provide personel who wish to enter onto school gorunds the attached QR code </p>
+                                <p>If the personal look suspicous please verify by asking for the users personal QR code  if there is a failuire to provide this please contact authorities</p>
+                                <p>Yours sincerly</p>
+                                <p>The Salus team</p>
+                            </body>
+                        </html>
+                        """,subtype= "html")
+                files = [f"{creation_point}ongrounds.png"]
+                for images in files:
+                    with open(f"QRcodes/{images}","rb") as image :
+                        file_data = image.read()
+                        file_type = imghdr.what(image.name)
+                        file_name= image.name
+                        msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name)
+                    os.remove(f"QRcodes/{creation_point}ongrounds.png")
+            except Exception as e :
+                print("[emailing_service_grounds_qr] emailing_service_grounds_qr() error:",e)
 
         def random_number_creation(self):
             number = ""
