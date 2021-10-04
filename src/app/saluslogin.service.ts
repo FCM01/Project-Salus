@@ -125,7 +125,7 @@ export class SalusloginService {
       //If your response is text not json
       responseType: 'json'
     }   
-    return this.http.post<any>(this.url+"/Student/Signup",final_payload,requestOptions).pipe(map((data: any,error: any) => {
+    return this.http.post<any>(this.url+"/Security/Signup",final_payload,requestOptions).pipe(map((data: any,error: any) => {
       if(data){
         return data;
       }
