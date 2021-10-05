@@ -6,6 +6,8 @@ from bson import json_util
 from flask_cors import CORS
 import json
 
+import gridfs
+from pymongo import MongoClient
 from microfunction import tools
 
 
@@ -19,11 +21,20 @@ app.config["MONGO_URI"] = "mongodb://localhost:27017/School"
 mongo  = PyMongo(app)
 CORS(app)
 
+def mongo_conn():
+    try:
+        conn = MongoClient(host ="127.0.0.1",port =27017)
+        print("Mongo Connected",conn)
+        return conn.grid_file
+    except Exception  as e :
+        print(e)
+
 #signup routes ////
 @app.route("/Admin/Signup",methods=["POST"])
 def a_signup():
     status= 200
     resp ={}
+    image_path = ""
     try:
         data =request.get_json("data")
         name = data["data"]["name"]
@@ -38,6 +49,17 @@ def a_signup():
         password = data["data"]["password"]
         admin_number = data["data"]["admin_number"]
         if name!= "" and email !="" and password !="" and   id_number  != "": 
+            qr = tools()
+            token = qr.generate_token(data,admin_number)
+            image_path  = token[2]
+            db = mongo_conn()
+            file_name = "test1.png"
+            file_data = open(image_path,"rb")
+            data = file_data.read()
+            fs  = gridfs.GridFS(db)
+            personal_qr = fs.put(data ,filename=file_name)
+            #delete image
+            
             signup_payload = {
                 "name":f"{name}",
                 "surname":f"{surname}",
@@ -51,18 +73,44 @@ def a_signup():
                 "password":f"{password}",
                 "admin_number":f"{admin_number}",
                 "acess_level":0,
-                "token":[]
+                "token":personal_qr
             }
-            teacher  = mongo.db.admin.insert(signup_payload)
+            mongo.db.admin.insert_one(signup_payload)
             q1= tools()
-            q1.emailing_services(email,name,admin_number,"signup","","","","")
+            q1.emailing_services(email,name,admin_number,"signup",image_path,"","","")
             status = 200
-            resp = {"message":"succeessful","status":f"{status}"}       
+            resp = {"message":"succeessful","status":f"{status}"}  
+                
     except Exception as e:
         status = 400
         resp = {"message":"ERROR on /Admin/Signup","status":f"{status}",}
         print("ERROR:/Admin/Signup-->",e)
     return jsonify(resp),status
+    
+@app.route("/Purge/QR/Codes",methods= ["POST"])
+def delete_qr_codes():
+    status = 200
+    resp ={}
+    try:
+        data = request.get_json("data")
+        command = data["data"]["command"]
+        print(command)
+        if command != "":
+            if command =="purge":
+                com = tools()
+                response = com.purge_qr_codes()
+                if response == 1:
+                    status = 200
+                    resp ={"message":"successful","stutus":status}
+                elif response == 0:
+                    status = 400
+                    resp ={"message":"fail","stutus":status}
+    except Exception as e :
+        status = 400
+        resp = {"message":"ERROR on /Admin/Signup","status":f"{status}",}
+        print("ERROR:/Admin/Signup-->",e)
+    return jsonify(resp),status
+
 
 
 @app.route("/Teacher/Signup",methods=["POST"])
@@ -157,9 +205,9 @@ def se_signup():
                 "acess_level":2,
                 "token":[]
             }
+            mongo.db.security.insert_one(signup_payload)
             q1= tools()
             q1.emailing_services(email,name,staff_number,"signup","","","","")
-            teacher  = mongo.db.security.insert_one(signup_payload) 
             status = 200
             resp = {"message":"succeessful","status":f"{status}"}       
     except Exception as e:
@@ -186,7 +234,6 @@ def dom_signup():
         pcode= data["data"]["pcode"]
         password = data["data"]["password"]
         staff_number= data["data"]["staff_number"]
-        position= data["data"]["position"]
         job_title = data["data"]["job_title"]
         if name!= "" and email !="" and password !="" and   id_number  != "":
             signup_payload = {
@@ -201,16 +248,15 @@ def dom_signup():
                 "pcode":f"{pcode}",
                 "password":f"{password}",
                 "staff_number":f"{staff_number}",
-                "position":f"{position}",
                 "job_title":f"{job_title}",
                 "acess_level":1,
                 "token":[]
             }
-            teacher  = mongo.db.domestic.insert(signup_payload)
+            mongo.db.domestic.insert_one(signup_payload)
             q1= tools()
             q1.emailing_services(email,name,staff_number,"signup","","","","")
             status = 200
-            resp = {"message":"succeessful","status":f"{status}"}       
+            resp = {"message":"succeessful","status":f"{status}"}         
     except Exception as e:
         status = 400
         resp = {"message":"ERROR on /Domestic/Signup","status":f"{status}",}
@@ -265,7 +311,7 @@ def stu_signup():
                 "acess_level":0,
                 "token":[]
             }
-            teacher  = mongo.db.student.insert(signup_payload)
+            mongo.db.student.insert_one(signup_payload)
             q1= tools()
             q1.emailing_services(email,name,student_number,"signup","","","","")
             q1.emailing_services(pg_email,pg_name,"","pg_signup","","","","")
@@ -316,7 +362,7 @@ def v_signup():
                 "token":[]
             }
             print(signup_payload)
-            teacher  = mongo.db.visitor.insert(signup_payload)
+            mongo.db.visitor.insert_one(signup_payload)
             q1= tools()
             q1.emailing_services(email,name,visitor_number,"signup","","","","")
             status = 200
@@ -442,17 +488,17 @@ def genrate_grounds_token():
         data = request.get_json("data")
         user_number = data["data"]["user_number"]
         if user_number != "" :
-            qr= tools()
+            qr = tools()
             token = qr.genrate_grounds_qr() 
-            security  = monog.db.security.find_one({"staff_number":f"{user_number}"})
+            security  = mongo.db.security.find_one({"staff_number":f"{user_number}"})
             if parse_json(security) != None:
                     data = parse_json(security)
                     email = data["email"]
                     name = data["name"] 
-                    qr.emailing_service_grounds_qr(email,name,token)
+                    image = token[0]
+                    qr.emailing_service_grounds_qr(email,name,image)
                     status = 200 
                     resp = {"message":"Toke sent","status":f"{status}"}
-
                     surname = data["surname"]
                     on_grounds_payload  ={
                         "name":f"{name}",
@@ -476,10 +522,9 @@ def enter_grounds():
     status = 200
     resp = {}
     try:
-        data =request.get_json("data")
+        data = request.get_json("data")
         user_number = data["data"]["user_number"]
-        token =data["data"]["token"]
-        if user_number != "" and token != []:
+        if user_number != "":
             teacher = mongo.db.teacher.find_one({"staff_number":f"{user_number}"})
             admin = mongo.db.admin.find_one({"admin_number":f"{user_number}"})
             student = mongo.db.student.find_one({"student_number":f"{user_number}"})
@@ -493,8 +538,7 @@ def enter_grounds():
                 surname =data["surname"]
                 user_number = data["staff_number"]
                 email= data["email"]
-                qr = token[0]
-            
+                qr = data["token"]
                 on_grounds_payload  ={
                         "name":f"{name}",
                         "surname":f"{surname}",
@@ -505,7 +549,7 @@ def enter_grounds():
         
                 mongo.db.ongrounds.insert_one(on_grounds_payload)
                 status  = 200
-                resp ={"messge":"token sent","status":status}
+                resp ={"message":"successful","status":status}
             if parse_json(admin) != None:
                 print("Admin")
                 data = parse_json(admin)
@@ -513,8 +557,7 @@ def enter_grounds():
                 surname =data["surname"]
                 user_number = data["admin_number"]
                 email= data["email"]
-
-                qr = token[0]
+                qr = data["token"]["$oid"]
                 on_grounds_payload  ={
                         "name":f"{name}",
                         "surname":f"{surname}",
@@ -525,7 +568,7 @@ def enter_grounds():
         
                 mongo.db.ongrounds.insert_one(on_grounds_payload)
                 status  = 200
-                resp ={"messge":"token sent","status":status}
+                resp ={"message":"successful","status":status}
             if parse_json(student) != None:
                 print("Student")
                 data = parse_json(student)
@@ -534,8 +577,7 @@ def enter_grounds():
                 user_number = data["staff_number"]
                 email= data["pg_email"]
 
-                qr = token[0]
-
+                qr= data["token"]
                 on_grounds_payload  ={
                         "name":f"{name}",
                         "surname":f"{surname}",
@@ -546,7 +588,7 @@ def enter_grounds():
         
                 mongo.db.ongrounds.insert_one(on_grounds_payload)
                 status  = 200
-                resp ={"messge":"token sent","status":status} 
+                resp ={"message":"successful","status":status} 
             if parse_json(security) != None:
                 print("Security")
                 data = parse_json(security)
@@ -555,8 +597,7 @@ def enter_grounds():
                 user_number = data["staff_number"]
                 email= data["email"]
 
-                qr = token[0]
-
+                qr= data["token"]
                 on_grounds_payload  ={
                         "name":f"{name}",
                         "surname":f"{surname}",
@@ -567,7 +608,7 @@ def enter_grounds():
         
                 mongo.db.ongrounds.insert_one(on_grounds_payload)
                 status  = 200
-                resp = {"messge":"token sent","status":status}  
+                resp ={"message":"successful","status":status}  
             if parse_json(domestic) != None:
                 print("Domestic")
                 data = parse_json(domestic)
@@ -576,7 +617,7 @@ def enter_grounds():
                 user_number = data["staff_number"]
                 email= data["email"]
 
-                qr = token[0]
+                qr= data["token"]
                 on_grounds_payload  ={
                         "name":f"{name}",
                         "surname":f"{surname}",
@@ -587,7 +628,7 @@ def enter_grounds():
         
                 mongo.db.ongrounds.insert_one(on_grounds_payload)
                 status  = 200
-                resp ={"messge":"token sent","status":status}  
+                resp ={"message":"successful","status":status}  
             if parse_json(visitor) != None:
                 print("Vistor")
                 data = parse_json(visitor)
@@ -596,7 +637,7 @@ def enter_grounds():
                 user_number = data["visitor_number"]
                 email= data["email"]
 
-                qr = token[0]
+                qr= data["token"]
                 on_grounds_payload  ={
                         "name":f"{name}",
                         "surname":f"{surname}",
@@ -607,7 +648,7 @@ def enter_grounds():
         
                 mongo.db.ongrounds.insert_one(on_grounds_payload)
                 status  = 200
-                resp ={"messge":"token sent","status":status} 
+                resp ={"message":"successful","status":status} 
         else :
             status = 200 
             resp  = {"message":"missing credential", "status":status}
@@ -616,7 +657,7 @@ def enter_grounds():
         resp = {"message":"ERROR on /Enter/Grounds","status":f"{status}",}
         print("ERROR:/Enter/Grounds->",e)
     return jsonify(resp),status
-@app.route("/Verify/Personal/QR",methods = ["POST"])
+@app.route("/Verify/Personal/QR",methods = ["GET"])
 def generate_personal_qr():
     status= 200
     resp = {}
@@ -658,8 +699,13 @@ def verify():
                 domestic = mongo.db.domestic.find_one({"staff_number":f"{user_number}"})
                 if parse_json(teacher) != None:
                     data = parse_json(teacher)
+                    token_list = data["token"]
+                    current= len(token_list)
+                    
                     qr = tools()
-                    token = qr.generate_token(data,user_number)
+                    qr_data= qr.retreive_qr_info(token)
+                    qr_user_number = qr_data[1]
+                    qr_creation_date =qr_data[2] 
                     email = data["email"]
                     name = data["name"] 
                     qr.emailing_services(email,name,user_number,"qr_code",token,"","","")
@@ -709,190 +755,46 @@ def verify():
     return jsonify(resp),status
 
 
-@app.route("/Generate/Token",methods=["POST"])
+@app.route("/Generate/Class/RegisterQR",methods=["POST"])
 def generate_token():
     status  = 200
     resp= {}
     try:
         #user_number is not SA id number its user specific number 
         data = request.get_json("data")
-        print(data)
         user_number = data["data"]["user_number"]
-        user_type = data["data"]["user_type"]
         print(user_number,user_type)
-        if user_number != "" and user_type != "":
-
-            if user_type == "staff":
+        if user_number != "" :
                 teacher = mongo.db.teacher.find_one({"staff_number":f"{user_number}"})
-                security = mongo.db.security.find_one({"staff_number":f"{user_number}"})
-                domestic = mongo.db.domestic.find_one({"staff_number":f"{user_number}"})
-                print(parse_json(teacher))
-                print(parse_json(security))
-                print(parse_json(domestic))
-
                 if parse_json(teacher) != None:
                     data = parse_json(teacher)
+                    name = data["name"]
+                    register_class = data["register_class"]
+                    subject= data["subject"]
                     qr = tools()
-                    token = qr.generate_token(data,user_number)
+                    token = qr.generate_token(name,user_number)
                     email = data["email"]
                     name = data["name"] 
                     image = token[0]
                     log = token[1]
                     qr.emailing_services(email,name,user_number,"qr_code",image,"","","")
-                    #adding token record to database
-                    teacher = mongo.db.teacher.find_one({"staff_number":f"{user_number}"})
-                    if parse_json(teacher) != []:
-                        user = parse_json(teacher)
-                        #token adding
-                        array =[]
-                        for i in user["token"]:
-                            array.append(i)
-                        array.append(log)
-                        #saving
-                        mongo.db.teacher.update_one({"staff_number":f"{user_number}"},{ "$set": { "token": f"{array}" } })
-                        status = 200 
-                        resp = {"message":"Toke sent","status":f"{status}"}
+                    # #adding token record to database
+                    # teacher = mongo.db.teacher.find_one({"staff_number":f"{user_number}"})
+                    # if parse_json(teacher) != []:
+                    #     user = parse_json(teacher)
+                    #     #token adding
+                    #     array =[]
+                    #     for i in user["token"]:
+                    #         array.append(i)
+                    #     array.append(log)
+                    #     #saving
+                    #     mongo.db.teacher.update_one({"staff_number":f"{user_number}"},{ "$set": { "token": f"{array}" } })
+                    #     status = 200 
+                    #     resp = {"message":"Toke sent","status":f"{status}"}
                 else :
                     status = 400 
                     resp = {"message":"User not found","status":f"{status}"}
-                
-                if parse_json(security) != None:
-                    data = parse_json(security)
-                    qr = tools()
-                    token = qr.generate_token(data,user_number)
-                    email = data["email"]
-                    name = data["name"] 
-                    image = token[0]
-                    log = token[1]
-                    qr.emailing_services(email,name,user_number,"qr_code",image,"","","")
-                    #adding token record to database
-                    security = mongo.db.security.find_one({"staff_number":f"{user_number}"})
-                    if parse_json(security) != []:
-                        user = parse_json(security)
-                        #token adding
-                        array =[]
-                        for i in user["token"]:
-                            array.append(i)
-                        array.append(log)
-                        #saving
-                        mongo.db.security.update_one({"staff_number":f"{user_number}"},{ "$set": { "token": f"{array}" } })
-                        status = 200 
-                        resp = {"message":"Toke sent","status":f"{status}"}
-                else :
-                    status = 400 
-                    resp = {"message":"User not found","status":f"{status}"}
-
-                if parse_json(domestic) != None:
-                    print("Domestic")
-                    data = parse_json(domestic)
-                    qr = tools()
-                    print(data)
-                    token = qr.generate_token(data,user_number)
-                    email = data["email"]
-                    name = data["name"] 
-                    image = token[0]
-                    log = token[1]
-                    qr.emailing_services(email,name,user_number,"qr_code",image,"","","")
-                    #adding token record to database
-                    domestic = mongo.db.domestic.find_one({"staff_number":f"{user_number}"})
-                    if parse_json(domestic) != []:
-                        user = parse_json(domestic)
-                        #token adding
-                        array =[]
-                        for i in user["token"]:
-                            array.append(i)
-                        array.append(log)
-                        #saving
-                        mongo.db.domestic.update_one({"staff_number":f"{user_number}"},{ "$set": { "token": f"{array}" } })
-                        status = 200 
-                        resp = {"message":"Toke sent","status":f"{status}"}
-                else :
-                    status = 400 
-                    token = resp = {"message":"User not found","status":f"{status}"}
-
-            elif user_type == "student":
-                student = mongo.db.student.find_one({"student_number":f"{user_number}"})
-                if  parse_json(student) != None:
-                    qr = tools()
-                    token = qr.generate_token(student,user_number)
-                    email = student["email"]
-                    name = student["name"] 
-                    image = token[0]
-                    log = token[1]
-                    qr.emailing_services(email,name,user_number,"qr_code",image,"","","")
-                    #adding token record to database
-                    student = mongo.db.student.find_one({"student_number":f"{user_number}"})
-                    if parse_json(student) != []:
-                        user = parse_json(student)
-                        #token adding
-                        array =[]
-                        for i in user["token"]:
-                            array.append(i)
-                        array.append(log)
-                        #saving
-                        mongo.db.student.update_one({"student_number":f"{user_number}"},{ "$set": { "token": f"{array}" } })
-                        status = 200 
-                        resp = {"message":"Toke sent","status":f"{status}"}
-                else :
-                    status = 400 
-                    resp = {"message":"User not found","status":f"{status}"}
-            
-            elif user_type == "vistor":
-                visitor = mongo.db.visitor.find_one({"visitor_number":f"{user_number}"})
-                if parse_json(visitor)  != None:
-                    data = parse_json(visitor)
-                    qr = tools()
-                    token = qr.generate_token(data,user_number)
-                    email = data["email"]
-                    name = data["name"] 
-                    image = token[0]
-                    log = token[1]
-                    qr.emailing_services(email,name,user_number,"qr_code",image,"","","")
-                    #adding token record to database
-                    visitor = mongo.db.visitor.find_one({"visitor_number":f"{user_number}"})
-                    if parse_json(visitor) != []:
-                        user = parse_json(visitor)
-                        #token adding
-                        array =[]
-                        for i in user["token"]:
-                            array.append(i)
-                        array.append(log)
-                        #saving
-                        mongo.db.visitor.update_one({"visitor_number":f"{user_number}"},{ "$set": { "token": f"{array}" } })
-                        status = 200 
-                        resp = {"message":"Toke sent","status":f"{status}"}
-                else :
-                    status = 400 
-                    resp = {"message":"User not found","status":f"{status}"}
-
-            elif user_type  == "admin":
-                admin = mongo.db.admin.find_one({"admin_number":f"{user_number}"})
-                if parse_json(admin) != []:
-                    data = parse_json(admin)
-                    print("profile ==>",data)
-                    qr = tools()
-                    token = qr.generate_token(data,user_number)
-                    email = data["email"]
-                    name = data["name"] 
-                    image = token[0]
-                    log = token[1]
-                    qr.emailing_services(email,name,user_number,"qr_code",image,"","","")
-                    #adding token record to database
-                    admin = mongo.db.admin.find_one({"admin_number":f"{user_number}"})
-                    if parse_json(admin) != []:
-                        user = parse_json(admin)
-                        #token adding
-                        array =[]
-                        for i in user["token"]:
-                            array.append(i)
-                        array.append(log)
-                        #saving
-                        mongo.db.admin.update_one({"admin_number":f"{user_number}"},{ "$set": { "token": f"{array}" } })
-                        status = 200 
-                        resp = {"message":"Toke sent","status":f"{status}"}
-                else :
-                    status = 400 
-                    resp = {"message":"User not found","status":f"{status}"}
+               
 
     except Exception as e :
         status = 400
@@ -903,96 +805,6 @@ def generate_token():
 #######################################################################
 ################################################
 #RETRIVE USER SECTION
-# @app.route("/Retrieve/User",methods=["POST"])
-# def get_user():
-#     status = 200
-#     resp  = {}
-#     try:
-#         data = request.get_json("data")
-#         database_name = data["data"]["user_number"]
-#         teacher = mongo.db.teacher.find_one({"staff_number":f"{user_number}"})
-#         student = mongo.db.student.find_one({"student_number":f"{user_number}"})
-#         domestic = mongo.db.domestic.find_one({"staff_number":f"{user_number}"})
-#         security = mongo.db.security.find_one({"staff_number":f"{user_number}"})
-#         visitor = mongo.db.visitor.find_one({"visitor_number":f"{user_number}"})
-       
-#         if parse_json(teacher) != None:
-#             print("Teacher")
-#             user_profile = parse_json(teacher)
-#              status = 200
-#             resp = {"message":"Welcome","status":status,"token":"active","user":data,"type_user":"teacher"}
-   
-            
-#                     print("welcome user")
-                   
-#                 else:
-#                     print("Password is incorrect")
-#                     status = 400
-#                     resp = {"message":"Fail in check password","status":status}  
-#         if parse_json(admin) != None:
-#                 print("Admin")
-#                 data = parse_json(admin)
-#                 database_password = data["password"]   
-#                 if database_password  == password:
-#                     print("welcome user")
-#                     status = 200
-#                     resp = {"message":"Welcome","status":status,"token":"active","user":data,"type_user":"admin"}
-#                 else:
-#                     print("Password is incorrect")
-#                     status = 400
-#                     resp = {"message":"Fail in check password","status":status} 
-#         if parse_json(student) != None:
-#                 print("Student")
-#                 data = parse_json(student)
-#                 database_password = data["password"]   
-#                 if database_password  == password:
-#                     print("welcome user")
-#                     status = 200
-#                     resp = {"message":"Welcome","status":status,"token":"active","user":data,"type_user":"student"}
-#                 else:
-#                     print("Password is incorrect")
-#                     status = 400
-#                     resp = {"message":"Fail in check password","status":status} 
-#         if parse_json(security) != None:
-#                 print("Security")
-#                 data = parse_json(security)
-#                 database_password = data["password"]   
-#                 if database_password  == password:
-#                     print("welcome user")
-#                     status = 200
-#                     resp = {"message":"Welcome","status":status,"token":"active","user":data,"type_user":"security"}
-#                 else:
-#                     print("Password is incorrect")
-#                     status = 400
-#                     resp = {"message":"Fail in check password","status":status}  
-#         if parse_json(domestic) != None:
-#                 print("Domestic")
-#                 data = parse_json(domestic)
-#                 database_password = data["password"]   
-#                 if database_password  == password:
-#                     print("welcome user")
-#                     status = 200
-#                     resp = {"message":"Welcome","status":status,"token":"active","user":data,"type_user":"domestic"}
-#                 else:
-#                     print("Password is incorrect")
-#                     status = 400
-#                     resp = {"message":"Fail in check password","status":status}  
-#         if parse_json(visitor) != None:
-#                 print("Vistor")
-#                 data = parse_json(visitor)
-#                 database_password = data["password"]   
-#                 if database_password  == password:
-#                     print("welcome user")
-#                     status = 200
-#                     resp = {"message":"Welcome","status":status,"token":"active","user":data}
-#                 else:
-#                     print("Password is incorrect")
-#                     status = 400
-#                     resp = {"message":"Fail in check password","status":status}
-#     except Exception as e : 
-#         status = 400
-#         resp = {"message":"ERROR on/Retrieve/User","status":f"{status}",}
-#         print("ERROR:/Retrieve/User-->",e)
 
 
 @app.route("/retrieve/users",methods=["POST"])
@@ -1054,6 +866,7 @@ def get_user_list():
 #############################################################################
 #########################################################
 #############################################
+#SUB SERVICES
 #Delete user area
 @app.route("/Delete/User",methods=["POST"])
 def user_delete():
@@ -1159,8 +972,291 @@ def user_delete():
         print("ERORR (/delete/user route)--->",e)
     return jsonify(resp),status
 
+@app.route("/Get/User",methods=["GET"])
+def get_user():
+    status = 200
+    resp = {}
+    try:
+        data= request.get_json("data")
+        user_number = data["data"]["user_number"]
+        if user_number != "":
+            teacher = mongo.db.teacher.find_one({"staff_number":f"{user_number}"})
+            admin = mongo.db.admin.find_one({ "admin_number":f"{user_number}"})
+            student = mongo.db.student.find_one({"student_number":f"{user_number}"})
+            domestic = mongo.db.domestic.find_one({"staff_number":f"{user_number}"})
+            security = mongo.db.security.find_one({"staff_number":f"{user_number}"})
+            visitor = mongo.db.visitor.find_one({"visitor_number":f"{user_number}"})
+            print(parse_json(admin))
+            print(parse_json(teacher))
+            if parse_json(teacher) != None:
+                print("Teacher")
+                data = parse_json(teacher) 
+                status= 200
+                resp = {"status":status,"token":"active","user":data}
+                
+            if parse_json(admin) != None:
+                print("Admin")
+                data = parse_json(admin)
+                status= 200
+                resp = {"status":status,"token":"active","user":data}
+            if parse_json(student) != None:
+                print("Student")
+                data = parse_json(student)
+                status= 200
+                resp = {"status":status,"token":"active","user":data}
+            if parse_json(security) != None:
+                print("Security")
+                data = parse_json(security)
+                status= 200
+                resp = {"status":status,"token":"active","user":data}
+            if parse_json(domestic) != None:
+                print("Domestic")
+                data = parse_json(domestic)
+                status= 200
+                resp = {"status":status,"token":"active","user":data}
+            if parse_json(visitor) != None:
+                print("Vistor")
+                data = parse_json(visitor)
+                status= 200
+                resp = {"status":status,"token":"active","user":data}
+
+    except Exception as e :
+        status  = 400
+        resp={"message":f"{e}","status":status}  
+        print("ERORR (/Get/User route)--->",e)
+    return jsonify(resp),status
 
 
+@app.route("/Edit/User",methods= ["POST"])
+def edit_user():
+    status = 200 
+    resp  = {}
+    try:
+        data =request.get_json("data")
+        new_crediatials = data["data"]["user_profile"]
+        user_number = data["data"]["user_number"]
+        if new_crediatials != {}  and user_number != "":
+            teacher = mongo.db.teacher.find_one({"staff_number":f"{user_number}"})
+            admin = mongo.db.admin.find_one({ "admin_number":f"{user_number}"})
+            student = mongo.db.student.find_one({"student_number":f"{user_number}"})
+            domestic = mongo.db.domestic.find_one({"staff_number":f"{user_number}"})
+            security = mongo.db.security.find_one({"staff_number":f"{user_number}"})
+            visitor = mongo.db.visitor.find_one({"visitor_number":f"{user_number}"})
+            if parse_json(teacher) != None:
+                print("Teacher")
+                name = new_crediatials["data"]["name"]
+                surname = new_crediatials["data"]["surname"]
+                id_number = new_crediatials["data"]["id_number"]
+                date_of_birth = new_crediatials["data"]["date_of_birth"]
+                email = new_crediatials["data"]["email"]
+                phone_number= new_crediatials["data"]["phone_number"]
+                address= new_crediatials["data"]["address"]
+                city= new_crediatials["data"]["city"]
+                pcode= new_crediatials["data"]["pcode"]
+                password = new_crediatials["data"]["password"]
+                staff_number = new_crediatials["data"]["staff_number"]
+                position= new_crediatials["data"]["position"]
+                subject= new_crediatials["data"]["subject"]
+                register_class = new_crediatials["data"]["register_class"]
+            
+                newvalues = { "$set": { 
+                "name":f"{name}",
+                "surname":f"{surname}",
+                "id_number":f"{id_number}",
+                "date_of_birth": f"{date_of_birth}",
+                "email":f"{email}",
+                "phone_number":f"{phone_number}",
+                "address":f"{address}",
+                "city":f"{city}",
+                "pcode":f"{pcode}",
+                "password":f"{password}",
+                "staff_number":f"{staff_number}",
+                "position":f"{position}",
+                "subject":f"{subject}",
+                "register_class":f"{register_class}" } }
+                mongo.db.teacher.update_one({"staff_number":f"{user_number}"},newvalues)
+                status = 200
+                resp ={"message":"successful","token":"true" ,"status":status}
+            if parse_json(admin) != None:
+                    print("Admin")
+                    name = new_crediatials["data"]["name"]
+                    surname = new_crediatials["data"]["surname"]
+                    id_number = new_crediatials["data"]["id_number"]
+                    date_of_birth = new_crediatials["data"]["date_of_birth"]
+                    email = new_crediatials["data"]["email"]
+                    phone_number= new_crediatials["data"]["phone_number"]
+                    address= new_crediatials["data"]["address"]
+                    city= new_crediatials["data"]["city"]
+                    pcode= new_crediatials["data"]["pcode"]
+                    password = new_crediatials["data"]["password"]
+                    admin_number = new_crediatials["data"]["admin_number"]
+                    
+
+                    newvalues = { "$set": { 
+                    "name":f"{name}",
+                    "surname":f"{surname}",
+                    "id_number":f"{id_number}",
+                    "date_of_birth": f"{date_of_birth}",
+                    "email":f"{email}",
+                    "phone_number":f"{phone_number}",
+                    "address":f"{address}",
+                    "city":f"{city}",
+                    "pcode":f"{pcode}",
+                    "password":f"{password}",
+                    "admin_number":f"{admin_number}"} 
+                    }
+                    mongo.db.admin.update_one({"staff_number":f"{user_number}"},newvalues)
+                    status = 200
+                    resp ={"message":"successful","token":"true" ,"status":status}
+            if parse_json(student) != None:
+                    print("Student")
+                    name = new_crediatials["data"]["name"]
+                    surname = new_crediatials["data"]["surname"]
+                    id_number = new_crediatials["data"]["id_number"]
+                    date_of_birth = new_crediatials["data"]["date_of_birth"]
+                    email = new_crediatials["data"]["email"]
+                    phone_number= new_crediatials["data"]["phone_number"]
+                    address= new_crediatials["data"]["address"]
+                    city= new_crediatials["data"]["city"]
+                    pcode= new_crediatials["data"]["pcode"]
+                    password = new_crediatials["data"]["password"]
+                    student_number = new_crediatials["data"]["student_number"]
+                    register_class = new_crediatials["data"]["register_class"]
+                    pg_name = new_crediatials["data"]["pg_name"]
+                    pg_surname= new_crediatials["data"]["pg_surname"]
+                    pg_email  = new_crediatials["data"]["pg_email"]
+                    pg_id_number =new_crediatials["data"]["pg_id_number"]
+                    pg_phone_number = new_crediatials["data"]["pg_cnum"]
+
+                    newvalues = { "$set": { 
+                    "name":f"{name}",
+                    "surname":f"{surname}",
+                    "id_number":f"{id_number}",
+                    "date_of_birth": f"{date_of_birth}",
+                    "email":f"{email}",
+                    "phone_number":f"{phone_number}",
+                    "address":f"{address}",
+                    "city":f"{city}",
+                    "pcode":f"{pcode}",
+                    "password":f"{password}",
+                    "student_number":f"{student_number}",
+                    "register_class":f"{register_class}",
+                    "pg_name":f"{pg_name}",
+                    "pg_surname":f"{pg_surname}",
+                    "pg_email":f"{pg_email}",
+                    "pg_id_number":f"{pg_id_number}",
+                    "pg_phone_number ":f"{pg_phone_number}" }
+                     }
+                    mongo.db.student.update_one({"staff_number":f"{user_number}"},newvalues)
+                    status = 200
+                    resp ={"message":"successful","token":"true" ,"status":status} 
+            if parse_json(security) != None:
+                    print("Security")
+                    name = new_crediatials["data"]["name"]
+                    surname = new_crediatials["data"]["surname"]
+                    id_number = new_crediatials["data"]["id_number"]
+                    date_of_birth = new_crediatials["data"]["date_of_birth"]
+                    email = new_crediatials["data"]["email"]
+                    phone_number= new_crediatials["data"]["phone_number"]
+                    address= new_crediatials["data"]["address"]
+                    city= new_crediatials["data"]["city"]
+                    pcode= new_crediatials["data"]["pcode"]
+                    password = new_crediatials["data"]["password"]
+                    staff_number = new_crediatials["data"]["staff_number"]
+                    position= new_crediatials["data"]["position"]
+                    petrol_sector = new_crediatials["data"]["petrol_sector"]
+                  
+
+                    newvalues = { "$set": { 
+                    "name":f"{name}",
+                    "surname":f"{surname}",
+                    "id_number":f"{id_number}",
+                    "date_of_birth": f"{date_of_birth}",
+                    "email":f"{email}",
+                    "phone_number":f"{phone_number}",
+                    "address":f"{address}",
+                    "city":f"{city}",
+                    "pcode":f"{pcode}",
+                    "password":f"{password}",
+                    "staff_number":f"{staff_number}",
+                    "position":f"{position}",
+                    "petrol_sector":f"{petrol_sector}" } }
+                    mongo.db.security.update_one({"staff_number":f"{user_number}"},newvalues)
+                    status = 200
+                    resp ={"message":"successful","token":"true" ,"status":status}
+            if parse_json(domestic) != None:
+                    print("Domestic")
+                    name = new_crediatials["data"]["name"]
+                    surname = new_crediatials["data"]["surname"]
+                    id_number = new_crediatials["data"]["id_number"]
+                    date_of_birth = new_crediatials["data"]["date_of_birth"]
+                    email = new_crediatials["data"]["email"]
+                    phone_number= new_crediatials["data"]["phone_number"]
+                    address= new_crediatials["data"]["address"]
+                    city= new_crediatials["data"]["city"]
+                    pcode= new_crediatials["data"]["pcode"]
+                    password = new_crediatials["data"]["password"]
+                    staff_number = new_crediatials["data"]["staff_number"]
+                    position= new_crediatials["data"]["position"]
+                    job_title  = new_crediatials["data"]["job_title"]
+
+                    newvalues = { "$set": { 
+                        "name":f"{name}",
+                        "surname":f"{surname}",
+                        "id_number":f"{id_number}",
+                        "date_of_birth": f"{date_of_birth}",
+                        "email":f"{email}",
+                        "phone_number":f"{phone_number}",
+                        "address":f"{address}",
+                        "city":f"{city}",
+                        "pcode":f"{pcode}",
+                        "password":f"{password}",
+                        "staff_number":f"{staff_number}",
+                        "job_title":f"{job_title}" } }
+                    mongo.db.domestic.update_one({"staff_number":f"{user_number}"},newvalues)
+                    status = 200
+                    resp ={"message":"successful","token":"true" ,"status":status}  
+            if parse_json(visitor) != None:
+                    print("Vistor")
+                    name = new_crediatials["data"]["name"]
+                    surname = new_crediatials["data"]["surname"]
+                    id_number = new_crediatials["data"]["id_number"]
+                    date_of_birth = new_crediatials["data"]["date_of_birth"]
+                    email = new_crediatials["data"]["email"]
+                    phone_number= new_crediatials["data"]["phone_number"]
+                    address= new_crediatials["data"]["address"]
+                    city= new_crediatials["data"]["city"]
+                    pcode= new_crediatials["data"]["pcode"]
+                    password = new_crediatials["data"]["password"]
+                    purpose_of_visit  = new_crediatials["data"]["purpose_of_visit"]
+
+                    newvalues = { "$set": { 
+                        "name":f"{name}",
+                        "surname":f"{surname}",
+                        "id_number":f"{id_number}",
+                        "date_of_birth": f"{date_of_birth}",
+                        "email":f"{email}",
+                        "phone_number":f"{phone_number}",
+                        "address":f"{address}",
+                        "city":f"{city}",
+                        "pcode":f"{pcode}",
+                        "password":f"{password}",
+                        "visitor_number":f"{visitor_number}",
+                        "purpose_of_visit":f"{purpose_of_visit}" } }
+                    mongo.db.visitor.update_one({"staff_number":f"{user_number}"},newvalues)
+                    status = 200
+                    resp ={"message":"successful","token":"true" ,"status":status}
+
+    except Exception as e :
+        status  = 400
+        resp={"message":f"{e}","status":status}  
+        print("ERORR (/delete/user route)--->",e)
+    return jsonify(resp),status
+
+
+###############################################
+################################################
+##############################################
 # Forget password and Change password 
 
 @app.route("/forgot/passowrd1",methods=["POST"])

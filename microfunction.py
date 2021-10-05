@@ -18,58 +18,62 @@ class tools :
             print(id_number)
             return id_number
 
-        def generate_token(self,profile,user_number):
-            image = ""
-            print(profile,user_number)
-            qr_id = uuid.uuid1()
+        def purge_qr_codes(self):
             try:
-                if profile != "" and user_number != "": 
-                    name = profile["name"]
-                    creation_point = datetime.now()
-                    payload_image= f"{name},{user_number};{creation_point}"
-                    # text =qrcode.make(payload)
+                files =[] 
+                for directory ,subdirectories,filenames in os.walk("QRcodes"):
+                    for filename in filenames:
+                        files.append(filename)
+                for i in range (0,len(files)):
+                    os.remove("QRcodes/"+files[i])
+            except Exception as e :
+                print("[purge_qr_codes] purge_qr_codes() error:",e)
+                return 0
+            return 1
+            
+
+        def generate_token(self,name,user_number):
+            try:
+                
+                creation_point = datetime.now()
+                payload_image= f"{name},{user_number};{creation_point}"
+               
                     #image creation 
-                    qr = qrcode.QRCode(
+                qr = qrcode.QRCode(
                         version=1,
                         error_correction=qrcode.constants.ERROR_CORRECT_H,
                         box_size=10,
                         border=4,
                     )
-                    qr.add_data(payload_image)
-                    qr.make(fit=True)
-                    image = qr.make_image(fill_color="black", back_color="white").convert('RGB')
-                    # image.save(f"QRcodes/{user_number}.png")
-                else :
-                    print("Missing credentials to create qr code")
+                qr.add_data(payload_image)
+                qr.make(fit=True)
+                image = qr.make_image(fill_color="black", back_color="white").convert('RGB')
+                image.save(f"QRcodes/{user_number}.png")
+                path  = f"QRcodes/{user_number}.png"
+    
             except Exception as e :
                 print("[generate_token] generate_token() error:",e)
-            return image, qr 
+            return image, qr ,path 
 
         def genrate_grounds_qr(self):
-                image = ""
-                print(profile,user_number)
-                qr_id = uuid.uuid1()
                 try:
-                    if profile != "" and user_number != "": 
-                        name = profile["name"]
-                        creation_point = datetime.now()
-                        payload_image= "http://localhost:4200/registercheck"
-                        # text =qrcode.make(payload)
-                        #image creation 
-                        qr = qrcode.QRCode(
+                     
+                    creation_point = datetime.now()
+                    payload_image= "http://localhost:4200/registercheck"
+                    # text =qrcode.make(payload)
+                    #image creation 
+                    qr = qrcode.QRCode(
                             version=1,
                             error_correction=qrcode.constants.ERROR_CORRECT_H,
                             box_size=10,
                             border=4,
                         )
-                        qr.add_data(payload_image)
-                        qr.make(fit=True)
-                        image = qr.make_image(fill_color="black", back_color="white").convert('RGB')
+                    qr.add_data(payload_image)
+                    qr.make(fit=True)
+                    image = qr.make_image(fill_color="black", back_color="white").convert('RGB')
                         # image.save(f"QRcodes/{user_number}.png")
-                    else :
-                        print("Missing credentials to create qr code")
                 except Exception as e :
-                    print("[generate_token] generate_token() error:",e)
+                    print("[genrate_grounds_qr] genrate_grounds_qr() error:",e)
                 return image, qr 
                 
         def retreive_qr_info(self,log):
@@ -398,7 +402,12 @@ class tools :
                         file_type = imghdr.what(image.name)
                         file_name= image.name
                         msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name) 
+                with smtplib.SMTP_SSL("smtp.gmail.com" ,465) as smtp:
+                    smtp.login(email_address,email_password)
 
+                    smtp.send_message(msg)
+                    print("Email has been sent")    
+                return True   
             except Exception as  e :
                 print("[breach_alram_email_service] breach_alram_email_service() error:",e)
 
@@ -408,7 +417,7 @@ class tools :
                 email_password  ="dummy101@1"
                 email_recieve = reciver_email
                 creation_point = datetime.now()   
-                token.save(f"QRcodes/{creation_point}ongrounds.png")
+                token.save(f"QRcodes/ongrounds.png")
 
                 msg = EmailMessage()
                 msg['Subject'] = 'QR Token '
@@ -428,14 +437,19 @@ class tools :
                             </body>
                         </html>
                         """,subtype= "html")
-                files = [f"{creation_point}ongrounds.png"]
+                files = ["ongrounds.png"]
                 for images in files:
                     with open(f"QRcodes/{images}","rb") as image :
                         file_data = image.read()
                         file_type = imghdr.what(image.name)
                         file_name= image.name
                         msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name)
-                    os.remove(f"QRcodes/{creation_point}ongrounds.png")
+                    os.remove(f"QRcodes/ongrounds.png")
+                with smtplib.SMTP_SSL("smtp.gmail.com" ,465) as smtp:
+                    smtp.login(email_address,email_password)
+                    smtp.send_message(msg)
+                    print("Email has been sent")    
+                return True   
             except Exception as e :
                 print("[emailing_service_grounds_qr] emailing_service_grounds_qr() error:",e)
 

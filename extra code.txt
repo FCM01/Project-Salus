@@ -1,0 +1,199 @@
+Generate QR code route
+
+
+@app.route("/Generate/Token",methods=["POST"])
+def generate_token():
+    status  = 200
+    resp= {}
+    try:
+        #user_number is not SA id number its user specific number 
+        data = request.get_json("data")
+        print(data)
+        user_number = data["data"]["user_number"]
+        user_type = data["data"]["user_type"]
+        print(user_number,user_type)
+        if user_number != "" and user_type != "":
+
+            if user_type == "staff":
+                teacher = mongo.db.teacher.find_one({"staff_number":f"{user_number}"})
+                security = mongo.db.security.find_one({"staff_number":f"{user_number}"})
+                domestic = mongo.db.domestic.find_one({"staff_number":f"{user_number}"})
+                print(parse_json(teacher))
+                print(parse_json(security))
+                print(parse_json(domestic))
+
+                if parse_json(teacher) != None:
+                    data = parse_json(teacher)
+                    name = data["name"]
+                    qr = tools()
+                    token = qr.generate_token(name,user_number)
+                    email = data["email"]
+                    name = data["name"] 
+                    image = token[0]
+                    log = token[1]
+                    qr.emailing_services(email,name,user_number,"qr_code",image,"","","")
+                    # #adding token record to database
+                    # teacher = mongo.db.teacher.find_one({"staff_number":f"{user_number}"})
+                    # if parse_json(teacher) != []:
+                    #     user = parse_json(teacher)
+                    #     #token adding
+                    #     array =[]
+                    #     for i in user["token"]:
+                    #         array.append(i)
+                    #     array.append(log)
+                    #     #saving
+                    #     mongo.db.teacher.update_one({"staff_number":f"{user_number}"},{ "$set": { "token": f"{array}" } })
+                    #     status = 200 
+                    #     resp = {"message":"Toke sent","status":f"{status}"}
+                else :
+                    status = 400 
+                    resp = {"message":"User not found","status":f"{status}"}
+                
+                if parse_json(security) != None:
+                    data = parse_json(security)
+                    name = data["name"]
+                    qr = tools()
+                    token = qr.generate_token(name,user_number)
+                    email = data["email"]
+                    name = data["name"] 
+                    image = token[0]
+                    log = token[1]
+                    qr.emailing_services(email,name,user_number,"qr_code",image,"","","")
+                    # #adding token record to database
+                    # security = mongo.db.security.find_one({"staff_number":f"{user_number}"})
+                    # if parse_json(security) != []:
+                    #     user = parse_json(security)
+                    #     #token adding
+                    #     array =[]
+                    #     for i in user["token"]:
+                    #         array.append(i)
+                    #     array.append(log)
+                    #     #saving
+                    #     mongo.db.security.update_one({"staff_number":f"{user_number}"},{ "$set": { "token": f"{array}" } })
+                    #     status = 200 
+                    #     resp = {"message":"Toke sent","status":f"{status}"}
+                else :
+                    status = 400 
+                    resp = {"message":"User not found","status":f"{status}"}
+
+                if parse_json(domestic) != None:
+                    print("Domestic")
+                    data = parse_json(domestic)
+                    name = data["name"]
+                    qr = tools()
+                    print(data)
+                    token = qr.generate_token(name,user_number)
+                    email = data["email"]
+                    name = data["name"] 
+                    image = token[0]
+                    log = token[1]
+                    qr.emailing_services(email,name,user_number,"qr_code",image,"","","")
+                    # #adding token record to database
+                    # domestic = mongo.db.domestic.find_one({"staff_number":f"{user_number}"})
+                    # if parse_json(domestic) != []:
+                    #     user = parse_json(domestic)
+                    #     #token adding
+                    #     array =[]
+                    #     for i in user["token"]:
+                    #         array.append(i)
+                    #     array.append(log)
+                    #     #saving
+                    #     mongo.db.domestic.update_one({"staff_number":f"{user_number}"},{ "$set": { "token": f"{array}" } })
+                    #     status = 200 
+                    #     resp = {"message":"Toke sent","status":f"{status}"}
+                else :
+                    status = 400 
+                    token = resp = {"message":"User not found","status":f"{status}"}
+
+            elif user_type == "student":
+                student = mongo.db.student.find_one({"student_number":f"{user_number}"})
+                if  parse_json(student) != None:
+                    data = parse_json(domestic)
+                    name = data["name"]
+                    qr = tools()
+                    token = qr.generate_token(name,user_number)
+                    email = student["email"]
+                    name = student["name"] 
+                    image = token[0]
+                    log = token[1]
+                    qr.emailing_services(email,name,user_number,"qr_code",image,"","","")
+                    # #adding token record to database
+                    # student = mongo.db.student.find_one({"student_number":f"{user_number}"})
+                    # if parse_json(student) != []:
+                    #     user = parse_json(student)
+                    #     #token adding
+                    #     array =[]
+                    #     for i in user["token"]:
+                    #         array.append(i)
+                    #     array.append(log)
+                    #     #saving
+                    #     mongo.db.student.update_one({"student_number":f"{user_number}"},{ "$set": { "token": f"{array}" } })
+                    #     status = 200 
+                    #     resp = {"message":"Toke sent","status":f"{status}"}
+                else :
+                    status = 400 
+                    resp = {"message":"User not found","status":f"{status}"}
+            
+            elif user_type == "vistor":
+                visitor = mongo.db.visitor.find_one({"visitor_number":f"{user_number}"})
+                if parse_json(visitor)  != None:
+                    data = parse_json(domestic)
+                    name = data["name"]
+                    qr = tools()
+                    token = qr.generate_token(name,user_number)
+                    email = data["email"]
+                    name = data["name"] 
+                    image = token[0]
+                    log = token[1]
+                    qr.emailing_services(email,name,user_number,"qr_code",image,"","","")
+                    # #adding token record to database
+                    # visitor = mongo.db.visitor.find_one({"visitor_number":f"{user_number}"})
+                    # if parse_json(visitor) != []:
+                    #     user = parse_json(visitor)
+                    #     #token adding
+                    #     array =[]
+                    #     for i in user["token"]:
+                    #         array.append(i)
+                    #     array.append(log)
+                    #     #saving
+                    #     mongo.db.visitor.update_one({"visitor_number":f"{user_number}"},{ "$set": { "token": f"{array}" } })
+                    #     status = 200 
+                    #     resp = {"message":"Toke sent","status":f"{status}"}
+                else :
+                    status = 400 
+                    resp = {"message":"User not found","status":f"{status}"}
+
+            elif user_type  == "admin":
+                admin = mongo.db.admin.find_one({"admin_number":f"{user_number}"})
+                if parse_json(admin) != []:
+                    data = parse_json(domestic)
+                    name = data["name"]
+                    qr = tools()
+                    token = qr.generate_token(name,user_number)
+                    email = data["email"]
+                    name = data["name"] 
+                    image = token[0]
+                    log = token[1]
+                    qr.emailing_services(email,name,user_number,"qr_code",image,"","","")
+                    # #adding token record to database
+                    # admin = mongo.db.admin.find_one({"admin_number":f"{user_number}"})
+                    # if parse_json(admin) != []:
+                    #     user = parse_json(admin)
+                    #     #token adding
+                    #     array =[]
+                    #     for i in user["token"]:
+                    #         array.append(i)
+                    #     array.append(log)
+                    #     #saving
+                    #     mongo.db.admin.update_one({"admin_number":f"{user_number}"},{ "$set": { "token": f"{array}" } })
+                    #     status = 200 
+                    #     resp = {"message":"Toke sent","status":f"{status}"}
+                else :
+                    status = 400 
+                    resp = {"message":"User not found","status":f"{status}"}
+
+    except Exception as e :
+        status = 400
+        resp = {"message":"ERROR on /generate/token","status":f"{status}",}
+        print("ERROR:/generate/token-->",e)
+    return jsonify(resp),status
