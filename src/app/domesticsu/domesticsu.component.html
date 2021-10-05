@@ -32,6 +32,9 @@
                     <input type = "text" placeholder = " Staff Number "  formControlName="staffnum">
                     <div class="alert" *ngIf="!signupForm.controls['staffnum'].valid && signupForm.controls['staffnum'].touched">
                         {{titleAlert1}} </div>
+                    <input type = "text" placeholder = "Job Title"  formControlName="job_title">
+                    <div class="alert" *ngIf="!signupForm.controls['job_title'].valid && signupForm.controls['job_title'].touched">
+                            {{titleAlert1}} </div>
                     <input type = "email" placeholder = "Email "  formControlName="email">
                     <div class="alert" *ngIf="!signupForm.controls['email'].valid && signupForm.controls['email'].touched">
                         {{titleAlert1}} </div>

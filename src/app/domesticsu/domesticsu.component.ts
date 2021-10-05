@@ -20,8 +20,8 @@ export class DomesticsuComponent implements OnInit {
       "surname": ['', Validators.required],
       "id_number": ['', Validators.required],
       "date_of_birth": ['', Validators.required],
-      "position": ['', Validators.required],
       "staffnum": ['',Validators.required],
+      "job_title":['',Validators.required],
       "email": ['', Validators.email],
       "password": ['', Validators.compose([Validators.required, Validators.maxLength(8)])],
       "passwordconfirm": ['', Validators.compose([Validators.required, Validators.maxLength(8)])],
@@ -51,7 +51,7 @@ export class DomesticsuComponent implements OnInit {
                 "pcode":post.pcode,
                 "password":post.passwordconfirm,
                 "staff_number":post.staffnum,
-                "position":post.position,
+                "job_title":post.job_title,
       }
     
     

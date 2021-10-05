@@ -68,7 +68,7 @@ export class StaffsuComponent implements OnInit {
             console.log(data);
             if (data["message"]=="succeessful")
             {
-              
+              this.router.navigate(["/teacherdash"])
             }
           }
         )
