@@ -71,12 +71,12 @@ class tools :
                 print("[generate_token] generate_token() error:",e)
             return path 
 
-        def genrate_grounds_qr(self,user_type):
+        def genrate_grounds_qr(self,user_number):
                 try:
                      
                     creation_point = datetime.now()
                     date = str(creation_point.year)+"-"+str(creation_point.month)+"-"+str(creation_point.day)
-                    payload_image= "http://localhost:4200/registercheck"
+                    payload_image= "http://localhost:4200/ongroundscheck"
                     qr = qrcode.QRCode(
                             version=1,
                             error_correction=qrcode.constants.ERROR_CORRECT_H,
@@ -90,14 +90,16 @@ class tools :
                     make = find_all("log.json","resources/OGQR/")
                     if make == 1:
                         array_of_qr = []
-                        with open("resources/OGQR/log.json","r") as outfile:
-                            data = json.loads(outfile)
+                        with open("resources/OGQR/log.json") as outfile:
+                            data = json.loads(outfile.read())
+                            print(data)
                             array  = data["qr"]
                             for  i in array :
                                 array_of_qr.append(i)
                             qr_new_object = {
                                 "date":date,
-                                "image":image
+                                "user_number":user_number,
+                                "pay_load":payload_image
                             }
                             array_of_qr.append(qr_new_object)
                             with open("resources/OGQR/log.json","w") as infile:
@@ -109,7 +111,8 @@ class tools :
                         array_of_qr = []
                         qr_new_object = {
                                 "date":date,
-                                "image":image
+                                "user_number":user_number,
+                                "pay_load":payload_image
                             }
                         array_of_qr.append(qr_new_object)
                         with open("resources/OGQR/log.json","w") as infile:
@@ -160,13 +163,14 @@ class tools :
                 print("[generate_token] generate_token() error:",e)
             return info1,user_number,creation_date
 
-        def class_register_qr_code(self,class_subject,teacher_name):
+        def class_register_qr_code(self,user_number):
             image = ""
             try:
                 
                 creation_point = datetime.now()
                 date = str(creation_point.year)+"-"+str(creation_point.month)+"-"+str(creation_point.day)
-                payload_image=""
+                time = creation_point.strftime("%H:%M:%S")
+                payload_image="http://localhost:4200/registercheck"
                 qr = qrcode.QRCode(
                         version=1,
                         error_correction=qrcode.constants.ERROR_CORRECT_H,
@@ -176,17 +180,20 @@ class tools :
                 qr.add_data(payload_image)
                 qr.make(fit=True)
                 image = qr.make_image(fill_color="black", back_color="white").convert('RGB')
-                make = find_all("log.json","resources/OGQR/")
+                make = find_all("log.json","resources/RCQR/")
                 if make == 1:
                     array_of_qr = []
-                    with open("resources/RCQR/log.json","r") as outfile:
-                        data = json.loads(outfile)
+                    with open("resources/RCQR/log.json") as outfile:
+                        data = json.loads(outfile.read())
+                        print(data)
                         array  = data["qr"]
                         for  i in array :
                             array_of_qr.append(i)
                         qr_new_object = {
                                 "date":date,
-                                "image":image
+                                "time":time,
+                                "user_number":user_number,
+                                "pay_load":payload_image
                             }
                         array_of_qr.append(qr_new_object)
                         with open("resources/RCQR/log.json","w") as infile:
@@ -198,7 +205,9 @@ class tools :
                     array_of_qr = []
                     qr_new_object = {
                                 "date":date,
-                                "image":image
+                                "time":time,
+                                "user_number":user_number,
+                                "pay_load":payload_image
                             }
                     array_of_qr.append(qr_new_object)
                     with open("resources/RCQR/log.json","w") as infile:
@@ -208,7 +217,7 @@ class tools :
                         json.dump(file_object,infile) 
             except Exception as e:
                 print("[class_register_qr_code] class_register_qr_code() error:",e)
-            return image
+            return image,qr
 
         def read_qr_code(self,user_number):
             im = cv.imread(f'{user_number}.png')
@@ -309,34 +318,7 @@ class tools :
                                 file_type = imghdr.what(image.name)
                                 file_name= image.name
                             msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name)
-                elif type == "qr_code":
-                    print("qr_code")
-                    token.save(f"QRcodes/{user_number}.png")
-                    msg = EmailMessage()
-                    msg['Subject'] = 'QR Token '
-                    msg['From'] = email_address
-                    msg['To']= email_recieve
-                    msg.set_content ( f'You have been issed a Token to enter grounds {name}  you may enter school grounds as soon as your QR code has been scanned ')
-                    msg.add_alternative(f"""
-                        <!DOCTYPE html>
-                        <html>
-                            <body>
-                                <h1 style ="color:#96c8cc;">School Grounds Token</h1> 
-                                <h2 style ="color:#96c8cc;">{name}</h2>
-                                <p>You have been issed a Token to enter grounds{name}  you may enter school grounds as soon as your QR code has been scanned </p>
-                                <p>Yours sincerly</p>
-                                <p>The Salus team</p>
-                            </body>
-                        </html>
-                        """,subtype= "html")
-                    files = [f"{user_number}.png"]
-                    for images in files:
-                        with open(f"QRcodes/{images}","rb") as image :
-                            file_data = image.read()
-                            file_type = imghdr.what(image.name)
-                            file_name= image.name
-                        msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name)
-                    os.remove(f"QRcodes/{images}")
+                
                 elif type == "forgot_password":
                     print("forgot passowrd")
                     msg = EmailMessage()
@@ -528,8 +510,9 @@ class tools :
                 email_address  ="dummyjackson8@gmail.com"
                 email_password  ="dummy101@1"
                 email_recieve = reciver_email
-                creation_point = datetime.now()   
-                token.save(f"resourse/OGQR/ongrounds.png")
+                creation_point = datetime.now() 
+                date = str(creation_point.year)+"-"+str(creation_point.month)+"-"+str(creation_point.day)
+                token.save(f"resources/OGQR/temp/{date}.png")
 
                 msg = EmailMessage()
                 msg['Subject'] = 'QR Token '
@@ -549,21 +532,63 @@ class tools :
                             </body>
                         </html>
                         """,subtype= "html")
-                files = ["ongrounds.png"]
+                files = [f"{date}.png"]
                 for images in files:
-                    with open(f"QRcodes/{images}","rb") as image :
+                    with open(f"resources/OGQR/temp/{images}","rb") as image :
                         file_data = image.read()
                         file_type = imghdr.what(image.name)
                         file_name= image.name
                         msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name)
-                    os.remove(f"QRcodes/ongrounds.png")
+                    os.remove(f"resources/OGQR/temp/{date}.png")
                 with smtplib.SMTP_SSL("smtp.gmail.com" ,465) as smtp:
                     smtp.login(email_address,email_password)
                     smtp.send_message(msg)
-                    print("Email has been sent")    
+                    print("Email has been sent")   
                 return True   
             except Exception as e :
                 print("[emailing_service_grounds_qr] emailing_service_grounds_qr() error:",e)
+
+        def emailing_service_class_register(self,reciver_email,name,token):
+            try:
+                email_address  ="dummyjackson8@gmail.com"
+                email_password  ="dummy101@1"
+                email_recieve = reciver_email
+                creation_point = datetime.now() 
+                date = str(creation_point.year)+"-"+str(creation_point.month)+"-"+str(creation_point.day)
+                token.save(f"resources/RCQR/temp/{date}.png")
+
+                msg = EmailMessage()
+                msg['Subject'] = 'QR Token '
+                msg['From'] = email_address
+                msg['To']= email_recieve
+                msg.add_alternative(f"""
+                        <!DOCTYPE html>
+                        <html>
+                            <body>
+                                <h1 style ="color:#96c8cc;">Class Register link Token</h1> 
+                                <h2 style ="color:#96c8cc;">{name}</h2>
+                                <p>Please provide students who wish to do class register the attached QR code </p>
+                                <p>If the personal look suspicous please verify by asking for the users personal QR code  if there is a failuire to provide this please contact authorities</p>
+                                <p>Yours sincerly</p>
+                                <p>The Salus team</p>
+                            </body>
+                        </html>
+                        """,subtype= "html")
+                files = [f"{date}.png"]
+                for images in files:
+                    with open(f"resources/RCQR/temp/{images}","rb") as image :
+                        file_data = image.read()
+                        file_type = imghdr.what(image.name)
+                        file_name= image.name
+                        msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name)
+                    os.remove(f"resources/RCQR/temp/{date}.png")
+                with smtplib.SMTP_SSL("smtp.gmail.com" ,465) as smtp:
+                    smtp.login(email_address,email_password)
+                    smtp.send_message(msg)
+                    print("Email has been sent")   
+                return True   
+            except Exception as e :
+                print("[emailing_service_class_register] emailing_service_class_register() error:",e)
 
         def random_number_creation(self):
             number = ""

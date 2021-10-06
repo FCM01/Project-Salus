@@ -3,8 +3,9 @@
 from datetime import datetime
 
 creation_point = datetime.now()
+time = creation_point.strftime("%H:%M:%S")
 date = str(creation_point.year)+"-"+str(creation_point.month)+"-"+str(creation_point.day)
-print(date)
+print(time)
 
 # def mongo_conn():
 #     try:

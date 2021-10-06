@@ -284,3 +284,57 @@ def verify():
         resp = {"message":"ERROR on /Verifiy/Token","status":f"{status}",}
         print("ERROR:/Verifiy/Token-->",e)
     return jsonify(resp),status
+
+
+
+
+
+elif type == "qr_code":
+                    print("qr_code")
+                    token.save(f"QRcodes/{user_number}.png")
+                    msg = EmailMessage()
+                    msg['Subject'] = 'QR Token '
+                    msg['From'] = email_address
+                    msg['To']= email_recieve
+                    msg.set_content ( f'You have been issed a Token to enter grounds {name}  you may enter school grounds as soon as your QR code has been scanned ')
+                    msg.add_alternative(f"""
+                        <!DOCTYPE html>
+                        <html>
+                            <body>
+                                <h1 style ="color:#96c8cc;">School Grounds Token</h1> 
+                                <h2 style ="color:#96c8cc;">{name}</h2>
+                                <p>You have been issed a Token to enter grounds{name}  you may enter school grounds as soon as your QR code has been scanned </p>
+                                <p>Yours sincerly</p>
+                                <p>The Salus team</p>
+                            </body>
+                        </html>
+                        """,subtype= "html")
+                    files = [f"{user_number}.png"]
+                    for images in files:
+                        with open(f"QRcodes/{images}","rb") as image :
+                            file_data = image.read()
+                            file_type = imghdr.what(image.name)
+                            file_name= image.name
+                        msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name)
+                    os.remove(f"QRcodes/{images}")
+
+
+@app.route("/Return/Image", methods = ["POST"])
+def return_image():
+    status = 200
+    resp  = {}
+    try:
+        data = request.get_json("data")
+        data  = db.fs.files.find_one({"filename":name})
+        my_id  = data["_id"]
+        output_data = fs.get(my_id).read()
+        download_location  = "resources/"+name
+        with open(download_location,"wb") as output:
+            output.write(output_data)
+            output.close()
+            print("download complete")
+    except Exception as e:
+        status  = 400
+        resp={"message":f"{e}","status":status}  
+        print("ERORR (/breachalarm/delete route)--->",e)
+    return jsonify(resp),status

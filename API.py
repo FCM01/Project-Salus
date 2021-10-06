@@ -518,7 +518,43 @@ def genrate_grounds_token():
         print("ERROR:/Enter/Grounds/QR-->",e)
     return jsonify(resp),status
 
+@app.route("/Mark/Present",methods=["POST"])
+def mark_present():
+    status =200
+    resp = {}
+    try:
+        data = request.get_json("data")
+        user_number = data["data"]["user_number"]
+        subject = data["data"]["subject"] 
+        register_class  = data["data"]["register_class"]
 
+        if user_number !="" and subject != "" and register_class != "":
+            student = mongo.db.student.find_one({"student_number":f"{user_number}"})
+            if parse_json(student) != None:
+                print("Student")
+                data = parse_json(student)
+                name = data["name"]
+                surname =data["surname"]
+                user_number = data["student_number"]
+                email= data["pg_email"]
+                on_grounds_payload  ={
+                        "name":f"{name}",
+                        "surname":f"{surname}",
+                        "user_number":f"{user_number}",
+                        "email":f"{email}",
+                        "register":f"{register_class}",
+                        "subject":f"{subject}"
+                    }
+        
+                mongo.db.inclass.insert_one(on_grounds_payload)
+                status  = 200
+                resp ={"message":"successful","status":status} 
+
+    except Exception as e :
+        status = 400
+        resp = {"message":"ERROR on /Mark/Present","status":f"{status}",}
+        print("ERROR:/Mark/Present /QR-->",e)
+    return jsonify(resp),status
 @app.route("/Enter/Grounds",methods=["POST"])
 def enter_grounds():
     status = 200
@@ -540,15 +576,12 @@ def enter_grounds():
                 surname =data["surname"]
                 user_number = data["staff_number"]
                 email= data["email"]
-                qr = data["token"]
                 on_grounds_payload  ={
                         "name":f"{name}",
                         "surname":f"{surname}",
                         "user_number":f"{user_number}",
-                        "email":f"{email}",
-                        "token":qr
+                        "email":f"{email}"
                     }
-        
                 mongo.db.ongrounds.insert_one(on_grounds_payload)
                 status  = 200
                 resp ={"message":"successful","status":status}
@@ -559,13 +592,11 @@ def enter_grounds():
                 surname =data["surname"]
                 user_number = data["admin_number"]
                 email= data["email"]
-                qr = data["token"]["$oid"]
                 on_grounds_payload  ={
                         "name":f"{name}",
                         "surname":f"{surname}",
                         "user_number":f"{user_number}",
-                        "email":f"{email}",
-                        "token":qr
+                        "email":f"{email}"
                     }
         
                 mongo.db.ongrounds.insert_one(on_grounds_payload)
@@ -576,16 +607,13 @@ def enter_grounds():
                 data = parse_json(student)
                 name = data["name"]
                 surname =data["surname"]
-                user_number = data["staff_number"]
+                user_number = data["student_number"]
                 email= data["pg_email"]
-
-                qr= data["token"]
                 on_grounds_payload  ={
                         "name":f"{name}",
                         "surname":f"{surname}",
                         "user_number":f"{user_number}",
                         "email":f"{email}",
-                        "token":qr
                     }
         
                 mongo.db.ongrounds.insert_one(on_grounds_payload)
@@ -598,14 +626,11 @@ def enter_grounds():
                 surname =data["surname"]
                 user_number = data["staff_number"]
                 email= data["email"]
-
-                qr= data["token"]
                 on_grounds_payload  ={
                         "name":f"{name}",
                         "surname":f"{surname}",
                         "user_number":f"{user_number}",
-                        "email":f"{email}",
-                        "token":qr
+                        "email":f"{email}"
                     }
         
                 mongo.db.ongrounds.insert_one(on_grounds_payload)
@@ -618,14 +643,11 @@ def enter_grounds():
                 surname =data["surname"]
                 user_number = data["staff_number"]
                 email= data["email"]
-
-                qr= data["token"]
                 on_grounds_payload  ={
                         "name":f"{name}",
                         "surname":f"{surname}",
                         "user_number":f"{user_number}",
-                        "email":f"{email}",
-                        "token":qr
+                        "email":f"{email}"
                     }
         
                 mongo.db.ongrounds.insert_one(on_grounds_payload)
@@ -638,27 +660,26 @@ def enter_grounds():
                 surname =data["surname"]
                 user_number = data["visitor_number"]
                 email= data["email"]
-
-                qr= data["token"]
                 on_grounds_payload  ={
                         "name":f"{name}",
                         "surname":f"{surname}",
                         "user_number":f"{user_number}",
-                        "email":f"{email}",
-                        "token":qr
+                        "email":f"{email}"
                     }
         
                 mongo.db.ongrounds.insert_one(on_grounds_payload)
                 status  = 200
                 resp ={"message":"successful","status":status} 
         else :
-            status = 200 
+            status = 400
             resp  = {"message":"missing credential", "status":status}
     except Exception as e :
         status = 400
         resp = {"message":"ERROR on /Enter/Grounds","status":f"{status}",}
         print("ERROR:/Enter/Grounds->",e)
     return jsonify(resp),status
+
+
 @app.route("/Verify/Personal/QR",methods = ["GET"])
 def generate_personal_qr():
     status= 200
@@ -684,31 +705,28 @@ def generate_token():
     status  = 200
     resp= {}
     try:
-        #user_number is not SA id number its user specific number 
         data = request.get_json("data")
         user_number = data["data"]["user_number"]
-        print(user_number,user_type)
+        print(user_number)
         if user_number != "" :
             qr = tools()
-            token = qr.genrate_grounds_qr(user_number) 
+            token = qr.class_register_qr_code(user_number) 
             teacher = mongo.db.teacher.find_one({"staff_number":f"{user_number}"})
             if parse_json(teacher) != None:
-                data = parse_json(security)
+                data = parse_json(teacher)
                 email = data["email"]
                 name = data["name"] 
                 image = token[0]
-                qr.emailing_service_grounds_qr(email,name,image)
+                qr.emailing_service_class_register(email,name,image)
                 status = 200 
                 resp = {"message":"Toke sent","status":f"{status}"}
             else :
                 status = 400 
                 resp = {"message":"User not found","status":f"{status}"}
-               
-
     except Exception as e :
         status = 400
-        resp = {"message":"ERROR on /generate/token","status":f"{status}",}
-        print("ERROR:/generate/token-->",e)
+        resp = {"message":"ERROR on /Generate/Class/RegisterQR","status":f"{status}",}
+        print("ERROR:/Generate/Class/RegisterQR-->",e)
     return jsonify(resp),status
 ##############################################################################
 #######################################################################
@@ -1529,25 +1547,6 @@ def delete_alarm():
 ################################################
 ##############################################
 # SUB functions
-@app.route("/Return/Image", methods = ["POST"])
-def return_image():
-    status = 200
-    resp  = {}
-    try:
-        data = request.get_json("data")
-        data  = db.fs.files.find_one({"filename":name})
-        my_id  = data["_id"]
-        output_data = fs.get(my_id).read()
-        download_location  = "resources/"+name
-        with open(download_location,"wb") as output:
-            output.write(output_data)
-            output.close()
-            print("download complete")
-    except Exception as e:
-        status  = 400
-        resp={"message":f"{e}","status":status}  
-        print("ERORR (/breachalarm/delete route)--->",e)
-    return jsonify(resp),status
 
 @app.route("/Leave/comment", methods=["POST"])
 def leave_comment():
