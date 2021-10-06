@@ -197,3 +197,90 @@ def generate_token():
         resp = {"message":"ERROR on /generate/token","status":f"{status}",}
         print("ERROR:/generate/token-->",e)
     return jsonify(resp),status
+
+
+
+
+
+
+
+
+
+
+    @app.route("/Verifiy/Token", methods=["POST"])
+def verify():
+    status  = 200
+    resp = {}
+    try :
+        data  = request.get_json("data")
+        user_number  = data["data"]["user_number"]
+        if user_number != "":
+            qr = tools()
+            qr_data= qr.retreive_qr_info(token)
+            qr_user_number = qr_data[1]
+            qr_creation_date =qr_data[2] 
+        
+        if user_number == qr_user_number :
+            print("working")
+
+        if user_number != "" and token != "":
+            if user_type == "staff":
+                teacher = mongo.db.teacher.find_one({"staff_number":f"{user_number}"})
+                security = mongo.db.security.find_one({"staff_number":f"{user_number}"})
+                domestic = mongo.db.domestic.find_one({"staff_number":f"{user_number}"})
+                if parse_json(teacher) != None:
+                    data = parse_json(teacher)
+                    token_list = data["token"]
+                    current= len(token_list)
+                    
+                    qr = tools()
+                    qr_data= qr.retreive_qr_info(token)
+                    qr_user_number = qr_data[1]
+                    qr_creation_date =qr_data[2] 
+                    email = data["email"]
+                    name = data["name"] 
+                    qr.emailing_services(email,name,user_number,"qr_code",token,"","","")
+                    status = 200 
+                    resp = {"message":"Toke sent","status":f"{status}"}
+                else :
+                    status = 400 
+                    resp = {"message":"User not found","status":f"{status}"}
+                
+                if parse_json(security) != None:
+                    data = parse_json(security)
+                    qr = tools()
+                    token = qr.generate_token(data,user_number)
+                    email = data["email"]
+                    name = data["name"] 
+                    qr.emailing_services(email,name,user_number,"qr_code",token,"","","")
+                    status = 200 
+                    resp = {"message":"Toke sent","status":f"{status}"}
+                else :
+                    status = 400 
+                    resp = {"message":"User not found","status":f"{status}"}
+
+                if parse_json(domestic) != None:
+                    print("Domestic")
+                    data = parse_json(domestic)
+                    qr = tools()
+                    print(data)
+                    token = qr.generate_token(data,user_number)
+                    email = data["email"]
+                    name = data["name"] 
+                    qr.emailing_services(email,name,user_number,"qr_code",token,"","","")
+                    status = 200 
+                    resp = {"message":"Toke sent","status":f"{status}"}
+                else :
+                    status = 400 
+                    token = resp = {"message":"User not found","status":f"{status}"}
+
+
+
+        else:
+            status  = 400 
+            resp = {"message":"misssing credentials","status":status} 
+    except Exception as e :
+        status = 400
+        resp = {"message":"ERROR on /Verifiy/Token","status":f"{status}",}
+        print("ERROR:/Verifiy/Token-->",e)
+    return jsonify(resp),status

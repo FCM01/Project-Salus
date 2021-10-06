@@ -12,6 +12,12 @@ import qrcode
 from PIL import Image
 import cv2 as cv
 
+def find_all(name, path):
+    result = 0
+    for root, dirs, files in os.walk(path):
+        if name in files:
+            result = 1
+    return result
 class tools :
         def id_number_genrator(self):
             id_number = uuid.uuid1()
@@ -32,13 +38,11 @@ class tools :
             return 1
             
 
-        def generate_token(self,name,user_number):
+        def generate_token(self,name,user_number,user_type):
             try:
-                
+                path = ""
                 creation_point = datetime.now()
                 payload_image= f"{name},{user_number};{creation_point}"
-               
-                    #image creation 
                 qr = qrcode.QRCode(
                         version=1,
                         error_correction=qrcode.constants.ERROR_CORRECT_H,
@@ -48,20 +52,31 @@ class tools :
                 qr.add_data(payload_image)
                 qr.make(fit=True)
                 image = qr.make_image(fill_color="black", back_color="white").convert('RGB')
-                image.save(f"QRcodes/{user_number}.png")
-                path  = f"QRcodes/{user_number}.png"
-    
+                if user_type =="admin":
+                    image.save(f"resources/PQR/admin_user/{user_number}.png")
+                    path = f"resources/PQR/admin_user/{user_number}.png"
+                elif user_type =="student":
+                    image.save(f"resources/PQR/student_user/{user_number}.png")
+                    path = f"resources/PQR/student_user/{user_number}.png"
+                elif user_type =="domestic":
+                    image.save(f"resources/PQR/domestic_user/{user_number}.png")
+                    path = f"resources/PQR/domestic_user/{user_number}.png"
+                elif user_type =="visitor":
+                    image.save(f"resources/PQR/visitor_user/{user_number}.png")
+                    path = f"resources/PQR/visitor_user/{user_number}.png"
+                elif user_type =="security":
+                    image.save(f"resources/PQR/security_user/{user_number}.png")
+                    path = f"resources/PQR/security_user/{user_number}.png" 
             except Exception as e :
                 print("[generate_token] generate_token() error:",e)
-            return image, qr ,path 
+            return path 
 
-        def genrate_grounds_qr(self):
+        def genrate_grounds_qr(self,user_type):
                 try:
                      
                     creation_point = datetime.now()
+                    date = str(creation_point.year)+"-"+str(creation_point.month)+"-"+str(creation_point.day)
                     payload_image= "http://localhost:4200/registercheck"
-                    # text =qrcode.make(payload)
-                    #image creation 
                     qr = qrcode.QRCode(
                             version=1,
                             error_correction=qrcode.constants.ERROR_CORRECT_H,
@@ -71,7 +86,37 @@ class tools :
                     qr.add_data(payload_image)
                     qr.make(fit=True)
                     image = qr.make_image(fill_color="black", back_color="white").convert('RGB')
-                        # image.save(f"QRcodes/{user_number}.png")
+
+                    make = find_all("log.json","resources/OGQR/")
+                    if make == 1:
+                        array_of_qr = []
+                        with open("resources/OGQR/log.json","r") as outfile:
+                            data = json.loads(outfile)
+                            array  = data["qr"]
+                            for  i in array :
+                                array_of_qr.append(i)
+                            qr_new_object = {
+                                "date":date,
+                                "image":image
+                            }
+                            array_of_qr.append(qr_new_object)
+                            with open("resources/OGQR/log.json","w") as infile:
+                                file_object = {
+                                    "qr":array_of_qr
+                                }
+                                json.dump(file_object,infile)
+                    elif make == 0 : 
+                        array_of_qr = []
+                        qr_new_object = {
+                                "date":date,
+                                "image":image
+                            }
+                        array_of_qr.append(qr_new_object)
+                        with open("resources/OGQR/log.json","w") as infile:
+                            file_object = {
+                                    "qr":array_of_qr
+                                }
+                            json.dump(file_object,infile)         
                 except Exception as e :
                     print("[genrate_grounds_qr] genrate_grounds_qr() error:",e)
                 return image, qr 
@@ -115,29 +160,55 @@ class tools :
                 print("[generate_token] generate_token() error:",e)
             return info1,user_number,creation_date
 
-        def class_register_qr_code(self,class_subject,teacher_name,qr_id ):
+        def class_register_qr_code(self,class_subject,teacher_name):
             image = ""
-            qr_id = uuid.uuid1()
             try:
-                if class_subject != "" and teacher_name != "" and qr_id !="":
-                    creation_point = datetime.now()
-                    payload_image= f"CLASS:{class_subject}, TEACHER:{teacher_name}, CREATED:{creation_point}, QR CODE ID:{qr_id},"
-
-                    #image creation 
-                    qr = qrcode.QRCode(
+                
+                creation_point = datetime.now()
+                date = str(creation_point.year)+"-"+str(creation_point.month)+"-"+str(creation_point.day)
+                payload_image=""
+                qr = qrcode.QRCode(
                         version=1,
                         error_correction=qrcode.constants.ERROR_CORRECT_H,
                         box_size=10,
                         border=4,
                     )
-                    qr.add_data(payload_image)
-                    qr.make(fit=True)
-                    image = qr.make_image(fill_color="black", back_color="white").convert('RGB')
-                    # image.save(f"QRcodes/{user_number}.png")
-                else :
-                    print("Missing credentials to create qr code")
+                qr.add_data(payload_image)
+                qr.make(fit=True)
+                image = qr.make_image(fill_color="black", back_color="white").convert('RGB')
+                make = find_all("log.json","resources/OGQR/")
+                if make == 1:
+                    array_of_qr = []
+                    with open("resources/RCQR/log.json","r") as outfile:
+                        data = json.loads(outfile)
+                        array  = data["qr"]
+                        for  i in array :
+                            array_of_qr.append(i)
+                        qr_new_object = {
+                                "date":date,
+                                "image":image
+                            }
+                        array_of_qr.append(qr_new_object)
+                        with open("resources/RCQR/log.json","w") as infile:
+                            file_object = {
+                                "qr":array_of_qr
+                                }
+                            json.dump(file_object,infile)
+                elif make == 0 : 
+                    array_of_qr = []
+                    qr_new_object = {
+                                "date":date,
+                                "image":image
+                            }
+                    array_of_qr.append(qr_new_object)
+                    with open("resources/RCQR/log.json","w") as infile:
+                        file_object = {
+                                    "qr":array_of_qr
+                                }
+                        json.dump(file_object,infile) 
             except Exception as e:
                 print("[class_register_qr_code] class_register_qr_code() error:",e)
+            return image
 
         def read_qr_code(self,user_number):
             im = cv.imread(f'{user_number}.png')
@@ -410,6 +481,47 @@ class tools :
                 return True   
             except Exception as  e :
                 print("[breach_alram_email_service] breach_alram_email_service() error:",e)
+        def vistor_emailing_services(self,reciver_email,name,visitor_number):
+            try :
+                email_address  ="dummyjackson8@gmail.com"
+                email_password  ="dummy101@1"
+                email_recieve = reciver_email
+
+                msg = EmailMessage()
+                msg['Subject'] = 'Welcome to Salus'
+                msg['From'] = email_address
+                msg['To']= email_recieve
+                msg.set_content ('Welcome to Salus we happy to provide you a new way to get onto your school grounds to with safety and secure tracking while maintaining you safety on school gounds and notifying you of issues on school grounds')
+                msg.add_alternative(f"""
+                        <!DOCTYPE html>
+                        <html>
+                            <body>
+                                <h1 style ="color:#96c8cc;">Account Made</h1> 
+                                <h2 style ="color:#96c8cc;">Thank you {name}</h2>
+                                <p>Welcome to Salus we happy to provide u a new way to get onto your school grounds to with safety and secure tracking while maintaining you safety on school gounds and notifying you of issues on school grounds</p>
+                                <p>Your visitor number :{visitor_number}</p>
+                                <p>Please user it to be able to login into the visitors portal </p>
+                                <p>Please  feel safe under Salus</p>
+                                <p> We care about your well being </p>
+                                <p>Yours sincerly</p>
+                                <p>The Salus team</p>
+                            </body>
+                        </html>
+                        """,subtype= "html")
+                files = ["ongrounds.png"]
+                for images in files:
+                    with open(f"QRcodes/{images}","rb") as image :
+                        file_data = image.read()
+                        file_type = imghdr.what(image.name)
+                        file_name= image.name
+                        msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name)
+                    os.remove(f"QRcodes/ongrounds.png")
+                with smtplib.SMTP_SSL("smtp.gmail.com" ,465) as smtp:
+                    smtp.login(email_address,email_password)
+                    smtp.send_message(msg)
+                    print("Email has been sent")    
+            except Exception as e :
+                print("[vistor_emailing_services] vistor_emailing_services() error:",e)
 
         def emailing_service_grounds_qr(self,reciver_email,name,token):
             try:
@@ -417,7 +529,7 @@ class tools :
                 email_password  ="dummy101@1"
                 email_recieve = reciver_email
                 creation_point = datetime.now()   
-                token.save(f"QRcodes/ongrounds.png")
+                token.save(f"resourse/OGQR/ongrounds.png")
 
                 msg = EmailMessage()
                 msg['Subject'] = 'QR Token '

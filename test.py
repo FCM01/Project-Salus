@@ -1,5 +1,10 @@
 # from pymongo import MongoClient
 # import gridfs
+from datetime import datetime
+
+creation_point = datetime.now()
+date = str(creation_point.year)+"-"+str(creation_point.month)+"-"+str(creation_point.day)
+print(date)
 
 # def mongo_conn():
 #     try:
