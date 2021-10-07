@@ -8,15 +8,27 @@
     <title>Document</title>
 </head>
 <body>
+  
+
   <div class="content">
-    <h1>Welcome {{user_profile["name"]}} {{user_profile["surname"]}}</h1>
+    <h1>Welcome : {{user_profile["name"]}} {{user_profile["surname"]}}</h1>
     <p>Keep Safe with SALUS</p>
+    <br>
+    <img src={{location}} alt={{location}}>
+  </div>
+  <div class="wrapper fadeInDown">
+    <div id="formContent">
+      <h1 style ="color:#ff0000;">Breach Alarm</h1>
+      <h2 class="active">Make a breach Alarm</h2>
+      <br>
+      <input type="submit"  class="fadeIn fourth" value="Breach" routerLink="/breach">
+    </div>
   </div>
     <div class="wrapper fadeInDown">
         <div id="formContent">
           <ul>
-            <h1>Databses Select</h1>
-            <p>please select type of user </p>
+            <h1>Database Select</h1>
+            <p>Please select type of user </p>
             <a 
               *ngFor="let item of list1" 
               [class.item-selected]="item.selected"
@@ -31,21 +43,22 @@
         <table>
             <thead>
                 <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">First</th>
-                  <th scope="col">Last</th>
+                  <th scope="col">Name</th>
                   <th scope="col">Handle</th>
+                  <th scope="col">User Number</th>
+                  <th scope="col">Functions</th>
                 </tr>
               </thead>
               <tbody  *ngFor= "let user of userarray">
                 <tr>
-                  <th scope="row">{{num + 1}}</th>
-                  <td>{{user.name}}</td>
-                  <td>{{user.surname}}</td>
+                  <th scope="row">{{user.name}},{{user.surname}}</th>
                   <td>{{user.email}}</td>
-                  <input type="submit" class="fadeIn fourth" value="Delete" (click)="deletUser(user.name,user.surname)">
-                  <input type="submit" class="fadeIn fourth" value="Edit">
-                  <input type="submit" class="fadeIn fourth" value="More Information">
+                  <td>{{user.admin_number}}</td>
+                  <td>
+                    <button type="submit"  class="fadeIn fourth" (click)="deletUser(user.name,user.surname)">Delete</button>
+                    <button type="submit" class="fadeIn fourth"> Edit </button>
+                    <button type="submit" class="fadeIn fourth">Details</button>
+                  </td> 
                   <br>
                   <br>
                 </tr>
@@ -67,7 +80,7 @@
               <br>
               <h2>USER NUMBER: {{user_profile.admin_number}}</h2>
               <br>
-              <h2>TIME OF CREATION: {{datetime}}</h2> 
+              <h2>TIME OF CREATION :{{datetime | date: 'yyyy-MM-dd'}}</h2> 
               <br>
               <input type="submit" class="fadeIn fourth" value="Generate" (click)= "GenerateToken()">
               <span *ngIf = "status != '' ">

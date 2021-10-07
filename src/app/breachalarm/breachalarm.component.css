@@ -1,0 +1,439 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins');
+
+
+html {
+    background-color: #56baed;
+  }
+  
+body {
+    font-family: "Poppins", sans-serif;
+    height: 100vh;
+  }
+  
+  
+a {
+    color: #92badd;
+    display:inline-block;
+    text-decoration: none;
+    font-weight: 400;
+  }
+
+
+  #quad1{
+    color:#fff; background-image: url(/assets/images/q1.jpg) ;
+    background-size: 75%;
+    background-size: cover;
+    font-weight: bolder;
+    width: 4cm;
+    height: 4cm;
+    text-align: center;
+  }
+
+  #quad2{
+    color:#fff; background-image: url(/assets/images/q2.jpg) ;
+    background-size: 100%;
+    background-size: cover;
+    font-weight: bolder;
+    width: 4cm;
+    height: 4cm;
+    text-align: center;
+  }
+
+  #quad3{
+    color:#fff; background-image: url(/assets/images/q3.jpg) ;
+    background-size: 100%;
+    background-size: cover;
+    font-weight: bolder;
+    width: 4cm;
+    height: 4cm;
+    text-align: center;
+  }
+
+  #quad4{
+    color:#fff; background-image: url(/assets/images/q4.jpg) ;
+    background-size: 100%;
+    background-size: cover;
+    font-weight: bolder;
+    width: 4cm;
+    height: 4cm;
+    text-align: center;
+  }
+
+
+  h1
+  {
+      color :black;
+      font-size: 50px;
+  }
+
+
+  input[type=button], input[type=submit], input[type=reset]  {
+    background-color: #56baed;
+    border: none;
+    color: white;
+    padding: 15px 80px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    text-transform: uppercase;
+    font-size: 13px;
+    -webkit-box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4);
+    box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4);
+    -webkit-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+    margin: 5px 20px 40px 20px;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+  }
+
+  
+  input {
+    background-color: #f6f6f6;
+    border: none;
+    color: #0d0d0d;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 5px;
+    width: 50%;
+    border: 2px solid #f6f6f6;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+  }
+  
+  input:focus {
+    background-color: #fff;
+    border-bottom: 2px solid #5fbae9;
+  }
+  
+  input:placeholder {
+    color: #cccccc;
+  }
+  
+
+  #formContent {
+    -webkit-border-radius: 10px 10px 10px 10px;
+    border-radius: 10px 10px 10px 10px;
+    background: #fff;
+    padding: 30px;
+    width: 90%;
+    position: relative;
+    padding: 0px;
+    -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+    box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+    text-align: center;
+  }
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column; 
+    justify-content: center;
+    width: 100%;
+    min-height: 100%;
+    padding: 20px;
+  }
+
+.fadeInDown {
+    -webkit-animation-name: fadeInDown;
+    animation-name: fadeInDown;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+  }
+
+@-webkit-keyframes fadeInDown {
+    0% {
+      opacity: 0;
+      -webkit-transform: translate3d(0, -100%, 0);
+      transform: translate3d(0, -100%, 0);
+    }
+    100% {
+      opacity: 1;
+      -webkit-transform: none;
+      transform: none;
+    }
+  }
+
+
+  @keyframes fadeInDown {
+    0% {
+      opacity: 0;
+      -webkit-transform: translate3d(0, -100%, 0);
+      transform: translate3d(0, -100%, 0);
+    }
+    100% {
+      opacity: 1;
+      -webkit-transform: none;
+      transform: none;
+    }
+  }
+
+  @-webkit-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  @-moz-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  
+  .fadeIn {
+    opacity:0;
+    -webkit-animation:fadeIn ease-in 1;
+    -moz-animation:fadeIn ease-in 1;
+    animation:fadeIn ease-in 1;
+  
+    -webkit-animation-fill-mode:forwards;
+    -moz-animation-fill-mode:forwards;
+    animation-fill-mode:forwards;
+  
+    -webkit-animation-duration:1s;
+    -moz-animation-duration:1s;
+    animation-duration:1s;
+  }
+  
+  .fadeIn.first {
+    -webkit-animation-delay: 0.4s;
+    -moz-animation-delay: 0.4s;
+    animation-delay: 0.4s;
+  }
+  
+  .fadeIn.second {
+    -webkit-animation-delay: 0.6s;
+    -moz-animation-delay: 0.6s;
+    animation-delay: 0.6s;
+  }
+  
+  .fadeIn.third {
+    -webkit-animation-delay: 0.8s;
+    -moz-animation-delay: 0.8s;
+    animation-delay: 0.8s;
+  }
+  
+  .fadeIn.fourth {
+    -webkit-animation-delay: 1s;
+    -moz-animation-delay: 1s;
+    animation-delay: 1s;
+  }
+
+  .underlineHover:after {
+    display: block;
+    left: 0;
+    bottom: -10px;
+    width: 0;
+    height: 2px;
+    background-color: #56baed;
+    content: "";
+    transition: width 0.2s;
+  }
+  
+  .underlineHover:hover {
+    color: #0d0d0d;
+  }
+  
+  .underlineHover:hover:after{
+    width: 100%;
+  }
+  
+
+*:focus {
+    outline: none;
+} 
+
+#icon {
+  width:60%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#formFooter {
+    background-color: #f6f6f6;
+    border-top: 1px solid #dce8f1;
+    padding: 25px;
+    text-align: center;
+    -webkit-border-radius: 0 0 10px 10px;
+    border-radius: 0 0 10px 10px;
+  }
+
+
+
+
+
+/* drop down list */
+  
+  .navbar {
+      overflow: hidden;
+      background-color: white;
+      font-family: Arial;
+      box-shadow: black 2em;
+      border-radius: 0.5em;
+      font-family: "Poppins", sans-serif;
+      
+    }
+    
+    .navbar a {
+      float: left;
+      font-size: 16px;
+      color: black;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+    }
+    
+    .dropdown {
+      float: left;
+      overflow: hidden;
+    }
+    
+    .dropdown .dropbtn {
+      font-size: 16px;
+      border: none;
+      outline: none;
+      color: black;
+      padding: 14px 16px;
+      background-color: inherit;
+      font-family: inherit;
+      margin: 0; 
+    }
+    
+  
+    .navbar nav {
+      float: right;
+    }
+    .navbar ul {
+      list-style-type: none;
+      margin: 0;
+      display: flex;
+    }
+    .navbar li a {
+      padding: 0.5em;
+    }
+    
+  
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      border-radius: 0.5em;
+      z-index: 1;
+    }
+    
+  
+    .dropdown-content a {
+      float: none;
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      text-align: left;
+    }
+    
+    /* .dropdown-content a:hover {
+      background-color: #56baed;
+    } */
+  
+    a.inactive {
+      color: #cccccc;
+    }
+    a {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 600;
+      text-transform: uppercase;
+      display:inline-block;
+      color: #cccccc;
+    }
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+  
+    .underlineHover:after {
+      display: block;
+      left: 0;
+      bottom: -10px;
+      width: 0;
+      height: 2px;
+      background-color: #56baed;
+      content: "";
+      transition: width 0.2s;
+    }
+    
+    .underlineHover:hover {
+      color: #0d0d0d;
+    }
+    
+    .underlineHover:hover:after{
+      width: 100%;
+    }
+    
+    
+  
+  /*Loading screen*/
+.preload {
+  width: 100%;
+  height: 100%;
+  background: #56baed;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+.logo {
+  width: 300px;
+  height: 70px;
+  margin: 150px auto 50px auto;
+  font-size: 50px;
+  text-shadow: -1px 2px 2px #000;
+  text-align: center;
+  color: azure;
+}
+.loader-frame {
+  width: 70px;
+  height: 70px;
+  margin: auto;
+  position: relative;
+}
+.loader1, .loader2 {
+  position: absolute;
+  border: 5px solid transparent;
+  border-radius: 50%;
+}
+.loader1 {
+  width: 70px;
+  height: 70px;
+  border-top: 5px solid azure;
+  border-bottom: 5px solid azure;
+  animation: clockwisespin 4s linear 100;
+}
+.loader2 {
+  width: 60px;
+  height: 60px;
+  border-left: 5px solid darkgray;
+  border-right: 5px solid darkgray;
+  top: 5px; left: 5px;
+  animation: anticlockwisespin 4s linear 100;
+}
+
+@keyframes clockwisespin {
+  from {transform: rotate(0deg);}
+  to {transform: rotate(360deg);}
+}
+@keyframes anticlockwisespin {
+  from {transform: rotate(0deg);}
+  to {transform: rotate(-360deg);}
+}
+@keyframes fadeout {
+  from {opacity: 1;}
+  to {opacity: 0;}
+}

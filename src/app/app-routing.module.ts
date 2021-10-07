@@ -20,6 +20,7 @@ import { VisitorssuComponent } from './visitorssu/visitorssu.component';
 import { AdminsuComponent } from './adminsu/adminsu.component';
 import { AdmindashboardComponent } from './admindashboard/admindashboard.component';
 import { RegistercheckComponent } from './registercheck/registercheck.component';
+import { OngroundscheckComponent } from './ongroundscheck/ongroundscheck.component';
 
 const routes: Routes = [
   {path:"",component :HomeComponent},
@@ -42,6 +43,7 @@ const routes: Routes = [
   {path:"adminsu",component:AdminsuComponent},
   {path:"admindash",component:AdmindashboardComponent},
   {path:"registercheck",component:RegistercheckComponent},
+  {path:"ongroundscheck",component:OngroundscheckComponent},
   
 ];
 

@@ -1,3 +1,4 @@
+<app-toolbar></app-toolbar>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +10,17 @@
 <body>
     <h1>Upload file</h1>
     <input type="file" (change)="onFileEvent($event)">
+    <div  class="wrapper fadeInDown">
+        <div id="formContent">
+        <h2 class="active" routerLink="/contact">HELP</h2>
+        <h2>Please ask for personel QR code from personel to scan to enter school grounds if personel is unidetified,QR code will be sent via email</h2>
+        <h2>To generate enter on grounds QR code click generate</h2>
+            <input type = "submit" placeholder = "Generate" (click)="GenrateQR()">
+        <div id="formFooter">
+            <a class="underlineHover" routerLink="">CANCEL</a>
+        </div>
+       </div>
+    </div>
     
 </body>
 </html>

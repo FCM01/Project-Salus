@@ -1,7 +1,53 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins');
 
 /* BASIC */
+.content{
+  width: 80%;
+  margin: 0em auto;
+  text-align: right;
+  background-color:#56baed ;
+}
+.names h4{
+  background-color:#56baed ;
+  border-radius: 0.5em;
+}
+/*table list-style */
+table {
+  width: 100%;
+  border: 1px black;
+  border-radius: 12px;
+}
 
+th{
+  background-color:#56baed;
+  color: white;
+}
+
+
+
+th, td {
+  padding: 15px;
+  text-align: center;
+}
+
+tr:nth-child(odd){
+  background-color: #f2f2f2;
+
+}
+
+img
+{
+    width: 20%;
+    border-radius: 50%;
+    object-position: left;
+    object-fit: fill;  
+}
+.names p
+{
+  background-color: white;
+  border-radius: 0.5em;
+  border-bottom: 1px solid black
+}
 html {
   background-color: #56baed;
 }
@@ -41,26 +87,30 @@ h2 {
   min-height: 100%;
   padding: 20px;
 }
-
+.area-content
+{
+  text-align: center;
+}
 #formContent {
   -webkit-border-radius: 10px 10px 10px 10px;
   border-radius: 10px 10px 10px 10px;
   background: #fff;
   padding: 30px;
   width: 90%;
-  max-width: 450px;
+  /* max-width: 450px; */
   position: relative;
   padding: 0px;
   -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
   box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
-  text-align: center;
+  text-align:center;
 }
+
 
 #formFooter {
   background-color: #f6f6f6;
   border-top: 1px solid #dce8f1;
   padding: 25px;
-  text-align: center;
+  text-align:left;
   -webkit-border-radius: 0 0 10px 10px;
   border-radius: 0 0 10px 10px;
 }
@@ -126,7 +176,7 @@ input {
   display: inline-block;
   font-size: 16px;
   margin: 5px;
-  width: 85%;
+  width: 50%;
   border: 2px solid #f6f6f6;
   -webkit-transition: all 0.5s ease-in-out;
   -moz-transition: all 0.5s ease-in-out;

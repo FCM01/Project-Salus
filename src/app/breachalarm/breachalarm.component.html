@@ -5,61 +5,69 @@
 <div class="wrapper fadeInDown">
 <div id="formContent">
 <br>
+
 <h1> Breach alarm </h1> 
+
+<!--New tool bar -->
+<div class="navbar">
+
+    <div class="dropdown">
+      <button class="dropbtn">SALUS
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-content">
+        <a class="underlineHover" routerLink="/breachresponse">More Information </a>
+        <a class="underlineHover" routerLink="#">Messages</a>
+        <a class="underlineHover" routerLink="#">Reports</a>
+      </div>
+    </div>
+  </div>
+
+
 
 <br> 
 <br>
 
 <p> Please select the location of the breach </p>
-<div id = "quads">
 <div>
-<input #q1 type = "button" value = "Quadrant 1" (click)= "GetQuadrent(q1.value)"> 
-<input  type = "button" value = "Quadrant 2"> 
+<div>
+<input type = "submit" value = "Quadrant 1" id = "quad1" #q1 (click) = "Getquadrant(q1.value)"> 
+<input  type = "submit" value = "Quadrant 2" id = "quad2" #q2  (click) = "Getquadrant(q2.value)"> 
 </div>
 
 <div> 
-<input type = "button" value = "Quadrant 3"> 
-<input  type = "button" value = "Quadrant 4">
+<input type = "submit" value = "Quadrant 3" id = "quad3" #q3  (click) = "Getquadrant(q3.value)"> 
+<input  type = "submit" value = "Quadrant 4" id = "quad4" #q4 (click) = "Getquadrant(q4.value)">
 </div>
 
 </div>
 
 <br>
-
-<!-- <div>
-<mat-form-field>
-<input matInput [matDatepicker] = "breachdate" placeholder = "Please insert the date">
-<mat-datepicker-toggle [for] = "breachdate" matSuffix> </mat-datepicker-toggle>
-<mat-datepicker #breachdate> </mat-datepicker>
-</mat-form-field>
-
-<p> Date must match {{myDate | date: 'yyyy-MM-dd'}} </p>
-
-</div> -->
-<br>
-<br>
-
-
-<p> Please enter the type of breach </p>
-
 <div>
-<input list = "bt" type="text" place-holder = "Breach Type">
+<p> Date: {{myDate | date: 'yyyy-MM-dd'}} </p>
+</div>
+
+<br>
+<br>
+
+<form [formGroup]="breach" (ngSubmit)="getBreachType(breach.value)">
+  <p> Please enter the type of breach </p>
+
+<input list = "bt" type="text" class="fadeIn fourth" placeholder = "Breach Type"  formControlName="type">
 <datalist id = "bt">
-<option value = "Robery">
+<option value = "Robbery">
 <option value = "Intruder">
 <option value = "Fire">
-<option value = "Missing Student">
-<option value = "Missing Staff Member">
+<option value = "Terrorism">
 <option value = "Medical Emergency">
 </datalist>
-</div>
+<div class="alert" *ngIf="!breach.controls['type'].valid && breach.controls['type'].touched">
+  {{titleAlert1}} </div>
 
-<br>
-<br>
+<input [disabled]="!breach.valid"  type="submit" class="fadeIn fourth" value="Report breach">
 
-<div>
-<input  type="button" class="fadeIn fourth" value="Report breach" click = "getBreachType(bt.value); getDate(breachdate.value)">
-</div>
+</form>
+
 
 <div id="formFooter">
 <a class="underlineHover" routerLink = "/login"> Log out </a>
@@ -67,5 +75,15 @@
 
 </div>
 
+</div>
+
+<div *ngIf ="wait" class="preload">
+  <div class="logo">
+      <span style="color: #050708;">SALUS</span>   
+  </div>
+  <div  class="loader-frame">
+      <div class="loader1" id="loader1"></div>
+      <div class="loader2" id="loader2"></div>
+  </div>
 </div>
 </body>

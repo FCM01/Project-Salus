@@ -9,8 +9,10 @@ import { FormBuilder,FormControl, FormGroup, Validators } from "@angular/forms"
   styleUrls: ['./securitysu.component.css']
 })
 export class SecuritysuComponent implements OnInit {
+  public wait = false;
   public signupForm : FormGroup;
   public payload:any;
+  public session_payload:any;
   public titleAlert2 :string ="Please enter in an password that is 8 charaters long"
   public titleAlert1 :string ="This field is required"
   constructor(private log :SalusloginService,private router: Router,private fb: FormBuilder) {
@@ -39,7 +41,7 @@ export class SecuritysuComponent implements OnInit {
   ngOnInit(): void {
   }
   setValues(post:any){
-    console.log("working")
+    this.wait = true;
     this.payload ={
       "data":{
                 "name":post.name,
@@ -59,10 +61,12 @@ export class SecuritysuComponent implements OnInit {
     
     
     }
+    this.session_payload = {"name":post.name,"staff_number":post.staffnum}
+    localStorage.setItem('user_profile',JSON.stringify(this.session_payload))
     this.log.SecuritySignUp(this.payload)
         .subscribe(
           (data)=>{
-            console.log(data);
+            this.wait=false
             if (data["message"]=="succeessful")
             {
               this.router.navigate(["/securitydash"])

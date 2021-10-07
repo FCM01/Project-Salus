@@ -9,7 +9,7 @@ import { FormBuilder,FormControl, FormGroup, Validators } from "@angular/forms"
   styleUrls: ['./studentsu.component.css']
 })
 export class StudentsuComponent implements OnInit {
-
+  public wait = false;
   public signupForm : FormGroup;
   public payload:any;
   public titleAlert2 :string ="Please enter in an password that is 8 charaters long"
@@ -18,7 +18,7 @@ export class StudentsuComponent implements OnInit {
     this.signupForm = fb.group({
       "name": ['', Validators.required],
       "surname": ['', Validators.required],
-      "id_number": ['', Validators.required],
+      "id_number": [''],
       "date_of_birth": ['', Validators.required],
       "studentnum": ['',Validators.required],
       "register_class": ['', Validators.required],
@@ -42,7 +42,7 @@ export class StudentsuComponent implements OnInit {
   ngOnInit(): void {
   }
   setValues(post:any){
-    console.log("working")
+    this.wait = true;
     this.payload ={
       "data":{
                 "name":post.name,
@@ -70,7 +70,7 @@ export class StudentsuComponent implements OnInit {
     this.log.StudentSignUp(this.payload)
         .subscribe(
           (data)=>{
-            console.log(data);
+            this.wait=false
             if (data["message"]=="succeessful")
             {
               this.router.navigate(["/studentdash"])

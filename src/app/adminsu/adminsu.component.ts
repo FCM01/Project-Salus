@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SalusloginService } from '../saluslogin.service';
 import { Router } from '@angular/router';
+import { SubservicesService } from '../subservices.service';
 import { FormBuilder,FormControl, FormGroup, Validators } from "@angular/forms"
 
 @Component({
@@ -9,12 +10,13 @@ import { FormBuilder,FormControl, FormGroup, Validators } from "@angular/forms"
   styleUrls: ['./adminsu.component.css']
 })
 export class AdminsuComponent implements OnInit {
- 
+  public wait = false;
   public signupForm : FormGroup;
   public payload:any;
+  public session_payload:any;
   public titleAlert2 :string ="Please enter in an password that is 8 charaters long"
   public titleAlert1 :string ="This field is required"
-  constructor(private log :SalusloginService,private router: Router,private fb: FormBuilder) {
+  constructor(private sub:SubservicesService,private log :SalusloginService,private router: Router,private fb: FormBuilder) {
     this.signupForm = fb.group({
       "name": ['', Validators.required],
       "surname": ['', Validators.required],
@@ -38,7 +40,7 @@ export class AdminsuComponent implements OnInit {
   ngOnInit(): void {
   }
   setValues(post:any){
-    console.log("working")
+    this.wait = true;
     this.payload ={
       "data":{
                 "name":post.name,
@@ -55,16 +57,19 @@ export class AdminsuComponent implements OnInit {
       }  
     
     }
+    this.session_payload = {"name":post.name,"admin_number":post.admin_number}
+    localStorage.setItem('user_profile',JSON.stringify(this.session_payload))
     this.log.AdminSignUp(this.payload)
         .subscribe(
           (data)=>{
-            console.log(data);
+            this.wait=false
             if (data["message"]=="succeessful")
             {
               this.router.navigate(["/admindash"])
             }
           }
         )
+    
     
   
 }

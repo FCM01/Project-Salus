@@ -13,7 +13,6 @@
             <h1> Visitor Sign-up </h1>
                 <form [formGroup]="signupForm" (ngSubmit)="setValues(signupForm.value)" >
                     <h1>General Infomation</h1>
-                
                     <input type="text"  formControlName="name" #name placeholder= "First Name ">
                     <div class="alert" *ngIf="!signupForm.controls['name'].valid && signupForm.controls['name'].touched">
                         {{titleAlert1}} </div>
@@ -22,7 +21,7 @@
                         {{titleAlert1}} </div>
                     <input type="text"  formControlName="id_number" #name placeholder= "SA ID number">
                     <div class="alert" *ngIf="!signupForm.controls['id_number'].valid && signupForm.controls['id_number'].touched">
-                            {{titleAlert1}} </div>
+                        {{titleAlert1}} </div>
                     <br>
                     <h2>Date of Birth</h2>
                     <br>
@@ -71,6 +70,15 @@
           
         </div>
     </div>
+    <div *ngIf ="wait" class="preload">
+        <div class="logo">
+            <span style="color: #050708;">SALUS</span>   
+        </div>
+        <div  class="loader-frame">
+            <div class="loader1" id="loader1"></div>
+            <div class="loader2" id="loader2"></div>
+    </div>
+</div>
     
 </body>
 </html>

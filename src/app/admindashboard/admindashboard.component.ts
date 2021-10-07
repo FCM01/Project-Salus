@@ -19,6 +19,7 @@ export class AdmindashboardComponent implements OnInit {
   public messages =null;
   public userarray=null;
   public status:any;
+  public location:any;
   public databaseselected:any; 
   public titleAlert1 :string ="This field is required"
   list1 = [
@@ -34,15 +35,21 @@ export class AdmindashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const dateNow = new Date();
-    this.datetime =new Date(new Date(dateNow).getTime())
+    //date area
 
-
-
+    this.datetime = new Date();
+   
+    //Sessions
     const user_profile_recieved = (localStorage.getItem('user_profile'));
     this.data = user_profile_recieved
     this.user_profile = JSON.parse(this.data);
-    
+
+    //set user_number for breach alram
+    let session_payload  = {
+      "user_number":this.user_profile["admin_number"],
+      "user_type":"admin"
+    }
+    localStorage.setItem('global_user_number',JSON.stringify(session_payload));
     this.sub.getComments()
     .subscribe(
       (data)=>
@@ -99,7 +106,7 @@ export class AdmindashboardComponent implements OnInit {
 
           if (data["response"] != "")
           {
-            this.userarray =data["response"]
+            this.userarray = data["response"]
           }
 
         }

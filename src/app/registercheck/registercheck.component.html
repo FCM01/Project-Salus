@@ -8,20 +8,38 @@
 </head>
 <body>
     <div class="content">
-        <h1>Entering School grounds</h1>
-        <p>Hello please enter in personel User Number so that we can be varify you in the security system</p>
-        <h2>If you are not signup with Salus please use the signup button to create a account before entering school grounds</h2>
+        <h1>Class Register Check</h1>
+        <p>Hello please enter in personal User Number/Student Number so that we can be varify you in the security system</p>
+        <P>And select the class you about to attend</P>
     </div>
     
     <div  class="wrapper fadeInDown">
         <div id="formContent">
-        <h2 class="active" routerLink="/contact">HELP</h2>
-        <h2 class="inactive underlineHover" routerLink ="/signup">Sign Up </h2>
+        <h2 class="inactive underlineHover" routerLink="/contact">HELP</h2>
         <form [formGroup]="signupForm" (ngSubmit)= "setValue(signupForm.value)">
+            
             <input type = "text" placeholder = "User Number"  formControlName="usernum">
             <div class="alert" *ngIf="!signupForm.controls['usernum'].valid && signupForm.controls['usernum'].touched">
                 {{titleAlert1}} </div>
-                <input [disabled]="!signupForm.valid" type="submit" class="fadeIn fourth" value="Submit">
+            <input type = "text" placeholder = "Register Class"  formControlName="register_class">
+            <div class="alert" *ngIf="!signupForm.controls['register_class'].valid && signupForm.controls['register_class'].touched">
+                {{titleAlert1}} </div>
+            <h2>Please select subject from list provided</h2>
+            <input list = "bt" type="text" placeholder = "Subject" formControlName="subject" #breach>
+                <datalist id = "bt">
+                <option value = "Mathematics">
+                <option value = "Physical Science">
+                <option value = "Life Science">
+                <option value = "English">
+                <option value = "Afrikaans">
+                <option value = "Accounting">
+                </datalist>
+            <div class="alert" *ngIf="!signupForm.controls['subject'].valid && signupForm.controls['subject'].touched">
+                    {{titleAlert1}} </div>
+            
+                
+            <input [disabled]="!signupForm.valid" type="submit" class="fadeIn fourth" value="Enter">
+            
         </form>
         <div id="formFooter">
             <a class="underlineHover" routerLink="">CANCEL</a>
@@ -29,6 +47,14 @@
        </div>
     </div>
     
-    
+    <div *ngIf ="wait" class="preload">
+        <div class="logo">
+            <span style="color: #050708;">SALUS</span>   
+        </div>
+        <div  class="loader-frame">
+            <div class="loader1" id="loader1"></div>
+            <div class="loader2" id="loader2"></div>
+        </div>
+</div>
 </body>
 </html>

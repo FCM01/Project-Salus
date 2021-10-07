@@ -27,6 +27,7 @@ import { DomesticsuComponent } from './domesticsu/domesticsu.component';
 import { AdminsuComponent } from './adminsu/adminsu.component';
 import { AdmindashboardComponent } from './admindashboard/admindashboard.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
+import { OngroundscheckComponent } from './ongroundscheck/ongroundscheck.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
     DomesticsuComponent,
     AdminsuComponent,
     AdmindashboardComponent,
-    ToolbarComponent
+    ToolbarComponent,
+    OngroundscheckComponent
   ],
   imports: [
     BrowserModule,

@@ -9,8 +9,8 @@ import { FormBuilder,FormControl, FormGroup, Validators } from "@angular/forms"
   styleUrls: ['./staffsu.component.css']
 })
 export class StaffsuComponent implements OnInit {
-
   public signupForm : FormGroup;
+  public wait = false;
   public payload:any;
   public titleAlert2 :string ="Please enter in an password that is 8 charaters long"
   public titleAlert1 :string ="This field is required"
@@ -40,8 +40,8 @@ export class StaffsuComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  setValues(post:any){
-    console.log("working")
+  setValues(post:any){  
+    this.wait = true;
     this.payload ={
       "data":{
                 "name":post.name,
@@ -62,10 +62,11 @@ export class StaffsuComponent implements OnInit {
     
     
     }
+
     this.log.TeacherSignUp(this.payload)
         .subscribe(
           (data)=>{
-            console.log(data);
+            this.wait=false
             if (data["message"]=="succeessful")
             {
               this.router.navigate(["/teacherdash"])
@@ -75,4 +76,6 @@ export class StaffsuComponent implements OnInit {
     
   
 }
+
+
 }

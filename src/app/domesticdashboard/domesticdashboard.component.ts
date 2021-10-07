@@ -9,16 +9,17 @@ import { FormBuilder,FormControl, FormGroup, Validators } from "@angular/forms"
   styleUrls: ['./domesticdashboard.component.css']
 })
 export class DomesticdashboardComponent implements OnInit {
-
-  public User:any;
+  public user_profile:any;
+  public data :any ;
  
   constructor(private log :SalusloginService,private router: Router,private fb: FormBuilder) { 
  
   }
 
   ngOnInit(): void {
-    sessionStorage.getItem('id');
-  
+    const user_profile_recieved = (localStorage.getItem('user_profile'));
+    this.data = user_profile_recieved
+    this.user_profile = JSON.parse(this.data);
   }
   
 

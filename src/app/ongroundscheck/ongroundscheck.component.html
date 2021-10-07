@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="content">
+        <h1>Entering School grounds</h1>
+        <p>Hello please enter in personel User Number so that we can be varify you in the security system</p>
+    </div>
+    
+    <div  class="wrapper fadeInDown">
+        <div id="formContent">
+        <h2 class="active" routerLink="/contact">HELP</h2>
+        <h2 class="inactive underlineHover" routerLink ="/signup">Sign Up </h2>
+        <form [formGroup]="signupForm" (ngSubmit)= "setValue(signupForm.value)">
+            <h2>If you are not signed up  with Salus please use the signup button to create a account before entering school grounds</h2>
+            <input type = "text" placeholder = "User Number"  formControlName="usernum">
+            <div class="alert" *ngIf="!signupForm.controls['usernum'].valid && signupForm.controls['usernum'].touched">
+                {{titleAlert1}} </div>
+                <input [disabled]="!signupForm.valid" type="submit" class="fadeIn fourth" value="Enter">
+        </form>
+        <div id="formFooter">
+            <a class="underlineHover" routerLink="">CANCEL</a>
+        </div>
+       </div>
+    </div>
+    <div *ngIf ="wait" class="preload">
+        <div class="logo">
+            <span style="color: #050708;">SALUS</span>   
+        </div>
+        <div  class="loader-frame">
+            <div class="loader1" id="loader1"></div>
+            <div class="loader2" id="loader2"></div>
+        </div>
+</div>
+    
+</body>
+</html>

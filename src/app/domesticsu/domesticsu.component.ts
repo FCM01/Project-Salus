@@ -9,7 +9,7 @@ import { FormBuilder,FormControl, FormGroup, Validators } from "@angular/forms"
   styleUrls: ['./domesticsu.component.css']
 })
 export class DomesticsuComponent implements OnInit {
-
+  public wait = false;
   public signupForm : FormGroup;
   public payload:any;
   public titleAlert2 :string ="Please enter in an password that is 8 charaters long"
@@ -37,7 +37,7 @@ export class DomesticsuComponent implements OnInit {
   ngOnInit(): void {
   }
   setValues(post:any){
-    console.log("working")
+    this.wait = true;
     this.payload ={
       "data":{
                 "name":post.name,
@@ -59,7 +59,7 @@ export class DomesticsuComponent implements OnInit {
     this.log.DomesticSignUp(this.payload)
         .subscribe(
           (data)=>{
-            console.log(data);
+            this.wait=false
             if (data["message"]=="succeessful")
             {
               this.router.navigate(["/domesticdash"])

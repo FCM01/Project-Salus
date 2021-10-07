@@ -31,6 +31,94 @@ export class SubservicesService {
     })
     );
   }
+
+  PurgeQRcodes(final_payload:any)
+  {
+    const requestOptions: Object = {
+      //If your response is text not json
+      responseType: 'json'
+    }   
+    return this.http.post<any>(this.url+"/Generate/Class/RegisterQR",final_payload,requestOptions).pipe(map((data: any,error: any) => {
+      if(data){
+        return data;
+      }
+      else{
+        return error;
+      }
+    })
+    );
+
+  }
+  RegisterClass(final_payload:any)
+  {
+    const requestOptions: Object = {
+      //If your response is text not json
+      responseType: 'json'
+    }   
+    return this.http.post<any>(this.url+"/Generate/Class/RegisterQR",final_payload,requestOptions).pipe(map((data: any,error: any) => {
+      if(data){
+        return data;
+      }
+      else{
+        return error;
+      }
+    })
+  );
+
+  }
+  GenerateEnterGroundsQR(final_payload:any)
+  {
+    const requestOptions: Object = {
+      //If your response is text not json
+      responseType: 'json'
+    }   
+    return this.http.post<any>(this.url+"/Enter/Grounds/QR",final_payload,requestOptions).pipe(map((data: any,error: any) => {
+      if(data){
+        return data;
+      }
+      else{
+        return error;
+      }
+    })
+  );
+  }
+  
+  EnterGrounds(final_payload:any)
+  {
+    const requestOptions: Object = {
+      //If your response is text not json
+      responseType: 'json'
+    }   
+    return this.http.post<any>(this.url+"/Enter/Grounds",final_payload,requestOptions).pipe(map((data: any,error: any) => {
+      if(data){
+        return data;
+      }
+      else{
+        return error;
+      }
+    })
+  );
+
+
+  }
+  Markpresent(final_payload:any)
+  {
+    const requestOptions: Object = {
+      //If your response is text not json
+      responseType: 'json'
+    }   
+    return this.http.post<any>(this.url+"/Mark/Present",final_payload,requestOptions).pipe(map((data: any,error: any) => {
+      if(data){
+        return data;
+      }
+      else{
+        return error;
+      }
+    })
+  );
+
+
+  }
   getComments()
   {
     const requestOptions: Object = {

@@ -1,3 +1,4 @@
+<app-toolbar></app-toolbar>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,20 +27,27 @@
                   <td>{{user.name}}</td>
                   <td>{{user.surname}}</td>
                   <td>{{user.email}}</td>
+                  <input type="submit" class="fadeIn fourth" value="Edit">
+                  <input type="submit" class="fadeIn fourth" value="Delete">
+                  <input type="submit" class="fadeIn fourth" value="Details">
                 </tr>
               </tbody>
         </table>
-        <div *ngIf ="userarray != null">
-          <input type="submit" class="fadeIn fourth" value="Edit">
-          <input type="submit" class="fadeIn fourth" value="Delete">
-          <input type="submit" class="fadeIn fourth" value="More Information">
         </div>
-            <!-- <div class="names" id="presentData" *ngFor="let items of data" >
-                <div class="comments" *ngFor="let comment of items.comments">
-                  <h4 *ngIf="items.comments !== [] ">-> {{items.name}}</h4>
-                  <p>> {{comment}}</p>
-            </div> -->
-        </div>
-    </div>  
+    </div> 
+    <div  class="wrapper fadeInDown">
+      <h1>GENERATE CLASS REGISTER QR</h1>
+      <div id="formContent">
+      <h2 class="active" routerLink="/contact">HELP</h2>
+      <br>
+      <h2>QR code will be sent via email</h2>
+      <h2>Please allow students to scan the qr code to mark themseleves present</h2>
+      <h2>To generate enter on grounds QR code click generate</h2>
+          <input type = "submit" placeholder = "Generate" (click)="GenerateQR()">
+      <div id="formFooter">
+          <a class="underlineHover" routerLink="">CANCEL</a>
+      </div>
+     </div>
+  </div> 
 </body>
 </html>
