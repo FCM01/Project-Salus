@@ -267,6 +267,7 @@ def stu_signup():
     resp ={}
     try:
         data = request.get_json("data")
+        print(data)
         name = data["data"]["name"]
         surname = data["data"]["surname"]
         id_number = data["data"]["id_number"]
@@ -285,9 +286,9 @@ def stu_signup():
         pg_id_number =data["data"]["pg_id_number"]
         pg_phone_number = data["data"]["pg_cnum"]
         
-        if name!= "" and email !="" and password !="" and   id_number  != "":
+        if name!= "" and email !="" and password !="":
             qr = tools()
-            token = qr.generate_token(data,staff_number,"student")
+            token = qr.generate_token(data,student_number,"student")
             signup_payload = {
                 "name":f"{name}",
                 "surname":f"{surname}",
@@ -340,10 +341,10 @@ def v_signup():
         password = data["data"]["password"]
         purpose_of_visit= data["data"]["purpose_of_visit"]
         if name!= "" and email !="" and password !="" and   id_number  != "":
-            id_number = tools()
-            visitor_number = id_number.random_number_creation() 
+            v_number = tools()
+            visitor_number = v_number.random_number_creation() 
             qr = tools()
-            token = qr.generate_token(data,staff_number,"visitor")
+            token = qr.generate_token(data,visitor_number,"visitor")
             signup_payload = {
                 "name":f"{name}",
                 "surname":f"{surname}",
@@ -364,7 +365,7 @@ def v_signup():
             print(signup_payload)
             mongo.db.visitor.insert_one(signup_payload)
             q1= tools()
-            q1.vistor_emailing_services(email,name,visitor_number,"signup","","","","")
+            q1.vistor_emailing_services(email,name,visitor_number)
             status = 200
             resp = {"message":"succeessful","status":f"{status}"}       
     except Exception as e:
@@ -1156,7 +1157,7 @@ def edit_user():
                     pcode= new_crediatials["data"]["pcode"]
                     password = new_crediatials["data"]["password"]
                     purpose_of_visit  = new_crediatials["data"]["purpose_of_visit"]
-
+                    visitor_number=new_crediatials["data"]["visitor_number"]
                     newvalues = { "$set": { 
                         "name":f"{name}",
                         "surname":f"{surname}",
@@ -1448,37 +1449,104 @@ def register_add():
 ###############################################
 # BREACH ALARM section 
 
-@app.route("/breachalarm",methods= ["POST"])
+@app.route("/Make/Breachalarm",methods= ["POST"])
 def make_alarm():
     status = 200
     resp = {}
     try:
         data = request.get_json("data")
-        name = data["data"]["name"]
-        surname = data["data"]["surname"]
-        id_number = data["data"]["id_number"]
-        password = data["data"]["password"]
-        email = data["data"]["email"]
+        user_number = data["data"]["user_number"]
         quadrant = data["data"]["quadrant"]
-        breach_type = data["data"]["breach type"]
-
-        if name!= "" and email !="" and password !="" and   id_number  != "":
+        breach_type = data["data"]["breach_type"]
+        id_num = tools()
+        breach_number = id_num.random_number_creation()
+        if breach_type != "" and breach_number != "" and quadrant != "" and user_number != "":
             breachAlarm_payload = {
-                "name":f"{name}",
-                "surname":f"{surname}",
-                "id_number":f"{id_number}",
-                "password": f"{password}",
-                "email":f"{email}",
-                "phone_number":f"{quadrant}",
-                "breach type":f"{breach_type}"
+                "breach_number":f"{breach_number}",
+                "user_number":f"{user_number}",
+                "quadrant":f"{quadrant}",
+                "breach_type":f"{breach_type}"
             }
+
+            if (breach_type  == "Robbery"):
+                #print("The breach is at:" + quadrant) 
+                people_profiles = mongo.db.ongrounds.find()
+                profiles = parse_json(people_profiles)
+                number_of_users= mongo.db.ongrounds.count()
+                c = tools()
+                c.breach_alram_email_service(breach_type) 
+                c.retrieve(profiles,number_of_users,breach_type)
+
+            elif(breach_type  == "Fire"):
+                #print("The breach happend in quadrant:" + quadrant) 
+                people_profiles = mongo.db.ongrounds.find()
+                profiles = parse_json(people_profiles)
+                number_of_users= mongo.db.ongrounds.count()
+                c = tools()
+                c.breach_alram_email_service(breach_type)
+                c.retrieve(profiles,number_of_users,breach_type)
+
+            elif(breach_type == "Intruder"):
+                #print("The breach happend in quadrant:" + quadrant)
+                people_profiles = mongo.db.ongrounds.find()
+                profiles = parse_json(people_profiles)
+                number_of_users= mongo.db.ongrounds.count()
+                c = tools()
+                c.breach_alram_email_service(breach_type)
+                c.retrieve(profiles,number_of_users,breach_type)
+
+            elif(breach_type  == "Terrorism"):
+                #print("The breach happend in quadrant:" + quadrant)
+                people_profiles = mongo.db.ongrounds.find()
+                profiles = parse_json(people_profiles)
+                number_of_users= mongo.db.ongrounds.count()
+                print(number_of_users)
+                c = tools()
+                c.breach_alram_email_service(breach_type)
+                c.retrieve(profiles,number_of_users,breach_type)
+
+            elif(breach_type  == "Medical Emergency"):
+                #print("The breach happend in quadrant:" + quadrant)            
+                people_profiles = mongo.db.ongrounds.find()
+                number_of_users= mongo.db.ongrounds.count()
+                c = tools()
+                c.breach_alram_email_service(breach_type)
+
+            user_number_onground = []
+            user_number_general = []
+            not_at_school = []
+
+            student_number = mongo.db.students.find()
+            present = mongo.db.onground.find()
+            if(student_number != None and present != None):
+                data_present = parse_json(present) 
+                data_student_number =parse_json(student_number)
+                for i in data_present:
+                    user_number_onground.append(i["user_number"])
+                for i in student_number :
+                    user_number_general.append(i["student_number"])
+                count = mongo.db.student.count()
+                print(count)
+                j = 0         
+                for i in range(0,count):
+                    if user_number_general[j] != user_number_onground[i]:
+                        not_at_school.append(user_number_general[j])
+                    j+=1
+
+                print(not_at_school)
+            else:
+                status = 400
+                resp = {"message":"Unsuccesful","status":status}
+
+            mongo.db.breach_alarm.insert_one(breachAlarm_payload)
+            status =200
+            resp = {"message":"successful","status":status}
 
     except Exception as e :
         status  = 400
         resp={"message":f"{e}","status":status}  
-        print("ERORR (/breachalarm route)--->",e)
+        print("ERORR (/Make/Breachalarm route)--->",e)
     return jsonify(resp),status
-
 @app.route("/breachalarm/check",methods= ["GET"])
 def check_alarm():
     status = 200
