@@ -11,6 +11,20 @@ import { FormBuilder,FormControl, FormGroup, Validators } from "@angular/forms"
 })
 export class AdmindashboardComponent implements OnInit {
   public databaseForm: FormGroup;
+  //breach varaiables 
+  public breach_status = ""
+  public breach_number :any;
+  public breach_type:any;
+  public quadrent:any;
+  public message_alert = false;
+  //reply variables 
+  public show_reply_section=false;
+  public show_message = true;
+  public current_message_number=""
+  public current_message_name=""
+  public current_message_message=""
+
+  //form and other variables
   public payload = {};
   public num = 0;
   public data :any ;
@@ -47,7 +61,7 @@ export class AdmindashboardComponent implements OnInit {
     //set user_number for breach alram
     let session_payload  = {
       "user_number":this.user_profile["admin_number"],
-      "user_type":"admin"
+      "user_type":"admin" 
     }
     localStorage.setItem('global_user_number',JSON.stringify(session_payload));
     this.sub.getComments()
@@ -58,6 +72,22 @@ export class AdmindashboardComponent implements OnInit {
 
       }
     )
+    //breach status 
+    this.sub.getBreach()
+      .subscribe(
+        (data)=>{
+          if(data != ""){
+            this.message_alert = true
+              this.breach_number =data["response"]["breach_number"]
+              this.breach_type = data["response"]["breach_type"]
+              this.quadrent = data["response"]["quadrant"]
+            if (data["response"]["status"]== "onroute"){
+              this.breach_status = "AID is on the Way" 
+            }
+            
+          }
+        }
+      )
    
   }
   public toggleSelection(item:any, _list:any) {
@@ -91,10 +121,50 @@ export class AdmindashboardComponent implements OnInit {
       )
 
   }
+  deleteBreach()
+  {
+    let payload =
+    {
+      "data":{
+        "breach_number":this.breach_number
+      }
+    }
+
+    this.sub.DeleteBreachAlarm(payload)
+      .subscribe(
+        (data)=>{
+          if (data["status"]==200){
+          
+          this.message_alert = false
+          }
+        }
+      )
+
+  }
+  deleteMessage(message_number:any)
+  {
+    
+    let payload =
+    {
+      "data":{
+        "message_number":message_number
+      }
+    }
+    this.sub.DeleteMessage(payload)
+      .subscribe(
+        (data)=>{
+          if (data["status"]==200){
+            alert("Message Deleted")
+            location.reload();
+           
+          }
+        }
+      )
+
+  }
 
   setValues()
   {
-    console.log(this.databaseselected)
     this.payload = {
       "data":{
         "database_name":this.databaseselected
@@ -114,9 +184,22 @@ export class AdmindashboardComponent implements OnInit {
       console.log (this.userarray)
 
 }
+
+ReplyShow(name:any,message_number:any,message:any){
+  this.show_reply_section = true;
+  this.show_message =false;
+  //
+
+  this.current_message_message = message;
+  this.current_message_name =name;
+  this.current_message_number =message_number;
+}
+ReplyHide(){
+  this.show_reply_section=false;
+  this.show_message =true;
+}
 GenerateToken()
 {
-  console.log("sending")
   this.status="Generating";
   let user_number =this.user_profile["admin_number"]
   this.payload={
@@ -139,6 +222,7 @@ GenerateToken()
   
 
 }
+
 }
 
 

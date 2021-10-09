@@ -21,6 +21,8 @@ import { AdminsuComponent } from './adminsu/adminsu.component';
 import { AdmindashboardComponent } from './admindashboard/admindashboard.component';
 import { RegistercheckComponent } from './registercheck/registercheck.component';
 import { OngroundscheckComponent } from './ongroundscheck/ongroundscheck.component';
+import { BreachresponseComponent } from './breachresponse/breachresponse.component';
+import { StudenteditComponent } from './studentedit/studentedit.component';
 
 const routes: Routes = [
   {path:"",component :HomeComponent},
@@ -44,6 +46,8 @@ const routes: Routes = [
   {path:"admindash",component:AdmindashboardComponent},
   {path:"registercheck",component:RegistercheckComponent},
   {path:"ongroundscheck",component:OngroundscheckComponent},
+  {path:"breachresponse",component:BreachresponseComponent},
+  {path:"studentedit",component:StudenteditComponent}
   
 ];
 

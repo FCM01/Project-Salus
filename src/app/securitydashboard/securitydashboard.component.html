@@ -1,4 +1,21 @@
-<app-toolbar></app-toolbar>
+<div class="navbar">
+
+    <div class="dropdown">
+      <button class="dropbtn">SALUS
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-content">
+        <a class="underlineHover" href="#">Database Select</a>
+        <a class="underlineHover" href="#">Messages</a>
+        <a class="underlineHover"href="#">Reports</a>
+      </div>
+    </div>
+    <nav>
+      <ul>
+          <li><a routerLink ="/login">Log Out </a></li>
+      </ul>
+    </nav>
+  </div>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +25,14 @@
     <title>Document</title>
 </head>
 <body>
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+          <h1 style ="color:#ff0000;">Breach Alarm</h1>
+          <h2 class="active">Make a breach Alarm</h2>
+          <br>
+          <input type="submit"  class="fadeIn fourth" value="Breach" routerLink="/breach">
+        </div>
+    </div>
     <h1>Upload file</h1>
     <input type="file" (change)="onFileEvent($event)">
     <div  class="wrapper fadeInDown">
@@ -22,5 +47,8 @@
        </div>
     </div>
     
+    <footer>
+        <p>All rights reserved. @SALUS 2021</p>
+    </footer>
 </body>
 </html>

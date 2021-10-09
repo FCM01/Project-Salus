@@ -326,3 +326,13 @@ input:placeholder {
   from {opacity: 1;}
   to {opacity: 0;}
 }
+
+.content {
+  height: 60vh;
+  padding: 20px;
+}
+footer {
+  text-align: center;
+  padding: 10px 20px;
+  background-color: #56baed;
+}

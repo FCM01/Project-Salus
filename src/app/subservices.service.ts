@@ -119,6 +119,22 @@ export class SubservicesService {
 
 
   }
+  UpdateStatus(final_payload:any){
+    const requestOptions: Object = {
+      //If your response is text not json
+      responseType: 'json'
+    }   
+    return this.http.post<any>(this.url+"/Breachalarm/Update",final_payload,requestOptions).pipe(map((data: any,error: any) => {
+      if(data){
+        return data;
+      }
+      else{
+        return error;
+      }
+    })
+    );
+  
+  }
   getComments()
   {
     const requestOptions: Object = {
@@ -136,14 +152,29 @@ export class SubservicesService {
     );
   }
 
-  
-  GenerateToken(final_payload:any)
+  getBreach()
   {
     const requestOptions: Object = {
       //If your response is text not json
       responseType: 'json'
     }   
-    return this.http.post<any>(this.url+"/Generate/Token",final_payload,requestOptions).pipe(map((data: any,error: any) => {
+    return this.http.get<any>(this.url+"/Breachalarm/Check",requestOptions).pipe(map((data: any,error: any) => {
+      if(data){
+        return data;
+      }
+      else{
+        return error;
+      }
+    })
+    );
+  }
+  DeleteMessage(final_payload:any)
+  {
+    const requestOptions: Object = {
+      //If your response is text not json
+      responseType: 'json'
+    }   
+    return this.http.post<any>(this.url+"/Delete/Message",final_payload,requestOptions).pipe(map((data: any,error: any) => {
       if(data){
         return data;
       }
@@ -153,6 +184,61 @@ export class SubservicesService {
     })
     );
 
+  }
+  DeleteBreachAlarm(final_payload:any)
+  {
+    const requestOptions: Object = {
+      //If your response is text not json
+      responseType: 'json'
+    }   
+    return this.http.post<any>(this.url+"/Breachalarm/Delete",final_payload,requestOptions).pipe(map((data: any,error: any) => {
+      if(data){
+        return data;
+      }
+      else{
+        return error;
+      }
+    })
+    );
+
+  }
+  
+  
+  GenerateToken(final_payload:any)
+  {
+    const requestOptions: Object = {
+      //If your response is text not json
+      responseType: 'json'
+    }   
+    return this.http.post<any>(this.url+"/Verify/Personal/QR",final_payload,requestOptions).pipe(map((data: any,error: any) => {
+      if(data){
+        return data;
+      }
+      else{
+        return error;
+      }
+    })
+    );
+
+  }
+
+  // EDIT USER section
+
+  GetUser(final_payload:any)
+  {
+    const requestOptions: Object = {
+      //If your response is text not json
+      responseType: 'json'
+    }   
+    return this.http.post<any>(this.url+"/Get/User",final_payload,requestOptions).pipe(map((data: any,error: any) => {
+      if(data){
+        return data;
+      }
+      else{
+        return error;
+      }
+    })
+    );
   }
 }
 

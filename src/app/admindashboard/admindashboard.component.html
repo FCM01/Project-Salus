@@ -1,4 +1,21 @@
-<app-toolbar></app-toolbar>
+<div class="navbar">
+
+  <div class="dropdown">
+    <button class="dropbtn">SALUS
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a class="underlineHover" href="#">Database Select</a>
+      <a class="underlineHover" href="#">Messages</a>
+      <a class="underlineHover"href="#">Reports</a>
+    </div>
+  </div>
+  <nav>
+    <ul>
+        <li><a routerLink ="/login">Log Out </a></li>
+    </ul>
+  </nav>
+</div>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,22 +25,47 @@
     <title>Document</title>
 </head>
 <body>
-  
-
   <div class="content">
     <h1>Welcome : {{user_profile["name"]}} {{user_profile["surname"]}}</h1>
     <p>Keep Safe with SALUS</p>
     <br>
     <img src={{location}} alt={{location}}>
   </div>
+  
   <div class="wrapper fadeInDown">
     <div id="formContent">
       <h1 style ="color:#ff0000;">Breach Alarm</h1>
       <h2 class="active">Make a breach Alarm</h2>
       <br>
       <input type="submit"  class="fadeIn fourth" value="Breach" routerLink="/breach">
+
+      <div *ngIf= "message_alert">
+        <h2>Breach Alarm</h2>
+        <br>
+        <h2>Breach Type :{{breach_type}}</h2>
+        <div class="alert"> 
+          <strong>Danger!</strong>There has been a breah on campus please stay indoors and await further instructions.
+        </div>
+      </div>
+
+      <div class="wrapper fadeInDown" *ngIf= "message_alert">
+        <div id="formContent">
+          <h1>MORE INFORMATION</h1>
+          <h2 class="active">Status:{{breach_status}}</h2>
+          <h2 class="active">Breach Number :{{breach_number}}</h2>
+          <h2 class="active">Breach Type :{{breach_type}}</h2>
+          <h2 class="active">Quadrent:{{quadrent}}</h2>
+        <div id="formFooterBreach" >
+          <a type="submit" class="underlineHover" (click)= "deleteBreach()">DELETE BREACH</a>
+        </div>
+
+        </div>
+      
+      </div>
     </div>
   </div>
+
+
     <div class="wrapper fadeInDown">
         <div id="formContent">
           <ul>
@@ -91,17 +133,47 @@
       </div> 
     <div class="wrapper fadeInDown">
       <div id="formContent">
-          <div class="form-container">
+          <div class="messagecontent"*ngIf="show_message" >
             <h1>Messages</h1>
-            <div class="names" id="presentData" *ngFor="let items of messages" >
-                <h4> {{items.name}}</h4>
-                <p>> {{items.message}}</p>
-                <input type="submit" class="fadeIn fourth" value="Delete" >
-                <input type="submit" class="fadeIn fourth" value="Reply">
-             </div>
-            </div> 
+            <div class="wrapper fadeInDown">
+              <div id="formContent">
+                  <div class="names" id="presentData" *ngFor="let items of messages" >
+                    <div class="alert info"> 
+                      <strong>FROM:  </strong>{{items.name}}
+                      <br>
+                      <strong>{{items.message_number}}: </strong>{{items.message}}
+                      <br>  
+                    </div>
+                    <div class= "buttons">
+                      <button type="submit" class="fadeIn fourth" (click)="deleteMessage(items.message_number)" >Delete</button>
+                      <button type="submit" class="fadeIn fourth"(click)="ReplyShow(items.name,items.message_number,items.message)">Reply</button>      
+                </div>
+              </div>
+            </div>  
+            </div>
+          </div> 
+          <section id="app" *ngIf="show_reply_section">
+            <div class="container">
+              <div class="row">
+                <div class="col-6">
+                  <div class="alert info"> 
+                    <strong>FROM:</strong>{{current_message_name}}
+                    <br>
+                    <strong>{{current_message_number}}: </strong>{{current_message_message}}
+                    <br>  
+                  </div>
+                  <textarea type="text" class="input" placeholder="Write a comment" v-model="newItem" ></textarea>
+                  <button v-on:click="addItem()" class='primaryContained float-right' type="submit">Submit</button>
+                  <button  class='primaryContained float-right' (click)="ReplyHide()">Cancel</button>
+                </div><!-- End col -->
+              </div><!--End Row -->
+            </div><!--End Container -->
+          </section><!-- end App -->   
         </div>
-      </div>
-  
+    </div> 
+   
+  <footer>
+    <p>All rights reserved. @SALUS 2021</p>
+  </footer>
 </body>
 </html>

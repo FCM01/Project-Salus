@@ -15,10 +15,15 @@ export class SecuritydashboardComponent implements OnInit {
   constructor(private sub:SubservicesService,private http :HttpClient,private log :SalusloginService) { }
 
   ngOnInit(): void {
-    //Sessions
-    const user_profile_recieved = (localStorage.getItem('user_profile'));
-    this.data = user_profile_recieved
-    this.user_profile = JSON.parse(this.data);
+     //Sessions
+     const user_profile_recieved = (localStorage.getItem('user_profile'));
+     this.data = user_profile_recieved
+     this.user_profile = JSON.parse(this.data);
+     //set user_number for breach alram
+     let session_payload  = {
+       "user_number":this.user_profile["staff_number"],
+       "user_type":"admin"
+     }
   }
 onFileEvent(event:any){
   console.log(event)

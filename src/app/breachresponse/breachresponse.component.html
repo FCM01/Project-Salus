@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+<div class="wrapper fadeInDown">
+<div id="formContent">
+
+<br> 
+<br>
+
+<h1> Breach response </h1>
+<br>
+<br>
+<div>
+    <h2 class="active">Breach Number : {{breach_number}}</h2>
+    <h2 class="active">Breach Type : {{breach_type}}</h2>
+    <h2 class="active">Quadrent : {{quadrent}}</h2>
+</div>
+
+<form [formGroup]="breachForm" (ngSubmit)="Respond(breachForm.value)">
+    <input type = "number" placeholder = "Breach Number"  formControlName="breach_number">
+    <div class="alert" *ngIf="!breachForm.controls['breach_number'].valid && breachForm.controls['breach_number'].touched">
+        {{titleAlert1}} </div>
+    <h2>Please click the button below to notify school that your onroute to give aid</h2>
+    <input [disabled]="!breachForm.valid" type= "submit" value = "Recieved" > 
+</form>
+
+
+
+</div>
+
+</div>
+<div *ngIf ="wait" class="preload">
+    <div class="logo">
+        <span style="color: #050708;">SALUS</span>   
+    </div>
+    <div  class="loader-frame">
+        <div class="loader1" id="loader1"></div>
+        <div class="loader2" id="loader2"></div>
+    </div>
+</div>
+
+</body>
+

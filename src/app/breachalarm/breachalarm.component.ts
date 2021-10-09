@@ -13,7 +13,9 @@ export class BreachalarmComponent implements OnInit {
   public wait = false;
   public breachtype = "";
   public breach:FormGroup;
+  //session variables
   public user_number:any;
+  public user_type :any;
   public data :any ;
   public titleAlert1 :string ="This field is required"
   constructor(private log :SalusloginService,private router: Router,private fb: FormBuilder) {
@@ -26,7 +28,9 @@ export class BreachalarmComponent implements OnInit {
     //Sessions
     const user_profile_recieved = (localStorage.getItem('global_user_number'));
     this.data = user_profile_recieved
-    this.user_number = JSON.parse(this.data);
+    this.data= JSON.parse(this.data);
+    this.user_type = this.data["user_type"];
+    this.user_number =this.data["user_number"];
   }
   
   myDate = new Date();
@@ -38,44 +42,44 @@ export class BreachalarmComponent implements OnInit {
     this.myDate = val1;
   }
 
-  
-
-  getBreachType(post:any)
+  MakeBreach(post:any)
   {
     this.wait = true;
+    
     let payload ={
        "data":{
-        "user_number" :this.user_number["user_number"],
+        "user_number" :this.user_number,
         "quadrant" :this.quadrant,
         "breach_type" :post.type
        }
     }
+    console.log("data==>",payload)
 
     this.log.MakeBreachAlarm(payload)
       .subscribe(
         (data)=>{
           this.wait = false;
           console.log(data)
-          if (this.user_number=="student"){
+          if (this.user_type=="student"){
             this.router.navigate(['/studentdash'])
           }
-          else if(this.user_number=="teacher")
+          else if(this.user_type=="teacher")
           {
             this.router.navigate(['/teacherdash']) 
           }
-          else if(this.user_number=="domestic")
+          else if(this.user_type=="domestic")
           { 
             this.router.navigate(['/domesticdash'])
           }
-          else if(this.user_number=="security")
+          else if(this.user_type=="security")
           {
             this.router.navigate(['/securitydash'])
           }
-          else if(this.user_number=="visitor")
+          else if(this.user_type=="visitor")
           {
             this.router.navigate(['/visitordash'])
           }
-          else if(this.user_number=="admin")
+          else if(this.user_type=="admin")
           {
             this.router.navigate(['/admindash'])
           }
@@ -87,23 +91,23 @@ export class BreachalarmComponent implements OnInit {
 
   Getquadrant(q: string){
 
-    if(q == "Quadrant 1"){
-      this.quadrant = q;
+    if(q == "Q1"){
+      this.quadrant = "Quadrant 1";
       console.log(this.quadrant)
     }
 
-    else if (q == "Quadrant 2"){
-      this.quadrant = q;
+    else if (q == "Q2"){
+      this.quadrant = "Quadrant 2";
       console.log(this.quadrant)
     }
 
-    else if(q == "Quadrant 3"){
-      this.quadrant = q;
+    else if(q == "Q3"){
+      this.quadrant = "Quadrant 3";
       console.log(this.quadrant)
     }
 
-    else if (q == "Quadrant 4"){
-      this.quadrant = q;
+    else if (q == "Q4"){
+      this.quadrant = "Quadrant 4";
       console.log(this.quadrant)
     }
 

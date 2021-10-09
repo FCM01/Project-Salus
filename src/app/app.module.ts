@@ -28,6 +28,8 @@ import { AdminsuComponent } from './adminsu/adminsu.component';
 import { AdmindashboardComponent } from './admindashboard/admindashboard.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { OngroundscheckComponent } from './ongroundscheck/ongroundscheck.component';
+import { BreachresponseComponent } from './breachresponse/breachresponse.component';
+import { StudenteditComponent } from './studentedit/studentedit.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +56,9 @@ import { OngroundscheckComponent } from './ongroundscheck/ongroundscheck.compone
     AdminsuComponent,
     AdmindashboardComponent,
     ToolbarComponent,
-    OngroundscheckComponent
+    OngroundscheckComponent,
+    BreachresponseComponent,
+    StudenteditComponent
   ],
   imports: [
     BrowserModule,

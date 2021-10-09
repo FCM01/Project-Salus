@@ -1,3 +1,15 @@
+<div class="navbar">
+  <div class="dropdown">
+    <button class="dropbtn">SALUS
+      <i class="fa fa-caret-down"></i>
+    </button>
+  </div>
+  <nav>
+    <ul>
+        <li><a routerLink ="/login">Log Out </a></li>
+    </ul>
+  </nav>
+</div>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,51 +18,30 @@
 <div id="formContent">
 <br>
 
-<h1> Breach alarm </h1> 
-
-<!--New tool bar -->
-<div class="navbar">
-
-    <div class="dropdown">
-      <button class="dropbtn">SALUS
-        <i class="fa fa-caret-down"></i>
-      </button>
-      <div class="dropdown-content">
-        <a class="underlineHover" routerLink="/breachresponse">More Information </a>
-        <a class="underlineHover" routerLink="#">Messages</a>
-        <a class="underlineHover" routerLink="#">Reports</a>
-      </div>
-    </div>
-  </div>
-
-
-
+<h1> Breach alarm </h1>
 <br> 
-<br>
+
 
 <p> Please select the location of the breach </p>
 <div>
 <div>
-<input type = "submit" value = "Quadrant 1" id = "quad1" #q1 (click) = "Getquadrant(q1.value)"> 
-<input  type = "submit" value = "Quadrant 2" id = "quad2" #q2  (click) = "Getquadrant(q2.value)"> 
+  <div>
+    <input type = "submit" value = "Q1" id = "quad1" #q1 (click) = "Getquadrant(q1.value)"> 
+    <input  type = "submit" value = "Q2" id = "quad2" #q2  (click) = "Getquadrant(q2.value)"> 
+    </div>
+    
+    <div> 
+    <input type = "submit" value = "Q3" id = "quad3" #q3  (click) = "Getquadrant(q3.value)"> 
+    <input  type = "submit" value = "Q4" id = "quad4" #q4 (click) = "Getquadrant(q4.value)">
+  </div>
+  <h2 class="active"> Date: {{myDate | date: 'yyyy-MM-dd'}} </h2>
+  <h2 class="active">{{quadrant}}</h2>
 </div>
 
-<div> 
-<input type = "submit" value = "Quadrant 3" id = "quad3" #q3  (click) = "Getquadrant(q3.value)"> 
-<input  type = "submit" value = "Quadrant 4" id = "quad4" #q4 (click) = "Getquadrant(q4.value)">
 </div>
-
-</div>
-
-<br>
-<div>
-<p> Date: {{myDate | date: 'yyyy-MM-dd'}} </p>
-</div>
-
 <br>
 <br>
-
-<form [formGroup]="breach" (ngSubmit)="getBreachType(breach.value)">
+<form [formGroup]="breach" (ngSubmit)="MakeBreach(breach.value)">
   <p> Please enter the type of breach </p>
 
 <input list = "bt" type="text" class="fadeIn fourth" placeholder = "Breach Type"  formControlName="type">
@@ -86,4 +77,8 @@
       <div class="loader2" id="loader2"></div>
   </div>
 </div>
+<footer>
+  <p>All rights reserved. @SALUS 2021</p>
+</footer>
+
 </body>

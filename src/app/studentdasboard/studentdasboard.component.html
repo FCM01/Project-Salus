@@ -1,1 +1,95 @@
-<p>studentdasboard works!</p>
+<div class="navbar">
+
+    <div class="dropdown">
+      <button class="dropbtn">SALUS
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-content">
+        <a class="underlineHover" (click)="toolbarControlEdit()">Edit details</a>
+        <a class="underlineHover"href="#">Reports</a>
+      </div>
+    </div>
+    <nav>
+      <ul>
+          <li><a routerLink ="/login">Log Out</a></li>
+      </ul>
+    </nav>
+  </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+<br> 
+
+
+<div class="content">
+    <h1>Welcome : {{user_profile["name"]}} {{user_profile["surname"]}}</h1>
+    <p>Keep Safe with SALUS</p>
+    <br>
+  
+</div> 
+<div *ngIf= "message_alert" class="wrapper fadeInDown">
+  <div id="formContent">
+    <div>
+      <h2>Breach Alarm</h2>
+      <br>
+      <h2>Breach Type :{{breach_type}}</h2>
+      <div class="alert"> 
+        <strong>Danger!</strong>There has been a breah on campus please stay indoors and await further instructions.
+        <strong>STAY AWAY FROM {{quadrent}}</strong>
+      </div>
+    </div>
+  </div>
+</div>  
+
+
+<div class="wrapper fadeInDown">
+<div id="formContent">
+
+<br>
+<h2>To enter school grounds, get QR personal code by clicking generate token </h2>
+<p>Click if ask by security ,teaching anf high level personel only</p>
+<br>
+<p class="alert">DO NOT SHARE OR GIVE ACCESS TO YOUR PERSONAL QR CODE</p>
+<input type = "submit"  value = "generate token" placeholder = "Send"(click)="GenerateVQR()">
+<div class="wrapper fadeInDown" *ngIf="show">
+  <div id="formContent">
+    <h2>Press resnd of you didnt rescieve email</h2>
+    <p>if you fail to recieve you email three time please click help</p>
+    <h2>{{timeLeft}} Seconds Left....</h2>
+    <br>
+    <h2 class="inactive underlineHover" (click)="GenerateVQR()">Resend</h2>
+    <h2 class="inactive underlineHover" routerLink ="/contact">Help</h2>
+    <h2 class="inactive underlineHover" (click)="Cancel()">Cancel</h2>
+ 
+  </div>
+</div>
+<div class="wrapper fadeInDown" *ngIf ="toolbar_show == 'edit'">
+  <div id="formContent">
+    
+  <h1>Edit Your Credentials</h1>
+  <h2>Click her to edit your personal details </h2>
+  <img src="assets/images/saluswithname.jpg" alt = "Salus logo" >
+  <br>
+  <a  routerLink="/studentedit">Edit details</a>
+  </div>
+</div>
+
+
+<div id="formFooter">
+<a class="underlineHover" routerLink=""> Cancel </a>
+<br>
+
+</div>
+</div>
+
+</div>
+
+</body>
+

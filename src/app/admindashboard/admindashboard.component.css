@@ -12,11 +12,15 @@ button {
   display: inline-block;
   margin: 4px 2px;
   cursor: pointer;
+} 
+.buttons
+{
+  text-align: right;
 }
 /* BASIC */
 .content{
   width: 80%;
-  margin: 0em auto;
+  /* margin: 0em auto; */
   text-align: right;
   background-color:#56baed ;
 }
@@ -118,16 +122,22 @@ h2 {
   text-align:center;
 }
 
-
 #formFooter {
   background-color: #f6f6f6;
   border-top: 1px solid #dce8f1;
   padding: 25px;
-  text-align:left;
+  text-align: center;
   -webkit-border-radius: 0 0 10px 10px;
   border-radius: 0 0 10px 10px;
 }
-
+#formFooterBreach{
+  background-color: #f17070;
+  border-top: 1px solid #a2a5a8;
+  padding: 25px;
+  text-align: center;
+  -webkit-border-radius: 0 0 10px 10px;
+  border-radius: 0 0 10px 10px;
+}
 
 
 /* TABS */
@@ -327,5 +337,46 @@ input:placeholder {
 
 * {
   box-sizing: border-box;
+}
+
+footer {
+  text-align: center;
+  padding: 10px 20px;
+  background-color: #56baed;
+}
+
+
+
+/*message styling*/
+/*message reply*/
+.container {
+	max-width: 640px;
+	margin: 30px auto;
+	background: #fff;
+	border-radius: 8px;
+	padding: 20px;
+}
+
+.comment {
+	display: block;
+	transition: all 1s;
+}
+.commentClicked {
+	min-height: 0px;
+	border: 1px solid #eee;
+	border-radius: 5px;
+	padding: 5px 10px
+}
+
+.container textarea {
+	width: 100%;
+	border: none;
+	background: #E8E8E8;
+	padding: 5px 10px;
+	height: 50%;
+	border-radius: 5px 5px 0px 0px;
+	border-bottom: 2px solid #56baed;
+	transition: all 0.5s;
+	margin-top: 15px;
 }
 

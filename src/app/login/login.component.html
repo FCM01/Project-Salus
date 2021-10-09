@@ -35,60 +35,13 @@
   
     </div>
   </div>
+
   
-  <!-- <section class="Login">
-    <div class="Login col-lg-4 m-auto shadow-lg">
-        <form class="content" [formGroup]="loginForm" (ngSubmit)="setValues(user_number.value,password.value)">
-            <div>
-              <input type="User_number" formControlName="User_number" id="login" class="fadeIn second" placeholder="Enter User_number" #user_number>
-              <div *ngIf="User_number.invalid && (User_number.touched || User_number.dirty)">
-                <span class="error" *ngIf="User_number.errors?.required">*User_number is required.</span>
-                <span class="error" *ngIf="User_number.errors?.pattern">*Enter only numbers</span>
-              </div>
-            </div>
-            <div>
-              <input type="password" formControlName="Password" id="password" class="fadeIn third" placeholder="Enter password" #password>
-              <div *ngIf="Password.invalid && (Password.touched || Password.dirty)">
-                <span class="error" *ngIf="Password.errors?.required">*Password is required.</span>
-                <span class="error" *ngIf="Password.errors?.pattern">*Enter Correct Password</span>
-              </div>
-            </div>
-            <button [disabled]="loginForm.invalid" class="fadeIn fourth">Login</button>
-        </form>
-        <div id="formFooter">
-              <a class="underlineHover" href="#">Forgot Password?</a>
-        </div>
-    </div>
-</section> -->
-  
+<footer>
+  <p>All rights reserved. @SALUS 2021</p>
+</footer>
 </body>
 </html>
 
-<!-- <form>
-    <h1>Welcome</h1>
-    <p>Please enter in your credentials</p>
-    <p>{{responce}}</p>
-    <div class = "mb-main">
-        <div class="row">
-            <div class="col-md-6 offset-md-3 mt-4">
-               
-                <br>
-                <div class="mb-3">
-                <label for="usernumber">User Number</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" #user_number>
-                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-                </div>
-                <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword1" #password>
-                </div>
-                <div class="mb-3 form-check">
-                <a routerLink = "/forgotpassword">Forgot Password ??</a>
-                </div>
-                <button type="submit" class="btn btn-primary" (click)="setValues(user_number.value,password.value)">Submit</button>
 
-            </div>
-        </div>  
-</div>
-  </form> -->
 
