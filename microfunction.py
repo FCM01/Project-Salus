@@ -88,8 +88,7 @@ class tools :
         def generate_token(self,name,user_number,user_type):
             try:
                 path = ""
-                creation_point = datetime.now()
-                payload_image= f"{name},{user_number};{creation_point}"
+                payload_image= f"{name},{user_number};{user_type}"
                 qr = qrcode.QRCode(
                         version=1,
                         error_correction=qrcode.constants.ERROR_CORRECT_H,
@@ -117,10 +116,56 @@ class tools :
             except Exception as e :
                 print("[generate_token] generate_token() error:",e)
             return path 
+        def verify_user_qr(self, user_number,user_type,reciver_email):
+            path  = ""
+            try:
+                if user_type =="admin":
+                    path = f"resources/PQR/admin_user/{user_number}.png"
+                elif user_type =="student":
+                    path = f"resources/PQR/student_user/{user_number}.png"
+                elif user_type =="domestic":
+                    path = f"resources/PQR/domestic_user/{user_number}.png"
+                elif user_type =="visitor":
+                    path = f"resources/PQR/visitor_user/{user_number}.png"
+                elif user_type =="security":
+                    path = f"resources/PQR/security_user/{user_number}.png" 
 
+                email_address  ="dummyjackson8@gmail.com"
+                email_password  ="dummy101@1"
+                email_recieve = reciver_email
+                msg = EmailMessage()
+                msg['Subject'] = 'Personal QR code'
+                msg['From'] = email_address
+                msg['To']= email_recieve
+                msg.add_alternative(f"""
+                        <!DOCTYPE html>
+                        <html>
+                            <body>
+                                <h2 style ="color:#96c8cc;">For :{user_number}</h2>
+                                <p>Please find the attached image containing your personal QR code</p>
+                                <p>Please  feel safe under Salus</p>
+                                <p> We care about your well being </p>
+                                <p>Yours sincerly</p>
+                                <p>The Salus team</p>
+                            </body>
+                        </html>
+                        """,subtype= "html")
+                files = [f"{user_number}.png"]
+                for images in files:
+                    with open(f"{path}","rb") as image :
+                        file_data = image.read()
+                        file_type = imghdr.what(image.name)
+                        file_name= image.name
+                        msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name)
+                with smtplib.SMTP_SSL("smtp.gmail.com" ,465) as smtp:
+                    smtp.login(email_address,email_password)
+                    smtp.send_message(msg)
+                    print("Email has been sent")
+            except Exception as e :
+                print("[verify_user_qr] verify_user_qr() error:",e) 
         def genrate_grounds_qr(self,user_number):
                 try:
-                     
+            
                     creation_point = datetime.now()
                     date = str(creation_point.year)+"-"+str(creation_point.month)+"-"+str(creation_point.day)
                     payload_image= "http://localhost:4200/ongroundscheck"
@@ -287,7 +332,6 @@ class tools :
                     msg['Subject'] = 'Welcome to Salus'
                     msg['From'] = email_address
                     msg['To']= email_recieve
-                    msg.set_content ('Welcome to Salus we happy to provide you a new way to get onto your school grounds to with safety and secure tracking while maintaining you safety on school gounds and notifying you of issues on school grounds')
                     msg.add_alternative(f"""
                         <!DOCTYPE html>
                         <html>
@@ -456,6 +500,42 @@ class tools :
                     return True    
             except Exception as e :
                 print("[email_service] emailingServices() error:",e)
+        def log_breach(self,breach_type,quadrant,user_number,breach_number):
+            try:
+                creation_point = datetime.now()
+                date = str(creation_point.year)+"-"+str(creation_point.month)+"-"+str(creation_point.day)
+                log_payload  = {
+                    "creation_date":f"{date}",
+                    "breach_number":f"{breach_number}",
+                    "user_number":f"{user_number}",
+                    "quadrant":f"{quadrant}",
+                    "breach_type":f"{breach_type}"
+                }
+                make = find_all("log.json","resources/BL/")
+                if make == 1:
+                    array_of_qr = []
+                    with open("resources/BL/log.json") as outfile:
+                        data = json.loads(outfile.read())
+                        print(data)
+                        array  = data["breaches"]
+                        for  i in array :
+                            array_of_qr.append(i)
+                        array_of_qr.append(log_payload)
+                        with open("resources/RCQR/log.json","w") as infile:
+                            file_object = {
+                                "breaches":array_of_qr
+                                }
+                            json.dump(file_object,infile)
+                elif make == 0 : 
+                    array_of_qr = []
+                    array_of_qr.append(log_payload)
+                    with open("resources/BL/log.json","w") as infile:
+                        file_object = {
+                                    "breaches":array_of_qr
+                                }
+                        json.dump(file_object,infile) 
+            except Exception as e :
+                print("[log_breach] log_breach() error:",e)
 
 
         def breach_alram_email_service(self ,type_alram):
@@ -469,7 +549,7 @@ class tools :
                 msg['Subject'] = 'Welcome to Salus'
                 msg['From'] = email_address
                 msg['To']= email_recieve
-                msg.set_content ('Welcome to Salus we happy to provide u a new way to get onto your school grounds to with safety and secure tracking while maintaining you safety on school gounds and notifying you of issues on school grounds')
+                
                 msg.add_alternative(f"""
                         <!DOCTYPE html>
                         <html>
@@ -478,9 +558,8 @@ class tools :
                                 <h2 style ="color:#96c8cc;">{type_alram}</h2>
                                 <p>There has been a breach.</p>
                                 <p>This email has been sent to inform you that a breach of the type above has occured on shool campus with has be idetified as a danger to persons of this facility</p>
-                                <p>Response</p>
-                                <p>Yours sincerly</p>
-                                <p>The Salus team</p>
+                                <p>Please use the link the below to go to the response page</p>
+                                <p>http://localhost:4200/breachresponse</p>
                                 <p>Please  feel safe under Salus</p>
                                 <p> We care about your well being </p>
                                 <p>Yours sincerly</p>
@@ -497,7 +576,6 @@ class tools :
                         msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name) 
                 with smtplib.SMTP_SSL("smtp.gmail.com" ,465) as smtp:
                     smtp.login(email_address,email_password)
-
                     smtp.send_message(msg)
                     print("Email has been sent")    
                 return True   

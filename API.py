@@ -306,7 +306,7 @@ def stu_signup():
                 "pg_surname":f"{pg_surname}",
                 "pg_email":f"{pg_email}",
                 "pg_id_number":f"{pg_id_number}",
-                "pg_phone_number ":f"{pg_phone_number}",
+                "pg_phone_number":f"{pg_phone_number}",
                 "acess_level":0,
                 "pqr":token
             }
@@ -461,7 +461,7 @@ def login_user():
                 if database_password  == password:
                     print("welcome user")
                     status = 200
-                    resp = {"message":"Welcome","status":status,"token":"active","user":data}
+                    resp = {"message":"Welcome","status":status,"token":"active","user":data,"type_user":"visitor"}
                 else:
                     print("Password is incorrect")
                     status = 400
@@ -606,6 +606,7 @@ def enter_grounds():
             if parse_json(student) != None:
                 print("Student")
                 data = parse_json(student)
+                print(data)
                 name = data["name"]
                 surname =data["surname"]
                 user_number = data["student_number"]
@@ -616,7 +617,7 @@ def enter_grounds():
                         "user_number":f"{user_number}",
                         "email":f"{email}",
                     }
-        
+                print(on_grounds_payload)
                 mongo.db.ongrounds.insert_one(on_grounds_payload)
                 status  = 200
                 resp ={"message":"successful","status":status} 
@@ -681,15 +682,76 @@ def enter_grounds():
     return jsonify(resp),status
 
 
-@app.route("/Verify/Personal/QR",methods = ["GET"])
+@app.route("/Verify/Personal/QR",methods = ["POST"])
 def generate_personal_qr():
     status= 200
     resp = {}
     try:
         data= request.get_json("data")
-        user_numer = data["data"]["user_number"]
-        if user_number != "":
-            print("helo")
+        print(data)
+        user_number = data["data"]["user_number"]
+        user_type = data["data"]["user_type"]
+        print(user_number,user_type)
+        if user_number != "" and user_type != "":
+            if user_type == "teacher":
+                teacher = mongo.db.teacher.find_one({"staff_number":f"{user_number}"})
+                if parse_json(teacher) != None:
+                    data = parse_json(teacher)
+                    email = data["email"]
+                    get_qr= tools()
+                    get_qr.verify_user_qr(user_number,user_type,email)
+                    status = 200
+                    resp  = {"message":"successful","status":status}
+            if user_type =="security":
+                security = mongo.db.security.find_one({"staff_number":f"{user_number}"})    
+                if parse_json(security) != None:
+                    data = parse_json(security)
+                    token = qr.generate_token(name,user_number)
+                    email = data["email"]
+                    get_qr= tools()
+                    get_qr.verify_user_qr(user_number,user_type,email)
+                    status = 200
+                    resp  = {"message":"successful","status":status}
+            elif user_type =="domestic":
+                domestic = mongo.db.domestic.find_one({"staff_number":f"{user_number}"})
+                if parse_json(domestic) != None:
+                    print("Domestic")
+                    data = parse_json(domestic)
+                    email = data["email"]
+                    get_qr= tools()
+                    get_qr.verify_user_qr(user_number,user_type,email)
+                    status = 200
+                    resp  = {"message":"successful","status":status}
+
+            elif user_type == "student":
+                student = mongo.db.student.find_one({"student_number":f"{user_number}"})
+                if  parse_json(student) != None:
+                    data = parse_json(student)
+                    email = student["email"]
+                    get_qr= tools()
+                    get_qr.verify_user_qr(user_number,user_type,email)
+                    status = 200
+                    resp  = {"message":"successful","status":status}
+            
+            elif user_type == "vistor":
+                visitor = mongo.db.visitor.find_one({"visitor_number":f"{user_number}"})
+                if parse_json(visitor)  != None:
+                    data = parse_json(visitor)
+                    email = data["email"]
+                    get_qr= tools()
+                    get_qr.verify_user_qr(user_number,user_type,email)
+                    status = 200
+                    resp  = {"message":"successful","status":status}
+                    
+            elif user_type  == "admin":
+                admin = mongo.db.admin.find_one({"admin_number":f"{user_number}"})
+                if parse_json(admin) != []:
+                    data = parse_json(admin)
+                    email = data["email"]
+                    get_qr= tools()
+                    get_qr.verify_user_qr(user_number,user_type,email)
+                    status = 200
+                    resp  = {"message":"successful","status":status}
 
         else:
             status  = 400
@@ -900,12 +962,13 @@ def user_delete():
         print("ERORR (/delete/user route)--->",e)
     return jsonify(resp),status
 
-@app.route("/Get/User",methods=["GET"])
+@app.route("/Get/User",methods=["POST"])
 def get_user():
     status = 200
     resp = {}
     try:
         data= request.get_json("data")
+        print(data)
         user_number = data["data"]["user_number"]
         if user_number != "":
             teacher = mongo.db.teacher.find_one({"staff_number":f"{user_number}"})
@@ -961,8 +1024,10 @@ def edit_user():
     resp  = {}
     try:
         data =request.get_json("data")
+        print(data)
         new_crediatials = data["data"]["user_profile"]
         user_number = data["data"]["user_number"]
+        print(new_crediatials,user_number)
         if new_crediatials != {}  and user_number != "":
             teacher = mongo.db.teacher.find_one({"staff_number":f"{user_number}"})
             admin = mongo.db.admin.find_one({ "admin_number":f"{user_number}"})
@@ -972,20 +1037,20 @@ def edit_user():
             visitor = mongo.db.visitor.find_one({"visitor_number":f"{user_number}"})
             if parse_json(teacher) != None:
                 print("Teacher")
-                name = new_crediatials["data"]["name"]
-                surname = new_crediatials["data"]["surname"]
-                id_number = new_crediatials["data"]["id_number"]
-                date_of_birth = new_crediatials["data"]["date_of_birth"]
-                email = new_crediatials["data"]["email"]
-                phone_number= new_crediatials["data"]["phone_number"]
-                address= new_crediatials["data"]["address"]
-                city= new_crediatials["data"]["city"]
-                pcode= new_crediatials["data"]["pcode"]
-                password = new_crediatials["data"]["password"]
-                staff_number = new_crediatials["data"]["staff_number"]
-                position= new_crediatials["data"]["position"]
-                subject= new_crediatials["data"]["subject"]
-                register_class = new_crediatials["data"]["register_class"]
+                name = new_crediatials["name"]
+                surname = new_crediatials["surname"]
+                id_number = new_crediatials["id_number"]
+                date_of_birth = new_crediatials["date_of_birth"]
+                email = new_crediatials["email"]
+                phone_number= new_crediatials["phone_number"]
+                address= new_crediatials["address"]
+                city= new_crediatials["city"]
+                pcode= new_crediatials["pcode"]
+                password = new_crediatials["password"]
+                staff_number = new_crediatials["staff_number"]
+                position= new_crediatials["position"]
+                subject= new_crediatials["subject"]
+                register_class = new_crediatials["register_class"]
             
                 newvalues = { "$set": { 
                 "name":f"{name}",
@@ -1007,17 +1072,17 @@ def edit_user():
                 resp ={"message":"successful","token":"true" ,"status":status}
             if parse_json(admin) != None:
                     print("Admin")
-                    name = new_crediatials["data"]["name"]
-                    surname = new_crediatials["data"]["surname"]
-                    id_number = new_crediatials["data"]["id_number"]
-                    date_of_birth = new_crediatials["data"]["date_of_birth"]
-                    email = new_crediatials["data"]["email"]
-                    phone_number= new_crediatials["data"]["phone_number"]
-                    address= new_crediatials["data"]["address"]
-                    city= new_crediatials["data"]["city"]
-                    pcode= new_crediatials["data"]["pcode"]
-                    password = new_crediatials["data"]["password"]
-                    admin_number = new_crediatials["data"]["admin_number"]
+                    name = new_crediatials["name"]
+                    surname = new_crediatials["surname"]
+                    id_number = new_crediatials["id_number"]
+                    date_of_birth = new_crediatials["date_of_birth"]
+                    email = new_crediatials["email"]
+                    phone_number= new_crediatials["phone_number"]
+                    address= new_crediatials["address"]
+                    city= new_crediatials["city"]
+                    pcode= new_crediatials["pcode"]
+                    password = new_crediatials["password"]
+                    admin_number = new_crediatials["admin_number"]
                     
 
                     newvalues = { "$set": { 
@@ -1038,23 +1103,23 @@ def edit_user():
                     resp ={"message":"successful","token":"true" ,"status":status}
             if parse_json(student) != None:
                     print("Student")
-                    name = new_crediatials["data"]["name"]
-                    surname = new_crediatials["data"]["surname"]
-                    id_number = new_crediatials["data"]["id_number"]
-                    date_of_birth = new_crediatials["data"]["date_of_birth"]
-                    email = new_crediatials["data"]["email"]
-                    phone_number= new_crediatials["data"]["phone_number"]
-                    address= new_crediatials["data"]["address"]
-                    city= new_crediatials["data"]["city"]
-                    pcode= new_crediatials["data"]["pcode"]
-                    password = new_crediatials["data"]["password"]
-                    student_number = new_crediatials["data"]["student_number"]
-                    register_class = new_crediatials["data"]["register_class"]
-                    pg_name = new_crediatials["data"]["pg_name"]
-                    pg_surname= new_crediatials["data"]["pg_surname"]
-                    pg_email  = new_crediatials["data"]["pg_email"]
-                    pg_id_number =new_crediatials["data"]["pg_id_number"]
-                    pg_phone_number = new_crediatials["data"]["pg_cnum"]
+                    name = new_crediatials["name"]
+                    surname = new_crediatials["surname"]
+                    id_number = new_crediatials["id_number"]
+                    date_of_birth = new_crediatials["date_of_birth"]
+                    email = new_crediatials["email"]
+                    phone_number= new_crediatials["phone_number"]
+                    address= new_crediatials["address"]
+                    city= new_crediatials["city"]
+                    pcode= new_crediatials["pcode"]
+                    password = new_crediatials["password"]
+                    student_number = new_crediatials["student_number"]
+                    register_class = new_crediatials["register_class"]
+                    pg_name = new_crediatials["pg_name"]
+                    pg_surname= new_crediatials["pg_surname"]
+                    pg_email  = new_crediatials["pg_email"]
+                    pg_id_number =new_crediatials["pg_id_number"]
+                    pg_phone_number = new_crediatials["pg_cnum"]
 
                     newvalues = { "$set": { 
                     "name":f"{name}",
@@ -1073,26 +1138,26 @@ def edit_user():
                     "pg_surname":f"{pg_surname}",
                     "pg_email":f"{pg_email}",
                     "pg_id_number":f"{pg_id_number}",
-                    "pg_phone_number ":f"{pg_phone_number}" }
+                    "pg_phone_number":f"{pg_phone_number}" }
                      }
-                    mongo.db.student.update_one({"staff_number":f"{user_number}"},newvalues)
+                    mongo.db.student.update_one({"student_number":f"{user_number}"},newvalues)
                     status = 200
                     resp ={"message":"successful","token":"true" ,"status":status} 
             if parse_json(security) != None:
                     print("Security")
-                    name = new_crediatials["data"]["name"]
-                    surname = new_crediatials["data"]["surname"]
-                    id_number = new_crediatials["data"]["id_number"]
-                    date_of_birth = new_crediatials["data"]["date_of_birth"]
-                    email = new_crediatials["data"]["email"]
-                    phone_number= new_crediatials["data"]["phone_number"]
-                    address= new_crediatials["data"]["address"]
-                    city= new_crediatials["data"]["city"]
-                    pcode= new_crediatials["data"]["pcode"]
-                    password = new_crediatials["data"]["password"]
-                    staff_number = new_crediatials["data"]["staff_number"]
-                    position= new_crediatials["data"]["position"]
-                    petrol_sector = new_crediatials["data"]["petrol_sector"]
+                    name = new_crediatials["name"]
+                    surname = new_crediatials["surname"]
+                    id_number = new_crediatials["id_number"]
+                    date_of_birth = new_crediatials["date_of_birth"]
+                    email = new_crediatials["email"]
+                    phone_number= new_crediatials["phone_number"]
+                    address= new_crediatials["address"]
+                    city= new_crediatials["city"]
+                    pcode= new_crediatials["pcode"]
+                    password = new_crediatials["password"]
+                    staff_number = new_crediatials["staff_number"]
+                    position= new_crediatials["position"]
+                    petrol_sector = new_crediatials["petrol_sector"]
                   
 
                     newvalues = { "$set": { 
@@ -1114,19 +1179,19 @@ def edit_user():
                     resp ={"message":"successful","token":"true" ,"status":status}
             if parse_json(domestic) != None:
                     print("Domestic")
-                    name = new_crediatials["data"]["name"]
-                    surname = new_crediatials["data"]["surname"]
-                    id_number = new_crediatials["data"]["id_number"]
-                    date_of_birth = new_crediatials["data"]["date_of_birth"]
-                    email = new_crediatials["data"]["email"]
-                    phone_number= new_crediatials["data"]["phone_number"]
-                    address= new_crediatials["data"]["address"]
-                    city= new_crediatials["data"]["city"]
-                    pcode= new_crediatials["data"]["pcode"]
-                    password = new_crediatials["data"]["password"]
-                    staff_number = new_crediatials["data"]["staff_number"]
-                    position= new_crediatials["data"]["position"]
-                    job_title  = new_crediatials["data"]["job_title"]
+                    name = new_crediatials["name"]
+                    surname = new_crediatials["surname"]
+                    id_number = new_crediatials["id_number"]
+                    date_of_birth = new_crediatials["date_of_birth"]
+                    email = new_crediatials["email"]
+                    phone_number= new_crediatials["phone_number"]
+                    address= new_crediatials["address"]
+                    city= new_crediatials["city"]
+                    pcode= new_crediatials["pcode"]
+                    password = new_crediatials["password"]
+                    staff_number = new_crediatials["staff_number"]
+                    position= new_crediatials["position"]
+                    job_title  = new_crediatials["job_title"]
 
                     newvalues = { "$set": { 
                         "name":f"{name}",
@@ -1146,18 +1211,18 @@ def edit_user():
                     resp ={"message":"successful","token":"true" ,"status":status}  
             if parse_json(visitor) != None:
                     print("Vistor")
-                    name = new_crediatials["data"]["name"]
-                    surname = new_crediatials["data"]["surname"]
-                    id_number = new_crediatials["data"]["id_number"]
-                    date_of_birth = new_crediatials["data"]["date_of_birth"]
-                    email = new_crediatials["data"]["email"]
-                    phone_number= new_crediatials["data"]["phone_number"]
-                    address= new_crediatials["data"]["address"]
-                    city= new_crediatials["data"]["city"]
-                    pcode= new_crediatials["data"]["pcode"]
-                    password = new_crediatials["data"]["password"]
-                    purpose_of_visit  = new_crediatials["data"]["purpose_of_visit"]
-                    visitor_number=new_crediatials["data"]["visitor_number"]
+                    name = new_crediatials["name"]
+                    surname = new_crediatials["surname"]
+                    id_number = new_crediatials["id_number"]
+                    date_of_birth = new_crediatials["date_of_birth"]
+                    email = new_crediatials["email"]
+                    phone_number= new_crediatials["phone_number"]
+                    address= new_crediatials["address"]
+                    city= new_crediatials["city"]
+                    pcode= new_crediatials["pcode"]
+                    password = new_crediatials["password"]
+                    purpose_of_visit  = new_crediatials["purpose_of_visit"]
+                    visitor_number=new_crediatials["visitor_number"]
                     newvalues = { "$set": { 
                         "name":f"{name}",
                         "surname":f"{surname}",
@@ -1178,7 +1243,7 @@ def edit_user():
     except Exception as e :
         status  = 400
         resp={"message":f"{e}","status":status}  
-        print("ERORR (/delete/user route)--->",e)
+        print("ERORR (/Edit/User route)--->",e)
     return jsonify(resp),status
 
 
@@ -1423,23 +1488,32 @@ def forgot_paswword_send():
 ########################################################################
 ########################################################
 #########################################
-#QR code checking area
-# student add to attedndence 
-@app.route("/add/attendence",methods=["POST"])
-def register_add():
-    status =200
-    resp = {}
+#Purge/Daily checking area
+# collection daily purge function
+@app.route("/Purge/Daily",methods=["POST"]) 
+def purge():
+    status = 200
+    resp ={}
     try:
-        data= request.get_json("data") 
-        if data != None:
-            resp = {"message":"working "}
-            status = 200 
+        response = mongo.db.ongrounds.find_one()
+        response_return = mongo.db.inclass.find_one()
+        if parse_json(response) != None:
+            mongo.db.ongrounds.remove()
+
+        if parse_json(response_return) != None:
+            mongo.db.inclass.remove()
+
+        else:
+            status = 400
+            resp = {"message": "users not deleted", "status":status}
+
+        status = 200
+        resp = {"message": "Info deleted", "status":status}
     except Exception as e :
         status  = 400
         resp={"message":f"{e}","status":status}  
-        print("ERORR (/add/attendence route)--->",e)
+        print("ERORR (/Purge/Daily route)--->",e)
     return jsonify(resp),status
-# @app.route("/QR/check", methods=["POST"])
 
 
 
@@ -1455,24 +1529,26 @@ def make_alarm():
     resp = {}
     try:
         data = request.get_json("data")
+        print(data)
         user_number = data["data"]["user_number"]
         quadrant = data["data"]["quadrant"]
         breach_type = data["data"]["breach_type"]
-        id_num = tools()
-        breach_number = id_num.random_number_creation()
+        breach = tools()
+        breach_number = breach.random_number_creation()
         if breach_type != "" and breach_number != "" and quadrant != "" and user_number != "":
             breachAlarm_payload = {
                 "breach_number":f"{breach_number}",
                 "user_number":f"{user_number}",
                 "quadrant":f"{quadrant}",
-                "breach_type":f"{breach_type}"
+                "breach_type":f"{breach_type}",
+                "status":""
             }
-
+            breach.log_breach(breach_type,quadrant,user_number,breach_number)
             if (breach_type  == "Robbery"):
                 #print("The breach is at:" + quadrant) 
                 people_profiles = mongo.db.ongrounds.find()
                 profiles = parse_json(people_profiles)
-                number_of_users= mongo.db.ongrounds.count()
+                number_of_users= mongo.db.ongrounds.count_documents({})
                 c = tools()
                 c.breach_alram_email_service(breach_type) 
                 c.retrieve(profiles,number_of_users,breach_type)
@@ -1481,7 +1557,7 @@ def make_alarm():
                 #print("The breach happend in quadrant:" + quadrant) 
                 people_profiles = mongo.db.ongrounds.find()
                 profiles = parse_json(people_profiles)
-                number_of_users= mongo.db.ongrounds.count()
+                number_of_users= mongo.db.ongrounds.count_documents({})
                 c = tools()
                 c.breach_alram_email_service(breach_type)
                 c.retrieve(profiles,number_of_users,breach_type)
@@ -1490,7 +1566,7 @@ def make_alarm():
                 #print("The breach happend in quadrant:" + quadrant)
                 people_profiles = mongo.db.ongrounds.find()
                 profiles = parse_json(people_profiles)
-                number_of_users= mongo.db.ongrounds.count()
+                number_of_users= mongo.db.ongrounds.count_documents({})
                 c = tools()
                 c.breach_alram_email_service(breach_type)
                 c.retrieve(profiles,number_of_users,breach_type)
@@ -1499,7 +1575,7 @@ def make_alarm():
                 #print("The breach happend in quadrant:" + quadrant)
                 people_profiles = mongo.db.ongrounds.find()
                 profiles = parse_json(people_profiles)
-                number_of_users= mongo.db.ongrounds.count()
+                number_of_users= mongo.db.ongrounds.count_documents({})
                 print(number_of_users)
                 c = tools()
                 c.breach_alram_email_service(breach_type)
@@ -1508,106 +1584,150 @@ def make_alarm():
             elif(breach_type  == "Medical Emergency"):
                 #print("The breach happend in quadrant:" + quadrant)            
                 people_profiles = mongo.db.ongrounds.find()
-                number_of_users= mongo.db.ongrounds.count()
+                number_of_users= mongo.db.ongrounds.count_documents({})
                 c = tools()
                 c.breach_alram_email_service(breach_type)
 
-            user_number_onground = []
-            user_number_general = []
+
             not_at_school = []
-
-            student_number = mongo.db.students.find()
-            present = mongo.db.onground.find()
-            if(student_number != None and present != None):
+            missing = []
+            in_school = []
+        
+            student_number = mongo.db.student.find()
+            present = mongo.db.ongrounds.find()
+            inclass = mongo.db.inclass.find()
+            if(student_number != None and present != None and inclass != None):
                 data_present = parse_json(present) 
-                data_student_number =parse_json(student_number)
+                ongrounds_array = []
                 for i in data_present:
-                    user_number_onground.append(i["user_number"])
-                for i in student_number :
-                    user_number_general.append(i["student_number"])
-                count = mongo.db.student.count()
-                print(count)
-                j = 0         
-                for i in range(0,count):
-                    if user_number_general[j] != user_number_onground[i]:
-                        not_at_school.append(user_number_general[j])
-                    j+=1
+                    ongrounds_array.append(i["user_number"])
 
-                print(not_at_school)
+                data_student_number =parse_json(student_number)
+                student_array = []
+                for i in data_student_number:
+                    student_array.append(i["student_number"])
+
+                data_in_class =parse_json(inclass)
+                inclass_array = []
+                for  i in data_in_class:
+                    inclass_array.append(i["user_number"]) 
+
+
+                count = mongo.db.ongrounds.count_documents({})
+                for i in ongrounds_array:
+                    for j  in student_array:
+                        if  j == i :
+                            if j in not_at_school: 
+                                print("here")
+                            else:
+                                not_at_school.append(j)
+                        else:
+                            if j in in_school: 
+                                print("here")
+                            else:
+                                in_school.append(j)
+                            
+                print("those in school-->",in_school)
+                here= ""
+                for i in in_school:
+                    for j in inclass_array:
+                        if i == j :
+                            here = ""
+                        else:
+                            if i in missing: 
+                                here = ""
+                            else:
+                                missing.append(i)
+
+                print("list not_at_school-->",not_at_school)
+                print("list missing-->",missing)
+
+                mongo.db.breach_alarm.insert_one(breachAlarm_payload)
+                status =200
+                resp = {"message":"successful","status":status,"missing":missing ,"not_at_school":not_at_school}
             else:
                 status = 400
                 resp = {"message":"Unsuccesful","status":status}
-
-            mongo.db.breach_alarm.insert_one(breachAlarm_payload)
-            status =200
-            resp = {"message":"successful","status":status}
 
     except Exception as e :
         status  = 400
         resp={"message":f"{e}","status":status}  
         print("ERORR (/Make/Breachalarm route)--->",e)
     return jsonify(resp),status
-@app.route("/breachalarm/check",methods= ["GET"])
-def check_alarm():
+
+@app.route("/Breachalarm/Update",methods= ["POST"])
+def update_alarm():
     status = 200
     resp = {}
     try:
         data = request.get_json("data")
-        database_name = data["data"]["database_name"]
-        if database_name == "breach_alarm":
-            users = mongo.db.breach_alarm
-            response  = users.find()
+        breach_number =data["data"]["breach_number"]
+        if breach_number != "":
+            breach = mongo.db.breach_alarm
+            response  = breach.find()
             if response != None:
-                print("working d")
+                mongo.db.breach_alarm.update_one({"breach_number":f"{breach_number}"},{ "$set": { "status":"onroute"}})
                 status = 200
-                return_response = parse_json(response)
-                resp = {"response":return_response,"message":"Report found","status":status}
-
+                resp ={"message":"successful","token":"true" ,"status":status}  
             else:
-                status  = 400
-                resp={"message":f"{e}","status":status}  
-                print("ERORR (/breachalarm/check route)--->",e)
-                return jsonify(resp),status
-            
+                status = 200
+                resp = {"message":"unsuccessful","status":status}
+                     
         else:
-            print("no report found for that database")
+            status =200
+            resp = {"message":"missing credentials","status":status}
 
     except Exception as e :
         status  = 400
         resp={"message":f"{e}","status":status}  
-        print("ERORR (/breachalarm/check route)--->",e)
+        print("ERORR (/Breachalarm/Update route)--->",e)
     return jsonify(resp),status
 
-@app.route("/breachalarm/delete",methods= ["DELETE"])
+@app.route("/Breachalarm/Check",methods= ["GET"])
+def check_alarm():
+    status = 200
+    resp = {}
+    try:
+        breach = mongo.db.breach_alarm.find()
+        if breach  != None:
+            response = parse_json(breach)
+            status = 200
+            resp ={"message":"breach is present","response":response[0] ,"status":status}  
+        else:
+            status = 200
+            resp = {"message":"no breach availble","status":status}
+                     
+
+    except Exception as e :
+        status  = 400
+        resp={"message":f"{e}","status":status}  
+        print("ERORR (/Breachalarm/Check route)--->",e)
+    return jsonify(resp),status
+
+@app.route("/Breachalarm/Delete",methods= ["POST"])
 def delete_alarm():
     status = 200
     resp = {}
     try:
         data = request.get_json("data")
-        name = data["data"]["name"]
-        surname = data["data"]["surname"]
-        user_number= data["data"]["user_number"]
-        user_type =data["data"]["user_type"]
-
-        if name != "" and surname !="" and user_number != "" and user_type != "":
-            database  = mongo.db.patients.find_one({"name":f"{user_name}","surname":f"{user_surnmae}","id_number":f"{user_id_number}"})
-            if database_name != "breach_alarm":
-                print("user is in database ")
-                user_database_id  = patient_in_database["_id"]
-                print(user_database_id)
-                if user_database_id != "":
-                    mongo.db.patients.delete_one({"_id":f"{patient_database_id}"})
+        print(data)
+        breach_number =data["data"]["breach_number"]
+        if breach_number != "":
+            database  = mongo.db.breach_alarm.find_one({"breach_number":f"{breach_number}"})
+            if database != None:
+                    mongo.db.breach_alarm.delete_one({"breach_number":f"{breach_number}"})
                     status =200
-                    resp = {"message":"User profile has been deleted","status":status}
-                else:
-                    status =400
-                    resp = {"message":"Could not get User _id ","status":status}
+                    resp = {"message":"Breach has been deleted","status":status}
+            else:
+                status =400
+                resp = {"message":"Breach not in database ","status":status}
 
     except Exception as e :
         status  = 400
         resp={"message":f"{e}","status":status}  
         print("ERORR (/breachalarm/delete route)--->",e)
     return jsonify(resp),status
+
 
 
 #####################################################
@@ -1627,37 +1747,20 @@ def leave_comment():
             name = data["data"]["name"]
             message = data["data"]["message"]
             email = data["data"]["email"]
-            print(name,message,email)
             if name != "" and message  !="" and  email != "":
+                number = tools()
+                message_number = number.random_number_creation()
                 payload  ={
                         "name":f"{name}",
                         "email":f"{email}",
-                        "message":f"{message}"
+                        "message":f"{message}",
+                        "message_number":f"{message_number}"
                     }
-                print(payload)
                 mongo.db.messages.insert(payload)
                 q1= tools()
                 q1.emailing_services(email,name,"","message","","","","")
                 status = 200
                 resp = {"message":"successful", "status":status}
-                # mongo.db.craeteCollection(messages)
-                # number = mongo.db.messages.count()
-                # meassage_number = int(number) + 1 
-                # if (number != null):
-                #     payload  ={
-                #         "name":f"{name}",
-                #         "email":f"{email}",
-                #         "message":f"{message}"
-                #     }
-                #     mongo.db.messages.insert(payload)
-                #     q1= tools()
-                #     q1.emailing_services(email,name,"","message","","","","")
-                #     status = 200
-                #     resp = {"message":"successful", "status":status}
-
-                # else :
-                #     print("collection count flail please check")   
-
         else:
             status = 400
             resp = {"message": "message was not added"}
@@ -1667,26 +1770,25 @@ def leave_comment():
         print("ERORR (/Leave/comment route)--->",e)
     return jsonify(resp),status
 
-@app.route ("/Delete/Messages",methods=["Delete"])
+@app.route ("/Delete/Message",methods=["POST"])
 def delete_messages():
     status = 200
     resp ={}
     try:
         data = request.get_json("data")
-        messsage_number  = data["data"]["message_number"]
+        message_number  = data["data"]["message_number"]
         if message_number != "":
             messages = mongo.db.messages.find_one({"message_number":f"{message_number}"})
             if messages != None:
                 status = 200
                 return_response = parse_json(messages)
-                user_database_id  = return_response["_id"]
-                if user_database_id != "":
-                    mongo.db.visitor.delete_one({"_id":f"{user_database_id}"})
+                if return_response != []:
+                    mongo.db.messages.delete_one({"message_number":f"{message_number}"})
                     status =200
-                    resp = {"message":"user profile has been deleted","status":status}
+                    resp = {"message":"message has been deleted","status":status}
                 else:
                     status =400
-                    resp = {"message":"Could not get messsage _id ","status":status}
+                    resp = {"message":"could not get messsage  ","status":status}
         else :
             status = 400
             resp ={"message": "The message number is no in the database please verify","status":status}
@@ -1733,7 +1835,55 @@ def messages():
         resp={"message":f"{e}","status":status}  
         print("ERORR (/Retrieve/Messages route)--->",e)
     return jsonify(resp),status
-    
+##############################################
+############################################
+###########################################
+#reports area 
+
+@app.route("/Report",methods=["GET"])
+def get_report():
+    status =200
+    resp = {}
+    try:
+        number_of_teacher = 0
+        number_of_admin = 0
+        number_of_student = 0
+        number_of_domestic = 0
+        number_of_security = 0
+        number_of_visitor = 0
+
+        teacher = mongo.db.teacher.find()
+        admin = mongo.db.admin.find()
+        student = mongo.db.student.find()
+        domestic = mongo.db.domestic.find()
+        security = mongo.db.security.find()
+        visitor = mongo.db.visitor.find()
+
+        if teacher != None:
+            number_of_teacher = mongo.db.teacher.count()
+
+        if admin != None:
+            number_of_admin = mongo.db.admin.count()
+
+        if student != None:
+            number_of_student = mongo.db.student.count()
+
+        if domestic != None:
+            number_of_domestic = mongo.db.domestic.count()
+
+        if security != None:
+            number_of_security = mongo.db.security.count()
+
+        if visitor != None:
+            number_of_visitor = mongo.db.visitor.count()
+
+        status = 200
+        resp ={"message":"successful", "number_of_teacher":number_of_teacher, "number_of_admin": number_of_admin, " number_of_student": number_of_student, "number_of_domestic": number_of_domestic, "number_of_security": number_of_security, "number_of_visitor": number_of_visitor, "status":status}
+    except Exception as e :
+        status  = 400
+        resp={"message":f"{e}","status":status}  
+        print("ERORR (/Report route)--->",e)
+    return jsonify(resp),status
 
 if __name__  =="__main__":
     app.run(debug=True)
