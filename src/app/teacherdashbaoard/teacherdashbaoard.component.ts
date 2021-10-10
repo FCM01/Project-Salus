@@ -30,6 +30,12 @@ export class TeacherdashbaoardComponent implements OnInit {
     const user_profile_recieved = (localStorage.getItem('user_profile'));
     this.data = user_profile_recieved
     this.user_profile = JSON.parse(this.data);
+
+    //edit variable
+    let edit_session_payload ={
+      "user_number":this.user_profile["student_number"]
+    }
+    localStorage.setItem('user_edit_profile',JSON.stringify(edit_session_payload));
     //set user_number for breach alram
     let session_payload  = {
       "user_number":this.user_profile["staff_number"],

@@ -9,8 +9,8 @@
 <body>
     <div class="wrapper fadeInDown">
         <div id="formContent">
-            <h1> Student Edit</h1>
-            <h2>User Number :{{edit_payload["student_number"]}}</h2>
+            <h1>Domestic Edit</h1>
+            <h2>User Number :{{edit_payload["staff_number"]}}</h2>
                 <form [formGroup]="editForm"  (ngSubmit)=" EditForm(editForm.value)">
                     <h1>General Infomation</h1>
                     
@@ -41,11 +41,15 @@
                     <div class="alert" *ngIf="!editForm.controls['date_of_birth'].valid && editForm.controls['date_of_birth'].touched">
                             {{titleAlert1}} </div>
                     <br>
-                    <h2 class ="active">VALUE : {{edit_payload["register_class"]}}</h2>
+                    <h2 class ="active">VALUE : {{edit_payload["staff_number"]}}</h2>
+                    <input type = "text" placeholder = " Staff Number "  formControlName="staffnum">
+                    <div class="alert" *ngIf="!editForm.controls['staffnum'].valid && editForm.controls['staffnum'].touched">
+                        {{titleAlert1}} </div>
+                    <h2 class ="active">VALUE : {{edit_payload["job_title"]}}</h2>
                     <br>
-                    <input type = "text" placeholder ="Register Class" formControlName="register_class">
-                    <div class="alert" *ngIf="!editForm.controls['register_class'].valid && editForm.controls['register_class'].touched">
-                                {{titleAlert1}} </div>
+                    <input type = "text" placeholder = "Job Title"  formControlName="job_title">
+                    <div class="alert" *ngIf="!editForm.controls['job_title'].valid && editForm.controls['job_title'].touched">
+                            {{titleAlert1}} </div>
                     <h2 class ="active">VALUE : {{edit_payload["email"]}}</h2>
                     <br>
                     <input type = "email" placeholder = "Email "  formControlName="email">
@@ -76,39 +80,13 @@
                     <input type = "text" placeholder = "City"  formControlName="city">
                     <div class="alert" *ngIf="!editForm.controls['city'].valid && editForm.controls['city'].touched">
                         {{titleAlert1}} </div>
-                    <br>
                     <h2 class ="active">VALUE : {{edit_payload["pcode"]}}</h2>
                     <br>
                     <input type = "number" placeholder = " Postal code"  formControlName="pcode">
                     <div class="alert" *ngIf="!editForm.controls['pcode'].valid && editForm.controls['pcode'].touched">
                         {{titleAlert1}} </div>
 
-                    <h1>Parents details</h1>
-                    <h2 class ="active">VALUE : {{edit_payload["pg_name"]}}</h2>
-                    <br>
-                    <input type = "text" placeholder = "Parent's/Gaurdian First Name" formControlName ="pg_name">
-                    <div class="alert" *ngIf="!editForm.controls['pg_name'].valid && editForm.controls['pg_name'].touched">
-                        {{titleAlert1}} </div>
-                    <h2 class ="active">VALUE : {{edit_payload["pg_surname"]}}</h2>
-                    <br>
-                    <input type = "text" placeholder = "Parent's/Gaurdian  Last Name" formControlName ="pg_surname">
-                    <div class="alert" *ngIf="!editForm.controls['pg_surname'].valid && editForm.controls['pg_surname'].touched">
-                        {{titleAlert1}} </div>
-                    <h2 class ="active">VALUE : {{edit_payload["pg_id_number"]}}</h2>
-                    <br>
-                    <input type = "text" placeholder = "Parent's/Gaurdian ID number" formControlName ="pg_id_number">
-                    <div class="alert" *ngIf="!editForm.controls['pg_id_number'].valid && editForm.controls['pg_id_number'].touched">
-                            {{titleAlert1}} </div>
-                    <h2 class ="active">VALUE : {{edit_payload["pg_phone_number"]}}</h2>
-                    <br>
-                    <input type = "tel" placeholder = "Parent's/Gaurdian  contact Number" formControlName ="pg_cnum">
-                    <div class="alert" *ngIf="!editForm.controls['pg_cnum'].valid && editForm.controls['pg_cnum'].touched">
-                        {{titleAlert1}} </div>
-                    <h2 class ="active">VALUE : {{edit_payload["pg_email"]}}</h2>
-                    <br>
-                    <input type = "email" placeholder = "Parent's/Gaurdian  Email " formControlName ="pg_email">
-                    <div class="alert" *ngIf="!editForm.controls['pg_email'].valid && editForm.controls['pg_email'].touched">
-                        {{titleAlert1}} </div>
+         
 
                     <input  type="submit" class="fadeIn fourth" value="Update">
                 </form>

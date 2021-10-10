@@ -36,6 +36,9 @@ export class AdmindashboardComponent implements OnInit {
   public location:any;
   public databaseselected:any; 
   public titleAlert1 :string ="This field is required"
+  //edit variables 
+  public edit_user_type:any;
+  public editForm:FormGroup;
   list1 = [
     { text: 'Domestic', selected: false, value:"domestic"},
     { text: 'Security', selected: false, value:"security"},
@@ -43,9 +46,15 @@ export class AdmindashboardComponent implements OnInit {
     { text: 'Teacher', selected: false,  value:"teacher"},
     { text: 'Visitor', selected: false,  value:"visitor"}
   ];
+
+  
   constructor(private log :SalusloginService,private router: Router,private fb: FormBuilder,private sub :SubservicesService) { 
     this.databaseForm = fb.group(
       { "database_name":['',Validators.required],})
+
+    this.editForm =fb.group(
+      {"user_number":['',Validators.required]}
+    )
   }
 
   ngOnInit(): void {
@@ -221,7 +230,66 @@ GenerateToken()
     )
   
 
-}
+
+  }
+  //edit function sessions 
+  public toggleSelectionEdit(item:any, _list:any) {
+    item.selected = !item.selected;
+    this.edit_user_type= item.value;
+
+  }
+  EditUser(user:any){
+   
+    let user_number ="";
+    //get user number
+    if (user["staff_number"]){
+      user_number= user["staff_number"]
+      console.log(user_number)
+    }
+    if (user["student_number"]){
+      user_number= user["student_number"]
+      console.log(user_number)
+    }
+    if (user["visitor_number"]){
+      user_number= user["visitor_number"]
+      console.log(user_number)
+    }
+    //making a session
+    let session_payload ={
+      "user_number":user_number
+    }
+    if (this.databaseselected =="student"){
+      localStorage.setItem('user_edit_profile',JSON.stringify(session_payload));
+      this.router.navigate(["/studentedit"]) 
+    }
+    else if (this.databaseselected =="security"){
+      localStorage.setItem('user_edit_profile',JSON.stringify(session_payload));
+      this.router.navigate(["/securityedit"]) 
+
+    }
+    else if (this.databaseselected =="teacher"){
+      localStorage.setItem('user_edit_profile',JSON.stringify(session_payload));
+      this.router.navigate(["/teacheredit"]) 
+
+    }
+    else if (this.databaseselected =="domestic"){ 
+      localStorage.setItem('user_edit_profile',JSON.stringify(session_payload));
+      this.router.navigate(["/domesticedit"]) 
+
+    }
+    else if (this.databaseselected =="admin"){
+      localStorage.setItem('user_edit_profile',JSON.stringify(session_payload));
+      this.router.navigate(["/adminedit"]) 
+
+    }
+    else if (this.databaseselected =="visitor"){
+      localStorage.setItem('user_edit_profile',JSON.stringify(session_payload));
+      this.router.navigate(["/visitoredit"]) 
+
+    }
+    
+
+  }
 
 }
 

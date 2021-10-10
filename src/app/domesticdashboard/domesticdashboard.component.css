@@ -17,7 +17,12 @@ a {
   text-decoration: none;
   font-weight: 400;
 }
-
+.content{
+  width: 80%;
+  /* margin: 0em auto; */
+  text-align: right;
+  background-color:#56baed ;
+}
 h2 {
   text-align: center;
   font-size: 16px;
@@ -27,7 +32,13 @@ h2 {
   margin: 40px 8px 10px 8px; 
   color: #cccccc;
 }
-
+img
+{
+    width: 30%;
+    border-radius: 50%;
+    object-position: center;
+    object-fit: fill;  
+}
 
 
 /* STRUCTURE */
@@ -41,24 +52,35 @@ h2 {
   min-height: 100%;
   padding: 20px;
 }
-
+.area-content
+{
+  text-align: center;
+}
 #formContent {
   -webkit-border-radius: 10px 10px 10px 10px;
   border-radius: 10px 10px 10px 10px;
   background: #fff;
   padding: 30px;
   width: 90%;
-  max-width: 450px;
+  /* max-width: 450px; */
   position: relative;
   padding: 0px;
   -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
   box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
-  text-align: center;
+  text-align:center;
 }
 
 #formFooter {
   background-color: #f6f6f6;
   border-top: 1px solid #dce8f1;
+  padding: 25px;
+  text-align: center;
+  -webkit-border-radius: 0 0 10px 10px;
+  border-radius: 0 0 10px 10px;
+}
+#formFooterBreach{
+  background-color: #f17070;
+  border-top: 1px solid #a2a5a8;
   padding: 25px;
   text-align: center;
   -webkit-border-radius: 0 0 10px 10px;

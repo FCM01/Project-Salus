@@ -23,6 +23,11 @@ import { RegistercheckComponent } from './registercheck/registercheck.component'
 import { OngroundscheckComponent } from './ongroundscheck/ongroundscheck.component';
 import { BreachresponseComponent } from './breachresponse/breachresponse.component';
 import { StudenteditComponent } from './studentedit/studentedit.component';
+import { TeachereditComponent } from './teacheredit/teacheredit.component';
+import { AdmineditComponent } from './adminedit/adminedit.component';
+import { SecurityeditComponent } from './securityedit/securityedit.component';
+import { DomesticeditComponent } from './domesticedit/domesticedit.component';
+import { VisitoreditComponent } from './visitoredit/visitoredit.component';
 
 const routes: Routes = [
   {path:"",component :HomeComponent},
@@ -47,7 +52,14 @@ const routes: Routes = [
   {path:"registercheck",component:RegistercheckComponent},
   {path:"ongroundscheck",component:OngroundscheckComponent},
   {path:"breachresponse",component:BreachresponseComponent},
-  {path:"studentedit",component:StudenteditComponent}
+  {path:"studentedit",component:StudenteditComponent},
+  {path:"teacheredit",component:TeachereditComponent},
+  {path:"domesticedit",component:DomesticeditComponent},
+  {path:"securityedit",component:SecurityeditComponent},
+  {path:"visitoredit",component:VisitoreditComponent},
+  {path:"adminedit",component:AdmineditComponent},
+
+
   
 ];
 

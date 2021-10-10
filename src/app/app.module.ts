@@ -30,6 +30,11 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
 import { OngroundscheckComponent } from './ongroundscheck/ongroundscheck.component';
 import { BreachresponseComponent } from './breachresponse/breachresponse.component';
 import { StudenteditComponent } from './studentedit/studentedit.component';
+import { TeachereditComponent } from './teacheredit/teacheredit.component';
+import { SecurityeditComponent } from './securityedit/securityedit.component';
+import { DomesticeditComponent } from './domesticedit/domesticedit.component';
+import { VisitoreditComponent } from './visitoredit/visitoredit.component';
+import { AdmineditComponent } from './adminedit/adminedit.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +63,12 @@ import { StudenteditComponent } from './studentedit/studentedit.component';
     ToolbarComponent,
     OngroundscheckComponent,
     BreachresponseComponent,
-    StudenteditComponent
+    StudenteditComponent,
+    TeachereditComponent,
+    SecurityeditComponent,
+    DomesticeditComponent,
+    VisitoreditComponent,
+    AdmineditComponent
   ],
   imports: [
     BrowserModule,

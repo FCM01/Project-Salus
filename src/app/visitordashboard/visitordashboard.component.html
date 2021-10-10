@@ -27,42 +27,53 @@
 </head>
 
 <body>
-<!--
-<div class="content">
+  <div class="content">
     <h1>Welcome : {{user_profile["name"]}} {{user_profile["surname"]}}</h1>
     <p>Keep Safe with SALUS</p>
     <br>
-    <img src={{location}} alt={{location}}>
-</div>   
--->
+</div>
 <div class="wrapper fadeInDown">
-    <div id="formContent">
-      <h1 style ="color:#ff0000;">Breach Alarm</h1>
-      <h2 class="active">Make a breach Alarm</h2>
-      <br>
-      <input type="submit"  class="fadeIn fourth" value="Breach" routerLink="/breach">
+  <div  id="formContent">
+
+    <div *ngIf= "message_alert" class="wrapper fadeInDown">
+      <div id="formContent">
+        <div>
+          <h2>Breach Alarm</h2>
+          <br>
+          <h2>Breach Type :{{breach_type}}</h2>
+          <div class="alert"> 
+            <strong>Danger!</strong>There has been a breah on campus please stay indoors and await further instructions.
+            <strong>STAY AWAY FROM {{quadrent}}</strong>
+          </div>
+        </div>
+      </div>
+    </div>  
+    
+    <br>
+    <h2>To enter school grounds, get QR personal code by clicking generate token </h2>
+    <p>Click if ask by security ,teaching anf high level personel only</p>
+    <br>
+    <p class="alert">DO NOT SHARE OR GIVE ACCESS TO YOUR PERSONAL QR CODE</p>
+    <input type = "submit"  value = "generate token" placeholder = "Send"(click)="GenerateVQR()">
+    <div class="wrapper fadeInDown" *ngIf="show">
+      <div id="formContent">
+        <h2>Press resnd of you didnt rescieve email</h2>
+        <p>if you fail to recieve you email three time please click help</p>
+        <h2>{{timeLeft}} Seconds Left....</h2>
+        <br>
+        <h2 class="inactive underlineHover" (click)="GenerateVQR()">Resend</h2>
+        <h2 class="inactive underlineHover" routerLink ="/contact">Help</h2>
+        <h2 class="inactive underlineHover" (click)="Cancel()">Cancel</h2>
+     
+      </div>
     </div>
+  
   </div>
-<div class="wrapper fadeInDown">
-<div id="formContent">
-
-<br>
-<h2>To enter school grounds, get QR code by clicking generate token</h2>
-
-<input type = "submit"  value = "Generate token" placeholder = "Generate">
-
-
-<br> 
-<br>
-
-<div id="formFooter">
-<a class="underlineHover" routerLink=""> cancel </a>
-<br>
-
 </div>
-</div>
+  
 
-</div>
+
+
 
 </body>
 

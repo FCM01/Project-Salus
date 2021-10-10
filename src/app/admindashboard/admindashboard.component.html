@@ -5,8 +5,9 @@
       <i class="fa fa-caret-down"></i>
     </button>
     <div class="dropdown-content">
-      <a class="underlineHover" href="#">Database Select</a>
+      <a class="underlineHover" href="#">Edit Users</a>
       <a class="underlineHover" href="#">Messages</a>
+      <a class="underlineHover"href="#">Generate Token</a>
       <a class="underlineHover"href="#">Reports</a>
     </div>
   </div>
@@ -29,149 +30,193 @@
     <h1>Welcome : {{user_profile["name"]}} {{user_profile["surname"]}}</h1>
     <p>Keep Safe with SALUS</p>
     <br>
-    <img src={{location}} alt={{location}}>
   </div>
-  
   <div class="wrapper fadeInDown">
     <div id="formContent">
-      <h1 style ="color:#ff0000;">Breach Alarm</h1>
-      <h2 class="active">Make a breach Alarm</h2>
-      <br>
-      <input type="submit"  class="fadeIn fourth" value="Breach" routerLink="/breach">
 
-      <div *ngIf= "message_alert">
-        <h2>Breach Alarm</h2>
-        <br>
-        <h2>Breach Type :{{breach_type}}</h2>
-        <div class="alert"> 
-          <strong>Danger!</strong>There has been a breah on campus please stay indoors and await further instructions.
+      <div class="wrapper fadeInDown">
+        <div id="formContent">
+          <h1 style ="color:#ff0000;">Breach Alarm</h1>
+          <h2 class="active">Make a breach Alarm</h2>
+          <br>
+          <input type="submit"  class="fadeIn fourth" value="Breach" routerLink="/breach">
+    
+          <div *ngIf= "message_alert">
+            <h2>Breach Alarm</h2>
+            <br>
+            <h2>Breach Type :{{breach_type}}</h2>
+            <div class="alert"> 
+              <strong>Danger!</strong>There has been a breah on campus please stay indoors and await further instructions.
+            </div>
+          </div>
+    
+          <div class="wrapper fadeInDown" *ngIf= "message_alert">
+            <div id="formContent">
+              <h1>MORE INFORMATION</h1>
+              <h2 class="active">Status:{{breach_status}}</h2>
+              <h2 class="active">Breach Number :{{breach_number}}</h2>
+              <h2 class="active">Breach Type :{{breach_type}}</h2>
+              <h2 class="active">Quadrent:{{quadrent}}</h2>
+            <div id="formFooterBreach" >
+              <a type="submit" class="underlineHover" (click)= "deleteBreach()">DELETE BREACH</a>
+            </div>
+    
+            </div>
+          
+          </div>
         </div>
       </div>
 
-      <div class="wrapper fadeInDown" *ngIf= "message_alert">
-        <div id="formContent">
-          <h1>MORE INFORMATION</h1>
-          <h2 class="active">Status:{{breach_status}}</h2>
-          <h2 class="active">Breach Number :{{breach_number}}</h2>
-          <h2 class="active">Breach Type :{{breach_type}}</h2>
-          <h2 class="active">Quadrent:{{quadrent}}</h2>
-        <div id="formFooterBreach" >
-          <a type="submit" class="underlineHover" (click)= "deleteBreach()">DELETE BREACH</a>
-        </div>
 
-        </div>
-      
-      </div>
-    </div>
-  </div>
-
-
-    <div class="wrapper fadeInDown">
-        <div id="formContent">
-          <ul>
-            <h1>Database Select</h1>
-            <p>Please select type of user </p>
-            <a 
-              *ngFor="let item of list1" 
-              [class.item-selected]="item.selected"
-              (click)="toggleSelection(item, 1)" id="formFooter">{{item.text}}</a>
-          </ul>
-        <form [formGroup]="databaseForm" (ngSubmit)="setValues()">
-           <h1>
-             {{databaseselected}}
-           </h1>
-            <input type="submit" class="fadeIn fourth" value="Search">
-        </form>
-        <table>
-            <thead>
-                <tr>
-                  <th scope="col">Name</th>
-                  <th scope="col">Handle</th>
-                  <th scope="col">User Number</th>
-                  <th scope="col">Functions</th>
-                </tr>
-              </thead>
-              <tbody  *ngFor= "let user of userarray">
-                <tr>
-                  <th scope="row">{{user.name}},{{user.surname}}</th>
-                  <td>{{user.email}}</td>
-                  <td>{{user.admin_number}}</td>
-                  <td>
-                    <button type="submit"  class="fadeIn fourth" (click)="deletUser(user.name,user.surname)">Delete</button>
-                    <button type="submit" class="fadeIn fourth"> Edit </button>
-                    <button type="submit" class="fadeIn fourth">Details</button>
-                  </td> 
-                  <br>
-                  <br>
-                </tr>
-              </tbody>
-        </table>
-        </div>
-    </div> 
-
-    <div class="wrapper fadeInDown">
-      <div id="formContent">
-          <div class="form-container">
-            <h1>GENRATE ENTERANCE TOKEN</h1>
-            <h2>This token allows you to enter school grounds</h2>
-            <h2>Please produce to designated personel</h2>
-            <img src="assets/images/pexels-travis-saylor-951375.jpg" >
-            </div>
-            <div class = "formFooter">
-              <h2>FOR: {{user_profile.name}}</h2>
-              <br>
-              <h2>USER NUMBER: {{user_profile.admin_number}}</h2>
-              <br>
-              <h2>TIME OF CREATION :{{datetime | date: 'yyyy-MM-dd'}}</h2> 
-              <br>
-              <input type="submit" class="fadeIn fourth" value="Generate" (click)= "GenerateToken()">
-              <span *ngIf = "status != '' ">
-                {{status}}
-              </span>
-            </div>
-        </div>
-      </div> 
-    <div class="wrapper fadeInDown">
-      <div id="formContent">
-          <div class="messagecontent"*ngIf="show_message" >
-            <h1>Messages</h1>
-            <div class="wrapper fadeInDown">
-              <div id="formContent">
-                  <div class="names" id="presentData" *ngFor="let items of messages" >
-                    <div class="alert info"> 
-                      <strong>FROM:  </strong>{{items.name}}
+        <div class="wrapper fadeInDown">
+            <div id="formContent">
+              <ul>
+                <h1 class="active" >Database Select</h1>
+                <p>Please select type of user </p>
+                <a 
+                  *ngFor="let item of list1" 
+                  [class.item-selected]="item.selected"
+                  (click)="toggleSelection(item, 1)" id="formFooter">{{item.text}}</a>
+              </ul>
+            <form [formGroup]="databaseForm" (ngSubmit)="setValues()">
+               <h2 class="active">
+                 {{databaseselected}}
+               </h2>
+               <br>
+                <input type="submit" class="fadeIn fourth" value="Search">
+            </form>
+            <table>
+                <thead>
+                    <tr>
+                      <th scope="col">Name</th>
+                      <th scope="col">Handle</th>
+                      <th scope="col">User Number</th>
+                      <th scope="col">Functions</th>
+                    </tr>
+                  </thead>
+                  <tbody  *ngFor= "let user of userarray">
+                    <tr>
+                      <th scope="row">{{user.name}},{{user.surname}}</th>
+                      <td>{{user.email}}</td>
+                      <td>{{user.staff_number}} {{user.student_number}} {{user.admin_number}} {{user.visitor_number}}</td>
+                      <td>
+                        <button type="submit"  class="fadeIn fourth" (click)="deletUser(user.name,user.surname)">Delete</button>
+                        <button type="submit" class="fadeIn fourth" (click)="EditUser(user)"> Edit </button>
+                        <button type="submit" class="fadeIn fourth">Details</button>
+                      </td> 
                       <br>
-                      <strong>{{items.message_number}}: </strong>{{items.message}}
-                      <br>  
-                    </div>
-                    <div class= "buttons">
-                      <button type="submit" class="fadeIn fourth" (click)="deleteMessage(items.message_number)" >Delete</button>
-                      <button type="submit" class="fadeIn fourth"(click)="ReplyShow(items.name,items.message_number,items.message)">Reply</button>      
+                      <br>
+                    </tr>
+                  </tbody>
+            </table>
+            </div>
+        </div> 
+
+        <div class="wrapper fadeInDown">
+          <div id="formContent">
+              <div class="form-container">
+                <h1 class="active">GENERATE ENTERANCE TOKEN</h1>
+                <p>This token allows you to enter school grounds</p>
+                <p>You can produce a on grounds QR and register class token</p>
+                <p>You can retrive User Number by using the above Database Select section </p>
                 </div>
-              </div>
-            </div>  
+                <div class = "formFooter">
+                  <h2 class="active">CURRENT ADMIN: {{user_profile.name}}  {{user_profile.surname}}</h2>
+                  <br>
+                  <h2 class="active">USER NUMBER: {{user_profile.admin_number}}</h2>
+                  <br>
+                  <h2 class="active">TIME OF CREATION :{{datetime | date: 'yyyy-MM-dd'}}</h2> 
+                  <br>
+                  <input type="text" id="login" formControlName="User_number" class="fadeIn second" name="login" placeholder="User Number">
+                  <input type="submit" class="fadeIn fourth" value="Generate" >
+                  <span *ngIf = "status != '' ">
+                    {{status}}
+                  </span>
+                </div>
+                <div class = "formFooter2">
+                  <h2>QR code generated</h2> 
+                  <br>
+                  <form [formGroup]="databaseForm" >
+                    <input type="text" id="login" formControlName="User_number" class="fadeIn second" name="login" placeholder="User Number">
+                    <div class="alert" *ngIf="!databaseForm.controls['User_number'].valid && databaseForm.controls['User_number'].touched">
+                      <span>{{titleAlert1}} </span>
+                    </div>
+                  </form>
+                  <input type = "submit" value = "Generate" >
+                </div>
             </div>
           </div> 
-          <section id="app" *ngIf="show_reply_section">
-            <div class="container">
-              <div class="row">
-                <div class="col-6">
-                  <div class="alert info"> 
-                    <strong>FROM:</strong>{{current_message_name}}
-                    <br>
-                    <strong>{{current_message_number}}: </strong>{{current_message_message}}
-                    <br>  
-                  </div>
-                  <textarea type="text" class="input" placeholder="Write a comment" v-model="newItem" ></textarea>
-                  <button v-on:click="addItem()" class='primaryContained float-right' type="submit">Submit</button>
-                  <button  class='primaryContained float-right' (click)="ReplyHide()">Cancel</button>
-                </div><!-- End col -->
-              </div><!--End Row -->
-            </div><!--End Container -->
-          </section><!-- end App -->   
+
+        <div class="wrapper fadeInDown">
+          <div id="formContent">
+            <ul>
+              <h1>Admin Functions</h1>
+              <p>Please Use Wisely</p>
+              <input type = "submit" value = "Generate" >
+              <a
+                *ngFor="let item of list1" 
+                [class.item-selected]="item.selected"
+                (click)="toggleSelectionEdit(item, 1)" id="formFooter">{{item.text}}</a>
+            </ul>
+          <form [formGroup]="editForm" (ngSubmit)="setValues()">
+              <h2 class="active">
+               {{edit_user_type}}
+              </h2>
+              <br>
+              <input type="text" id="login" formControlName="user_number" class="fadeIn second" name="login" placeholder="User Number">
+              <div class="alert" *ngIf="!editForm.controls['user_number'].valid && editForm.controls['user_number'].touched">
+              <span>{{titleAlert1}} </span>  </div>
+              <input [disabled]="!editForm.valid" type="submit" class="fadeIn fourth" value="Log In"> 
+          </form>
+        
+          </div>
         </div>
-    </div> 
-   
+    
+        <div class="wrapper fadeInDown">
+          <div id="formContent">
+              <div class="messagecontent"*ngIf="show_message" >
+                <h1>Messages</h1>
+                <div class="wrapper fadeInDown">
+                  <div id="formContent">
+                      <div class="names" id="presentData" *ngFor="let items of messages" >
+                        <div class="alert info"> 
+                          <strong>FROM:  </strong>{{items.name}}
+                          <br>
+                          <strong>{{items.message_number}}: </strong>{{items.message}}
+                          <br>  
+                        </div>
+                        <div class= "buttons">
+                          <button type="submit" class="fadeIn fourth" (click)="deleteMessage(items.message_number)" >Delete</button>
+                          <button type="submit" class="fadeIn fourth"(click)="ReplyShow(items.name,items.message_number,items.message)">Reply</button>      
+                    </div>
+                  </div>
+                </div>  
+                </div>
+              </div> 
+              <section id="app" *ngIf="show_reply_section">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="alert info"> 
+                        <strong>FROM:</strong>{{current_message_name}}
+                        <br>
+                        <strong>{{current_message_number}}: </strong>{{current_message_message}}
+                        <br>  
+                      </div>
+                      <textarea type="text" class="input" placeholder="Write a comment" v-model="newItem" ></textarea>
+                      <button v-on:click="addItem()" class='primaryContained float-right' type="submit">Submit</button>
+                      <button  class='primaryContained float-right' (click)="ReplyHide()">Cancel</button>
+                    </div><!-- End col -->
+                  </div><!--End Row -->
+                </div><!--End Container -->
+              </section><!-- end App -->   
+            </div>
+        </div> 
+       
+
+    </div>
+  </div>
+  
   <footer>
     <p>All rights reserved. @SALUS 2021</p>
   </footer>

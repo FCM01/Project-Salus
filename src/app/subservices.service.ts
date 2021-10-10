@@ -240,6 +240,24 @@ export class SubservicesService {
     })
     );
   }
+
+  EditUser(final_payload:any)
+  {
+    const requestOptions: Object = {
+      //If your response is text not json
+      responseType: 'json'
+    }   
+    return this.http.post<any>(this.url+"/Edit/User",final_payload,requestOptions).pipe(map((data: any,error: any) => {
+      if(data){
+        return data;
+      }
+      else{
+        return error;
+      }
+    })
+    );
+
+  }
 }
 
 

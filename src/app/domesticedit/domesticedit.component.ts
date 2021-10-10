@@ -5,11 +5,11 @@ import { Router } from '@angular/router';
 import { FormBuilder,FormControl, FormGroup, Validators } from "@angular/forms"
 
 @Component({
-  selector: 'app-studentedit',
-  templateUrl: './studentedit.component.html',
-  styleUrls: ['./studentedit.component.css']
+  selector: 'app-domesticedit',
+  templateUrl: './domesticedit.component.html',
+  styleUrls: ['./domesticedit.component.css']
 })
-export class StudenteditComponent implements OnInit {
+export class DomesticeditComponent implements OnInit {
   //Session varibale
   public user_number:any;
   public edit_profile:any;
@@ -76,19 +76,15 @@ export class StudenteditComponent implements OnInit {
     let surname = "";
     let id_number = "";
     let date_of_birth = "";
-    let studentnum = "";
-    let register_class= "";
+    let staff_number ="";
     let email = "";
     let password = "";
     let address="";
     let cnr = "";
     let city = "";
     let pcode = "";
-    let pg_name = "";
-    let pg_surname = "";
-    let pg_id_number= "";
-    let pg_cnum= "";
-    let pg_email= "";
+    let job_title = "";
+   
 
 
 
@@ -121,15 +117,10 @@ export class StudenteditComponent implements OnInit {
     }
 
   
-    studentnum =this.user_number;
+    staff_number =this.user_number;
   
 
-    if(post.register_class == ""){
-      register_class =this.edit_payload["register_class"];
-    }
-    else{
-      register_class =post.register_class;
-    }
+   
 
     if(post.email == ""){
       email =this.edit_payload["email"];
@@ -168,37 +159,13 @@ export class StudenteditComponent implements OnInit {
     else{
       address =post.address;
     }
-    if(post.pg_name == ""){
-      pg_name =this.edit_payload["pg_name"];
+    if(post.job_title == ""){
+      job_title =this.edit_payload["job_title"];
     }
     else{
-      pg_name =post.pg_name;
+      job_title =post.job_title;
     }
-    if(post.pg_surname == ""){
-      pg_surname =this.edit_payload["pg_surname"];
-    }
-    else{
-      pg_surname =post.pg_surname;
-    }
-
-    if(post.pg_id_number == ""){
-      pg_id_number =this.edit_payload["pg_id_number"];
-    }
-    else{
-      pg_id_number =post.pg_id_number;
-    }
-    if(post.pg_cnum== ""){
-      pg_cnum =this.edit_payload["pg_phone_number"];
-    }
-    else{
-      pg_cnum =post.pg_cnum;
-    }
-    if(post.pg_email == ""){
-      pg_email =this.edit_payload["pg_email"];
-    }
-    else{
-      pg_email =post.pg_email;
-    }
+    
 
     //Send data 
     let payload ={
@@ -206,7 +173,7 @@ export class StudenteditComponent implements OnInit {
         "user_number":this.user_number,
         "user_profile":{
                 "name":name,
-                 "surname":surname,
+                "surname":surname,
                 "id_number":id_number,
                 "date_of_birth":date_of_birth,
                 "email":email,
@@ -215,13 +182,9 @@ export class StudenteditComponent implements OnInit {
                 "city":city,
                 "pcode":pcode,
                 "password":password,
-                "student_number":studentnum,
-                "register_class":register_class,
-                "pg_name":pg_name,
-                "pg_surname":pg_surname,
-                "pg_id_number":pg_id_number,
-                "pg_cnum": pg_cnum,
-                "pg_email":pg_email,
+                "staff_number":staff_number,
+                "job_title":job_title,
+                
         }
       }
 
@@ -232,11 +195,12 @@ export class StudenteditComponent implements OnInit {
         if (data["message"]=="successful"){
           this.wait =false
           alert("User has been updated")
-          this.router.navigate(["/studentdash"])
+          this.router.navigate(["/domesticdash"])
 
         }
       }
     )
 
 }
+
 }

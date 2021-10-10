@@ -13,8 +13,11 @@ export class StudentdasboardComponent implements OnInit {
   public data :any ;
   //toolbar variable
   public toolbar_show:any;
-  //timer avriable
+  public toolbar_default = true;
+  public toolbar_report = false;
+  //timer variable
   public show = false;
+  public message="";
   // breach varibales 
   public message_alert= false;
   public breach_type:any;
@@ -28,6 +31,12 @@ export class StudentdasboardComponent implements OnInit {
     this.data = user_profile_recieved
     this.user_profile = JSON.parse(this.data);
 
+    //edit variable
+    let edit_session_payload ={
+      "user_number":this.user_profile["student_number"]
+    }
+    localStorage.setItem('user_edit_profile',JSON.stringify(edit_session_payload));
+
     //breach alram fetch
     this.sub.getBreach()
       .subscribe(
@@ -36,20 +45,32 @@ export class StudentdasboardComponent implements OnInit {
             this.message_alert = true
               this.breach_type = data["response"]["breach_type"]
               this.quadrent = data["response"]["quadrant"]
-            // if (data["response"]["status"]== "onroute"){
-            //   this.breach_status = "AID is on the Way" 
-            // }
             
           }
         }
       )
   }
-
+//toolbar functions
   toolbarControlEdit()
   {
     this.toolbar_show="edit"
+    this.toolbar_default =false;
+  }
+
+  toolbarControlHome()
+  {
+    this.toolbar_show=""
+    this.toolbar_default =true;
+  }
+  toolbarControlReport()
+  {
+    this.toolbar_report =true;
+    this.toolbar_default=false;
+    this.toolbar_show="";
 
   }
+
+  //Generate VQR
   GenerateVQR()
   {
     this.show = true
@@ -67,6 +88,7 @@ export class StudentdasboardComponent implements OnInit {
           if (data["message"]=="successful")
           {
             this.pauseTimer()
+            this.message ="QR code has been sent"
           }
         }
       )
