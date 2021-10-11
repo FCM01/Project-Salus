@@ -27,11 +27,49 @@ class tools :
         def purge_qr_codes(self):
             try:
                 files =[] 
-                for directory ,subdirectories,filenames in os.walk("QRcodes"):
+                for directory ,subdirectories,filenames in os.walk("resources/PQR/visitor_user"):
                     for filename in filenames:
                         files.append(filename)
+                    print(files)
                 for i in range (0,len(files)):
-                    os.remove("QRcodes/"+files[i])
+                    os.remove("resources/PQR/visitor_user/"+files[i])
+
+                files2 =[] 
+                for directory ,subdirectories,filenames in os.walk("resources/PQR/teacher_user"):
+                    for filename in filenames:
+                        files2.append(filename)
+                for i in range (0,len(files2)):
+                    os.remove("resources/PQR/teacher_user/"+files2[i])
+                    
+
+                files3 =[] 
+                for directory ,subdirectories,filenames in os.walk("resources/PQR/domestic_user"):
+                    for filename in filenames:
+                        files3.append(filename)
+                for i in range (0,len(files3)):
+                    os.remove("resources/PQR/domestic_user/"+files3[i])
+
+
+                files4 =[] 
+                for directory ,subdirectories,filenames in os.walk("resources/PQR/security_user"):
+                    for filename in filenames:
+                        files4.append(filename)
+                for i in range (0,len(files4)):
+                    os.remove("resources/PQR/security_user/"+files4[i])
+
+                files5 =[] 
+                for directory ,subdirectories,filenames in os.walk("resources/PQR/student_user"):
+                    for filename in filenames:
+                        files5.append(filename)
+                for i in range (0,len(files5)):
+                    os.remove("resources/PQR/student_user/"+files5[i])
+
+                files6 =[] 
+                for directory ,subdirectories,filenames in os.walk("resources/PQR/admin_user"):
+                    for filename in filenames:
+                        files6.append(filename)
+                for i in range (0,len(files6)):
+                    os.remove("resources/PQR/admin_user/"+files6[i])
             except Exception as e :
                 print("[purge_qr_codes] purge_qr_codes() error:",e)
                 return 0
@@ -583,6 +621,42 @@ class tools :
                 print("[breach_alram_email_service] breach_alram_email_service() error:",e)
         def vistor_emailing_services(self,reciver_email,name,visitor_number):
             try :
+                creation_point = datetime.now()
+                date = str(creation_point.year)+"-"+str(creation_point.month)+"-"+str(creation_point.day)
+                make = find_all("log.json","resources/OGQR/")
+                if make == 1:
+                    array_of_qr = []
+                    with open("resources/OGQR/log.json") as outfile:
+                        data = json.loads(outfile.read())
+                        array  = data["qr"]
+                        for  i in array :
+                            array_of_qr.append(i)
+                        qr_new_object = {
+                                "date":date,
+                                "name":name,
+                                "visitor_number":visitor_number
+                            }
+                        array_of_qr.append(qr_new_object)
+                        with open("resources/OGQR/log.json","w") as infile:
+                            file_object = {
+                                    "qr":array_of_qr
+                                }
+                            json.dump(file_object,infile)
+                elif make == 0 : 
+                    array_of_qr = []
+                    qr_new_object = {
+                                "date":date,
+                                "name":name,
+                                "visitor_number":visitor_number
+                            }
+                    array_of_qr.append(qr_new_object)
+                    with open("resources/OGQR/log.json","w") as infile:
+                        file_object = {
+                                    "qr":array_of_qr
+                                }
+                        json.dump(file_object,infile)
+
+
                 email_address  ="dummyjackson8@gmail.com"
                 email_password  ="dummy101@1"
                 email_recieve = reciver_email
@@ -707,6 +781,82 @@ class tools :
                 return True   
             except Exception as e :
                 print("[emailing_service_class_register] emailing_service_class_register() error:",e)
+
+
+        def emailing_message_response(self,reciver_email,name,message):
+            try:
+                email_address  ="dummyjackson8@gmail.com"
+                email_password  ="dummy101@1"
+                email_recieve = reciver_email
+                creation_point = datetime.now() 
+                date = str(creation_point.year)+"-"+str(creation_point.month)+"-"+str(creation_point.day)
+                msg = EmailMessage()
+                msg['Subject'] = 'Response to your message'
+                msg['From'] = email_address
+                msg['To']= email_recieve
+                msg.add_alternative(f"""
+                        <!DOCTYPE html>
+                        <html>
+                            <body>
+                                <h1 style ="color:#96c8cc;">Thank You</h1> 
+                                <h2 style ="color:#96c8cc;">{name}</h2>
+                                <p>{message}</p>
+                                <p>Yours sincerly</p>
+                                <p>The Salus team</p>
+                            </body>
+                        </html>
+                        """,subtype= "html")
+                files = ["saluswithname.jpg"]
+                for images in files:
+                    with open(f"{images}","rb") as image :
+                        file_data = image.read()
+                        file_type = imghdr.what(image.name)
+                        file_name= image.name
+                        msg.add_attachment(file_data,maintype="image",subtype=file_type,filename =file_name)
+                with smtplib.SMTP_SSL("smtp.gmail.com" ,465) as smtp:
+                    smtp.login(email_address,email_password)
+                    smtp.send_message(msg)
+                    print("Email has been sent")   
+                return True   
+            except Exception as e :
+                print("[emailing_service_class_register] emailing_service_class_register() error:",e)
+
+        def activity_report(self):
+            try:
+                breaches_number = 0 
+                ongorund_qr = 0
+                register_class = 0
+                vistor_number =0
+                with open("resources/OGQR/log.json") as outfile:
+                    data = json.loads(outfile.read())
+                    print(data)
+                    array  = data ["qr"]
+                    if array != []:
+                        ongorund_qr = len(array)
+                    else:
+                        ongorund_qr = 0
+         
+                with open("resources/RCQR/log.json") as outfile:
+                    data = json.loads(outfile.read())
+                    print(data)
+                    array  = data ["breaches"]
+                    if array != []:
+                        register_class = len(array)
+                    else:
+                        register_class = 0
+           
+                with open("resources/BL/log.json") as outfile:
+                    data = json.loads(outfile.read())
+                    print(data)
+                    array  = data ["breaches"]
+                    if array != []:
+                        breaches_number = len(array)
+                    else:
+                        breaches_number = 0
+
+                return breaches_number,ongorund_qr,register_class
+            except Exception as e :
+                print("[activity_report] activity_report() error:",e)
 
         def random_number_creation(self):
             number = ""

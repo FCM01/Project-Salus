@@ -126,7 +126,7 @@ def t_signup():
         register_class = data["data"]["register_class"]
         if name!= "" and email !="" and password !="" and   id_number  != "":
             qr = tools()
-            token = qr.generate_token(data,staff_number,"teacher")
+            token = qr.generate_token(name,staff_number,"teacher")
             signup_payload = {
                 "name":f"{name}",
                 "surname":f"{surname}",
@@ -181,7 +181,7 @@ def se_signup():
         print(staff_number)
         if name!= "" and email !="" and password !="" and   id_number  != "":
             qr = tools()
-            token = qr.generate_token(data,staff_number,"security")
+            token = qr.generate_token(name,staff_number,"security")
             signup_payload = {
                 "name":f"{name}",
                 "surname":f"{surname}",
@@ -231,7 +231,7 @@ def dom_signup():
         job_title = data["data"]["job_title"]
         if name!= "" and email !="" and password !="" and   id_number  != "":
             qr = tools()
-            token = qr.generate_token(data,staff_number,"domestic")
+            token = qr.generate_token(name,staff_number,"domestic")
             signup_payload = {
                 "name":f"{name}",
                 "surname":f"{surname}",
@@ -288,7 +288,7 @@ def stu_signup():
         
         if name!= "" and email !="" and password !="":
             qr = tools()
-            token = qr.generate_token(data,student_number,"student")
+            token = qr.generate_token(name,student_number,"student")
             signup_payload = {
                 "name":f"{name}",
                 "surname":f"{surname}",
@@ -344,7 +344,7 @@ def v_signup():
             v_number = tools()
             visitor_number = v_number.random_number_creation() 
             qr = tools()
-            token = qr.generate_token(data,visitor_number,"visitor")
+            token = qr.generate_token(name,visitor_number,"visitor")
             signup_payload = {
                 "name":f"{name}",
                 "surname":f"{surname}",
@@ -848,6 +848,16 @@ def get_user_list():
                 return_response = parse_json(response)
                 print(return_response)
                 resp = {"response":return_response,"message":"user retieved","status":status}
+
+        elif database_name == "admin":
+            users = mongo.db.admin
+            response  = users.find()
+            if response != None:
+                print("working v")
+                status = 200
+                return_response = parse_json(response)
+                print(return_response)
+                resp = {"response":return_response,"message":"user retieved","status":status}
     except Exception as e :
         status  = 400
         resp={"message":f"{e}","status":status}  
@@ -1024,7 +1034,6 @@ def edit_user():
     resp  = {}
     try:
         data =request.get_json("data")
-        print(data)
         new_crediatials = data["data"]["user_profile"]
         user_number = data["data"]["user_number"]
         print(new_crediatials,user_number)
@@ -1499,13 +1508,22 @@ def purge():
         response_return = mongo.db.inclass.find_one()
         if parse_json(response) != None:
             mongo.db.ongrounds.remove()
-
-        if parse_json(response_return) != None:
-            mongo.db.inclass.remove()
+            status = 200
+            resp = {"message": "deleted", "status":status}
 
         else:
             status = 400
-            resp = {"message": "users not deleted", "status":status}
+            resp = {"message": "deleted", "status":status}
+
+        if parse_json(response_return) != None:
+            mongo.db.inclass.remove()
+            status = 200
+            resp = {"message": "deleted", "status":status}
+            
+       
+        else:
+            status = 400
+            resp = {"message": "deleted", "status":status}
 
         status = 200
         resp = {"message": "Info deleted", "status":status}
@@ -1515,6 +1533,22 @@ def purge():
         print("ERORR (/Purge/Daily route)--->",e)
     return jsonify(resp),status
 
+
+@app.route("/Purge/Local/logs",methods=["POST"]) 
+def purge_local_log():
+    status = 200
+    resp ={}
+    try:
+        purge = tools()
+        purge.purge_qr_codes()
+        status = 200
+        resp = {"message": "deleted", "status":status}
+
+    except Exception as e :
+        status  = 400
+        resp={"message":f"{e}","status":status}  
+        print("ERORR (/Purge/Daily route)--->",e)
+    return jsonify(resp),status
 
 
 ##############################################################
@@ -1536,14 +1570,6 @@ def make_alarm():
         breach = tools()
         breach_number = breach.random_number_creation()
         if breach_type != "" and breach_number != "" and quadrant != "" and user_number != "":
-            breachAlarm_payload = {
-                "breach_number":f"{breach_number}",
-                "user_number":f"{user_number}",
-                "quadrant":f"{quadrant}",
-                "breach_type":f"{breach_type}",
-                "status":""
-            }
-            breach.log_breach(breach_type,quadrant,user_number,breach_number)
             if (breach_type  == "Robbery"):
                 #print("The breach is at:" + quadrant) 
                 people_profiles = mongo.db.ongrounds.find()
@@ -1638,16 +1664,23 @@ def make_alarm():
                                 here = ""
                             else:
                                 missing.append(i)
+                breachAlarm_payload = {
+                "breach_number":f"{breach_number}",
+                "user_number":f"{user_number}",
+                "quadrant":f"{quadrant}",
+                "breach_type":f"{breach_type}",
+                "students_missing":missing,
+                "stundents_not_at_school":not_at_school,
+                "status":""
+            }
+            breach.log_breach(breach_type,quadrant,user_number,breach_number)
 
-                print("list not_at_school-->",not_at_school)
-                print("list missing-->",missing)
-
-                mongo.db.breach_alarm.insert_one(breachAlarm_payload)
-                status =200
-                resp = {"message":"successful","status":status,"missing":missing ,"not_at_school":not_at_school}
-            else:
-                status = 400
-                resp = {"message":"Unsuccesful","status":status}
+            mongo.db.breach_alarm.insert_one(breachAlarm_payload)
+            status =200
+            resp = {"message":"successful","status":status,"missing":missing ,"not_at_school":not_at_school}
+        else:
+            status = 400
+            resp = {"message":"Unsuccesful","status":status}
 
     except Exception as e :
         status  = 400
@@ -1806,8 +1839,18 @@ def respose_to_messages():
     try:
         data  = request.get_json("data")
         if data != "":
-            message_number 
-            response_message 
+            message_number= data["data"]["message_number"] 
+            response_message =data["data"]["response_message"]
+
+            if message_number !="" and response_message != "":
+                response = mongo.db.messages.find_one({"message_number":f"{message_number}"})
+                data = parse_json(response)
+                email = data["email"]
+                name  = data["name"]
+                qr = tools()
+                qr.emailing_message_response(email,name,response_message)
+                status=200
+                resp = {"message":"successful","status":status}
         else:
             status=400
             resp = {"message":"no response recieved ","status":status}
@@ -1816,7 +1859,7 @@ def respose_to_messages():
         status  = 400
         resp={"message":f"{e}","status":status}  
         print("ERORR (/Retrieve/Messages route)--->",e)
-
+    return jsonify(resp),status
 @app.route("/Retrieve/Messages", methods=["GET"])
 def messages():
     status  = 200
@@ -1877,8 +1920,16 @@ def get_report():
         if visitor != None:
             number_of_visitor = mongo.db.visitor.count()
 
+        numbers = tools()
+        usage_report =numbers.activity_report()
+
+        br=usage_report[0]
+        ong=usage_report[1]
+        rc=usage_report[2]
+      
+
         status = 200
-        resp ={"message":"successful", "number_of_teacher":number_of_teacher, "number_of_admin": number_of_admin, " number_of_student": number_of_student, "number_of_domestic": number_of_domestic, "number_of_security": number_of_security, "number_of_visitor": number_of_visitor, "status":status}
+        resp ={"message":"successful", "number_of_teacher":number_of_teacher, "number_of_admin": number_of_admin, "number_of_student": number_of_student, "number_of_domestic": number_of_domestic, "number_of_security": number_of_security, "number_of_visitor": number_of_visitor, "breaches":br,"ongrounds":ong,"registerclass":rc ,"status":status}
     except Exception as e :
         status  = 400
         resp={"message":f"{e}","status":status}  
