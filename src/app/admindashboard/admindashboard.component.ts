@@ -17,12 +17,15 @@ export class AdmindashboardComponent implements OnInit {
   public breach_type:any;
   public quadrent:any;
   public message_alert = false;
+  public show_make_breach =true;
   //reply variables 
   public show_reply_section=false;
   public show_message = true;
   public current_message_number=""
   public current_message_name=""
   public current_message_message=""
+  //qr loading screen
+  public wait = false;
 
   //form and other variables
   public payload = {};
@@ -33,13 +36,25 @@ export class AdmindashboardComponent implements OnInit {
   public messages =null;
   public userarray=null;
   public status:any;
-  public location:any;
   public databaseselected:any; 
   public titleAlert1 :string ="This field is required"
   //edit variables 
   public edit_user_type:any;
   public editForm:FormGroup;
+
+  //toolbar variable
+ public toolbar_show:any;
+ public toolbar_default = true;
+ public toolbar_report = false;
+ public toolbar_message = false;
+ public toolbar_endday = false;
+
+
+ //report variables
+ public report_data :any;
+
   list1 = [
+    { text: 'Admin', selected: false, value:"admin"},
     { text: 'Domestic', selected: false, value:"domestic"},
     { text: 'Security', selected: false, value:"security"},
     { text: 'Student', selected: false,  value:"student"},
@@ -55,6 +70,7 @@ export class AdmindashboardComponent implements OnInit {
     this.editForm =fb.group(
       {"user_number":['',Validators.required]}
     )
+    
   }
 
   ngOnInit(): void {
@@ -87,6 +103,7 @@ export class AdmindashboardComponent implements OnInit {
         (data)=>{
           if(data != ""){
             this.message_alert = true
+            this.show_make_breach =false
               this.breach_number =data["response"]["breach_number"]
               this.breach_type = data["response"]["breach_type"]
               this.quadrent = data["response"]["quadrant"]
@@ -97,6 +114,15 @@ export class AdmindashboardComponent implements OnInit {
           }
         }
       )
+
+    //fecth report numbers 
+    this.sub.NumberOfUsers()
+    .subscribe(
+      (data)=>{
+        this.report_data = data
+      }
+    )
+
    
   }
   public toggleSelection(item:any, _list:any) {
@@ -104,6 +130,77 @@ export class AdmindashboardComponent implements OnInit {
     this.databaseselected= item.value;
 
   }
+
+  toolbarControlEdit()
+  {
+    this.toolbar_show="edit"
+    this.toolbar_default =false;
+    this.toolbar_report =false;
+    this.toolbar_endday =false;
+  }
+
+  toolbarControlHome()
+  {
+    this.toolbar_show=""
+    this.toolbar_default =true;
+    this.toolbar_report =false;
+    this.toolbar_endday =false;
+  }
+  toolbarControlReport()
+  {
+    this.toolbar_report =true;
+    this.toolbar_default=false;
+    this.toolbar_show="";
+    this.toolbar_endday =false;
+
+  }
+
+  toolbarControlMessages()
+  {
+    this.toolbar_message = true;
+    this.toolbar_report =false;
+    this.toolbar_default=false;
+    this.toolbar_show="";
+    this.toolbar_endday =false;
+
+  }
+  toolbarControlPurge()
+  {
+    this.toolbar_endday =true;
+    this.toolbar_message = false;
+    this.toolbar_report =false;
+    this.toolbar_default=false;
+    this.toolbar_show="";
+
+  }
+
+  Emptylogs(){
+    console.log("working")
+    this.sub.DeleteDaily()
+      .subscribe(
+        (data)=>{
+          if (data["message"]=="deleted"){
+            alert("Daily logs deleted")
+          }
+         
+
+        }
+      )
+
+  }
+  Deletelocal_logs(){
+    this.sub.DeleteLocalLogs()
+      .subscribe(
+        (data)=>{
+          if (data["message"]=="deleted"){
+           alert("Purge complete")
+            
+          }
+          
+        }
+      )
+
+ }
   deletUser(name:any,surname:any)
   {
     console.log ("type user ==>",this.databaseselected)
@@ -130,6 +227,49 @@ export class AdmindashboardComponent implements OnInit {
       )
 
   }
+  GenrateQR(){
+    this.wait = true;
+    let user_number  = this.user_profile["admin_number"]
+    console.log(user_number)
+    let payload = {
+      "data":{
+        "user_number":user_number
+      }
+    }
+    this.sub.GenerateEnterGroundsQR(payload)
+      .subscribe(
+        (data)=>{
+          if (data != ""){
+            this.wait=false;
+          }
+        }
+      )
+
+
+}
+
+GenerateQR()
+{
+  this.wait = true;
+  let user_number  = this.user_profile["admin_number"]
+  let payload = {
+    "data":{
+      "user_number":user_number
+    }
+  }
+  this.sub.RegisterClass(payload)
+    .subscribe(
+      (data)=>{
+        if (data != ""){
+          this.wait=false;
+        }
+        
+      }
+    )
+}
+
+
+
   deleteBreach()
   {
     let payload =
@@ -254,6 +394,10 @@ GenerateToken()
       user_number= user["visitor_number"]
       console.log(user_number)
     }
+    if (user["admin_number"]){
+      user_number= user["admin_number"]
+      console.log(user_number)
+    }
     //making a session
     let session_payload ={
       "user_number":user_number
@@ -288,6 +432,28 @@ GenerateToken()
 
     }
     
+
+  }
+
+  replyMessage(message_number:any ,message:any){
+
+    let payload ={
+      "data":{
+        "message_number":message_number ,
+        "response_message": message
+      }
+    }
+    console.log(payload)
+    this.sub.SendReponse(payload)
+      .subscribe(
+        (data)=>{
+          if (data["message"] != "successful"){
+            this.show_reply_section=false;
+            this.show_message =true;
+
+          }
+        }
+      )
 
   }
 

@@ -5,8 +5,8 @@
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
-        <a class="underlineHover" (click)="toolbarControlEdit()">Edit details</a>
-        <a class="underlineHover"href="#">Reports</a>
+        <a class="underlineHover" (click)="toolbarControlHome()">Generate Token</a>
+        <a class="underlineHover"(click)="toolbarControlEdit()">Edit Profile</a>
       </div>
     </div>
     <nav>
@@ -36,25 +36,31 @@
         <div id="formContent">
           
         <h1>Edit Your Credentials</h1>
-        <h2>Click her to edit your personal details </h2>
+        <h2>Click here to edit your personal details </h2>
+        <br>
         <img src="assets/images/saluswithname.jpg" alt = "Salus logo" >
         <br>
-        <a  routerLink="/studentedit">Edit details</a>
+        <div id="formFooter">
+          <a routerLink="/securityedit">Edit details</a>
         </div>
-      </div>
+        
+        </div>
+      </div> 
 
 
-      <div class="wrapper fadeInDown">
+      <div class="wrapper fadeInDown" *ngIf="toolbar_default"  >
         <div id="formContent">
-          <h1 style ="color:#ff0000;">Breach Alarm</h1>
-          <h2 class="active">Make a breach Alarm</h2>
-          <br>
-          <input type="submit"  class="fadeIn fourth" value="Breach" routerLink="/breach">
-    
-          <div *ngIf= "message_alert">
-            <h2>Breach Alarm</h2>
+          <div *ngIf= "show_make_breach">
+              <h1 style ="color:#ff0000;">Breach Alarm</h1>
+            <h2 class="active">Make a breach Alarm</h2>
             <br>
-            <h2>Breach Type :{{breach_type}}</h2>
+            <input type="submit"  class="fadeIn fourth" value="Breach" routerLink="/breach">
+          </div>
+          
+          <div *ngIf= "message_alert">
+            <h1>Breach Alarm</h1>
+            <br>
+            <h2 class="active">Breach Type :{{breach_type}}</h2>
             <div class="alert"> 
               <strong>Danger!</strong>There has been a breah on campus please stay indoors and await further instructions.
             </div>
@@ -67,32 +73,35 @@
               <h2 class="active">Breach Number :{{breach_number}}</h2>
               <h2 class="active">Breach Type :{{breach_type}}</h2>
               <h2 class="active">Quadrent:{{quadrent}}</h2>
-            <div id="formFooterBreach" >
-              <a type="submit" class="underlineHover" (click)= "deleteBreach()">DELETE BREACH</a>
+              <div class="warning"> 
+                <strong>Missing</strong>{{missing}}
+              </div>
+            <div id="formFooterRed">
+              <a type="submit" class="underlineHover" (click)="deleteBreach()">DELETE BREACH</a>
             </div>
     
-            </div>
-          
+            </div> 
           </div>
         </div>
       </div>
-        <div  class="wrapper fadeInDown">
+        <div  class="wrapper fadeInDown" *ngIf="toolbar_default">
             <div id="formContent">
             <h2 class="active" routerLink="/contact">HELP</h2>
             <h2>Please ask for personel QR code from personel to scan to enter school grounds if personel is unidetified,QR code will be sent via email</h2>
             <h2>To generate enter on grounds QR code click generate</h2>
+            <br>
                 <input type = "submit" value="Generate" (click)="GenrateQR()">
             
            </div>
         </div>
           
 
-        <div class="wrapper fadeInDown">
+        <div class="wrapper fadeInDown" *ngIf="toolbar_default">
           <div id="formContent">
-          
-          <br>
-          <h2>To enter school grounds, get QR personal code by clicking generate token </h2>
-          <p>Click if ask by security ,teaching anf high level personel only</p>
+            <h1>Personal QR code </h1>
+            <br>
+            <h2>To enter school grounds, get QR personal code by clicking generate token </h2>
+            <p>Click if ask by security ,teaching staff and high level personel only</p>
           <br>
           <p class="alert">DO NOT SHARE OR GIVE ACCESS TO YOUR PERSONAL QR CODE</p>
           <input type = "submit"  value = "generate token" placeholder = "Send"(click)="GenerateVQR()">
@@ -118,6 +127,15 @@
           </div>
 
     </div>
+  </div>
+  <div *ngIf ="wait" class="preload">
+    <div class="logo">
+        <span style="color: #050708;">SALUS</span>   
+    </div>
+    <div  class="loader-frame">
+        <div class="loader1" id="loader1"></div>
+        <div class="loader2" id="loader2"></div>
+</div>
   </div>
   
     <footer>

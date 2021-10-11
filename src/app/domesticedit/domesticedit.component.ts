@@ -28,18 +28,14 @@ export class DomesticeditComponent implements OnInit {
       "surname": [''],
       "id_number": [''],
       "date_of_birth": [''],
-      "register_class": [''],
+      "job_title": [''],
+      "staff_number": [''],      
       "email": [''],
       "password": ['', Validators.compose([Validators.maxLength(12)])],
       "cnr": [''],
       "address": [''],
       "city": [''],
       "pcode": [''],
-      "pg_name": [''],
-      "pg_surname": [''],
-      "pg_id_number": [''],
-      "pg_cnum": [''],
-      "pg_email": [''],
       "validate": ''
       
     })
@@ -142,11 +138,12 @@ export class DomesticeditComponent implements OnInit {
       cnr = post.cnr;
     }
     if(post.city == ""){
-      city =this.edit_payload["city"];
+      city = this.edit_payload["city"];
     }
     else{
       city =post.city;
     }
+
     if(post.pcode == ""){
       pcode =this.edit_payload["pcode"];
     }

@@ -33,6 +33,7 @@ constructor(private sub:SubservicesService,private log :SalusloginService,privat
     "password": ['', Validators.compose([Validators.maxLength(12)])],
     "cnr": [''],
     "address": [''],
+    "pcode": [''],
     "city": [''],
     "purpose": [''],
     "validate": ''
@@ -71,7 +72,7 @@ EditForm(post:any){
   let surname = "";
   let id_number = "";
   let date_of_birth = "";
-  let staff_number ="";
+  let visitor_number ="";
   let email = "";
   let password = "";
   let address="";
@@ -113,7 +114,7 @@ EditForm(post:any){
   }
 
 
-  staff_number =this.user_number;
+  visitor_number = this.user_number;
 
   if(post.email == ""){
     email =this.edit_payload["email"];
@@ -140,12 +141,15 @@ EditForm(post:any){
   else{
     city =post.city;
   }
+
   if(post.pcode == ""){
     pcode =this.edit_payload["pcode"];
   }
   else{
     pcode =post.pcode;
   }
+
+
   if(post.address == ""){
     address =this.edit_payload["address"];
   }
@@ -153,7 +157,7 @@ EditForm(post:any){
     address =post.address;
   }
  
-    purpose =this.edit_payload["purpose"];
+    purpose =this.edit_payload["purpose_of_visit"];
   
 
   //Send data 
@@ -171,8 +175,8 @@ EditForm(post:any){
               "city":city,
               "pcode":pcode,
               "password":password,
-              "staff_number":staff_number,
-              "purpose":purpose,
+              "visitor_number":visitor_number,
+              "purpose_of_visit":purpose,
       }
     }
 

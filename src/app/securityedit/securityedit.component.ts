@@ -62,8 +62,8 @@ ngOnInit(): void {
   this.sub.GetUser(get_user_payload)
     .subscribe(
       (data)=>{
-        console.log("data recieved",data["user"])
         this.edit_payload = data["user"];
+        console.log(this.edit_payload["email"])
       }
     )
 

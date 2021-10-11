@@ -5,10 +5,13 @@
       <i class="fa fa-caret-down"></i>
     </button>
     <div class="dropdown-content">
-      <a class="underlineHover" href="#">Edit Users</a>
-      <a class="underlineHover" href="#">Messages</a>
-      <a class="underlineHover"href="#">Generate Token</a>
-      <a class="underlineHover"href="#">Reports</a>
+      <a class="underlineHover" (click)="toolbarControlHome()">Home</a>
+      <a class="underlineHover" (click)="toolbarControlEdit()">Edit Users</a>
+      <a class="underlineHover" (click)="toolbarControlMessages()">Messages</a>
+      <a class="underlineHover"(click)="toolbarControlHome()">Generate Token</a>
+      <a class="underlineHover" (click)="toolbarControlReport()">Reports</a>
+      <a class="underlineHover" (click)="toolbarControlPurge()">Purge Functions</a>
+
     </div>
   </div>
   <nav>
@@ -34,15 +37,17 @@
   <div class="wrapper fadeInDown">
     <div id="formContent">
 
-      <div class="wrapper fadeInDown">
+      <div class="wrapper fadeInDown"*ngIf="toolbar_default">
         <div id="formContent">
-          <h1 style ="color:#ff0000;">Breach Alarm</h1>
-          <h2 class="active">Make a breach Alarm</h2>
-          <br>
-          <input type="submit"  class="fadeIn fourth" value="Breach" routerLink="/breach">
-    
+          <div *ngIf= "show_make_breach">
+            <h1 style ="color:#ff0000;">Breach Alarm</h1>
+            <h2 class="active">Make a breach Alarm</h2>
+            <br>
+            <input type="submit"  class="fadeIn fourth" value="Breach" routerLink="/breach">
+          </div>
+          
           <div *ngIf= "message_alert">
-            <h2>Breach Alarm</h2>
+            <h1>Breach Alarm</h1>
             <br>
             <h2>Breach Type :{{breach_type}}</h2>
             <div class="alert"> 
@@ -57,8 +62,8 @@
               <h2 class="active">Breach Number :{{breach_number}}</h2>
               <h2 class="active">Breach Type :{{breach_type}}</h2>
               <h2 class="active">Quadrent:{{quadrent}}</h2>
-            <div id="formFooterBreach" >
-              <a type="submit" class="underlineHover" (click)= "deleteBreach()">DELETE BREACH</a>
+            <div id="formFooterRed" >
+              <a type="submit" class="underlineHover" (click)="deleteBreach()">DELETE BREACH</a>
             </div>
     
             </div>
@@ -68,7 +73,7 @@
       </div>
 
 
-        <div class="wrapper fadeInDown">
+        <div class="wrapper fadeInDown" *ngIf="toolbar_show">
             <div id="formContent">
               <ul>
                 <h1 class="active" >Database Select</h1>
@@ -102,7 +107,7 @@
                       <td>
                         <button type="submit"  class="fadeIn fourth" (click)="deletUser(user.name,user.surname)">Delete</button>
                         <button type="submit" class="fadeIn fourth" (click)="EditUser(user)"> Edit </button>
-                        <button type="submit" class="fadeIn fourth">Details</button>
+
                       </td> 
                       <br>
                       <br>
@@ -112,7 +117,50 @@
             </div>
         </div> 
 
-        <div class="wrapper fadeInDown">
+        <div class="wrapper fadeInDown" *ngIf="toolbar_report">
+          <div id="formContent">
+            <h1>Number of users under Salus protection</h1>
+            <br>
+            <h2 class="active">Number of Visitors :{{report_data.number_of_visitor}}</h2>
+            <br>
+            <h2 class="active">Number of Admins :{{report_data.number_of_admin}}</h2>
+            <br>
+            <h2 class="active">Number of Students :{{report_data.number_of_student}}</h2>
+            <br>
+            <h2 class="active">Number of Security :{{report_data.number_of_security}}</h2>
+            <br>
+            <h2 class="active">Number of Domestic :{{report_data.number_of_domestic}}</h2>
+            <br>
+            <h2 class="active">Number of Teachers :{{report_data.number_of_teacher}}</h2>
+            <br>
+            <h1>Over All Stats  on General Use of Salus </h1>
+            <br>
+            <h2 class="active">Number of on ground tokens made :{{report_data.ongrounds}}</h2>
+            <br>
+            <h2 class="active">Number of class register tokens made :{{report_data.registerclass}}</h2>
+            <br>
+            <h2 class="active">Number of breaches made :{{report_data.breaches}}</h2>
+
+
+          </div>
+        </div>
+
+        <div class="wrapper fadeInDown" *ngIf="toolbar_endday">
+          <div id="formContent">
+            <h1>End of Day</h1>
+            <p>To clear daily clusters click below</p>
+            <button (click)="Emptylogs()">Empty Day Logs</button>
+            <p>To clear Personal QR code and recordsclick below</p>
+            <div class="alert"> 
+              <strong>Danger!</strong>You are about to empty crucial records
+              <br>
+              <button (click)="Deletelocal_logs()">Purge</button>
+            </div>
+            
+          </div>
+        </div>
+
+        <div class="wrapper fadeInDown" *ngIf="toolbar_default">
           <div id="formContent">
               <div class="form-container">
                 <h1 class="active">GENERATE ENTERANCE TOKEN</h1>
@@ -127,52 +175,32 @@
                   <br>
                   <h2 class="active">TIME OF CREATION :{{datetime | date: 'yyyy-MM-dd'}}</h2> 
                   <br>
-                  <input type="text" id="login" formControlName="User_number" class="fadeIn second" name="login" placeholder="User Number">
-                  <input type="submit" class="fadeIn fourth" value="Generate" >
-                  <span *ngIf = "status != '' ">
-                    {{status}}
-                  </span>
+                  <h2>Ongrounds QR code generated</h2>
+                  <br>
+                  <input type = "submit" value = "Generate" >
                 </div>
                 <div class = "formFooter2">
-                  <h2>QR code generated</h2> 
+
+                  <h2>Register Check QR code generated</h2> 
                   <br>
-                  <form [formGroup]="databaseForm" >
-                    <input type="text" id="login" formControlName="User_number" class="fadeIn second" name="login" placeholder="User Number">
-                    <div class="alert" *ngIf="!databaseForm.controls['User_number'].valid && databaseForm.controls['User_number'].touched">
-                      <span>{{titleAlert1}} </span>
-                    </div>
-                  </form>
                   <input type = "submit" value = "Generate" >
                 </div>
             </div>
           </div> 
 
-        <div class="wrapper fadeInDown">
+        <div class="wrapper fadeInDown" *ngIf ="toolbar_show">
           <div id="formContent">
-            <ul>
+            
               <h1>Admin Functions</h1>
               <p>Please Use Wisely</p>
-              <input type = "submit" value = "Generate" >
-              <a
-                *ngFor="let item of list1" 
-                [class.item-selected]="item.selected"
-                (click)="toggleSelectionEdit(item, 1)" id="formFooter">{{item.text}}</a>
-            </ul>
-          <form [formGroup]="editForm" (ngSubmit)="setValues()">
-              <h2 class="active">
-               {{edit_user_type}}
-              </h2>
+              <h2>Click below to add another admin</h2>
               <br>
-              <input type="text" id="login" formControlName="user_number" class="fadeIn second" name="login" placeholder="User Number">
-              <div class="alert" *ngIf="!editForm.controls['user_number'].valid && editForm.controls['user_number'].touched">
-              <span>{{titleAlert1}} </span>  </div>
-              <input [disabled]="!editForm.valid" type="submit" class="fadeIn fourth" value="Log In"> 
-          </form>
-        
+              <input type = "submit" value = "Make Admin" routerLink ="/adminsu">
+              <br>
           </div>
         </div>
     
-        <div class="wrapper fadeInDown">
+        <div class="wrapper fadeInDown" *ngIf="toolbar_message">
           <div id="formContent">
               <div class="messagecontent"*ngIf="show_message" >
                 <h1>Messages</h1>
@@ -203,8 +231,8 @@
                         <strong>{{current_message_number}}: </strong>{{current_message_message}}
                         <br>  
                       </div>
-                      <textarea type="text" class="input" placeholder="Write a comment" v-model="newItem" ></textarea>
-                      <button v-on:click="addItem()" class='primaryContained float-right' type="submit">Submit</button>
+                      <textarea type="text" class="input" placeholder="Write a comment" v-model="newItem" #response ></textarea>
+                      <button v-on:click="addItem()" class='primaryContained float-right' type="submit"(click)="replyMessage(current_message_number,response.value)">Submit</button>
                       <button  class='primaryContained float-right' (click)="ReplyHide()">Cancel</button>
                     </div><!-- End col -->
                   </div><!--End Row -->
@@ -215,6 +243,15 @@
        
 
     </div>
+  </div>
+  <div *ngIf ="wait" class="preload">
+    <div class="logo">
+        <span style="color: #050708;">SALUS</span>   
+    </div>
+    <div  class="loader-frame">
+        <div class="loader1" id="loader1"></div>
+        <div class="loader2" id="loader2"></div>
+</div>
   </div>
   
   <footer>

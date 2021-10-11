@@ -5,8 +5,8 @@
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
+        <a class="underlineHover" (click)="toolbarControlHome()">Home</a>
         <a class="underlineHover" (click)="toolbarControlEdit()">Edit details</a>
-        <a class="underlineHover"href="#">Reports</a>
       </div>
     </div>
     <nav>
@@ -52,6 +52,7 @@
         
       <h1>Edit Your Credentials</h1>
       <h2>Click her to edit your personal details </h2>
+      <br>
       <img src="assets/images/saluswithname.jpg" alt = "Salus logo" >
       <br>
       <div id="formFooter">
@@ -60,7 +61,7 @@
       </div>
     </div>
 
-    <div class="wrapper fadeInDown">
+    <div class="wrapper fadeInDown" *ngIf="toolbar_default">
       <div id="formContent">
         <h1 style ="color:#ff0000;">Breach Alarm</h1>
         <h2 class="active">Make a breach Alarm</h2>
@@ -69,7 +70,7 @@
       </div>
     </div>
 
-    <div class="wrapper fadeInDown">
+    <div class="wrapper fadeInDown"*ngIf="toolbar_default">
       <div id="formContent">
       
       <br>

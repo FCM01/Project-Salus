@@ -13,7 +13,9 @@ export class DomesticdashboardComponent implements OnInit {
   public user_profile:any;
   public data :any ;
   //toolbar variable
-  public toolbar_show:any;
+ public toolbar_show:any;
+ public toolbar_default = true;
+ public toolbar_report = false;
    //timer avriable
    public show = false;
    // breach varibales 
@@ -33,7 +35,7 @@ export class DomesticdashboardComponent implements OnInit {
      
      //edit variable
     let edit_session_payload ={
-      "user_number":this.user_profile["student_number"]
+      "user_number":this.user_profile["staff_number"]
     }
     localStorage.setItem('user_edit_profile',JSON.stringify(edit_session_payload));
      //breach alram fetch
@@ -52,6 +54,18 @@ export class DomesticdashboardComponent implements OnInit {
   toolbarControlEdit()
   {
     this.toolbar_show="edit"
+    this.toolbar_default =false;
+  }
+  toolbarControlHome()
+  {
+    this.toolbar_show=""
+    this.toolbar_default =true;
+  }
+  toolbarControlReport()
+  {
+    this.toolbar_report =true;
+    this.toolbar_default=false;
+    this.toolbar_show="";
 
   }
   GenerateVQR()

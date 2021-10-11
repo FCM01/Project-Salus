@@ -9,6 +9,9 @@ import { SubservicesService } from '../subservices.service';
   styleUrls: ['./securitydashboard.component.css']
 })
 export class SecuritydashboardComponent implements OnInit {
+  //qr loading screen
+  public wait = false;
+
   public selected_file:any;
   public user_profile:any;
   public data:any;
@@ -17,11 +20,18 @@ export class SecuritydashboardComponent implements OnInit {
    public breach_number :any;
    public breach_type:any;
    public quadrent:any;
+   public missing:any;
+   public not_at_school:any;
    public message_alert = false;
-   //toolbar variable
-  public toolbar_show:any;
-   //timer avriable
-   public show = false;
+   public show_make_breach =true;
+ //toolbar variable
+ public toolbar_show:any;
+ public toolbar_default = true;
+ public toolbar_report = false;
+
+ //timer variable
+ public show = false;
+ public message="";
   constructor(private sub:SubservicesService,private log :SalusloginService) { }
 
   ngOnInit(): void {
@@ -31,7 +41,7 @@ export class SecuritydashboardComponent implements OnInit {
      this.user_profile = JSON.parse(this.data);
      //edit variable
     let edit_session_payload ={
-      "user_number":this.user_profile["student_number"]
+      "user_number":this.user_profile["staff_number"]
     }
     localStorage.setItem('user_edit_profile',JSON.stringify(edit_session_payload));
     
@@ -48,9 +58,12 @@ export class SecuritydashboardComponent implements OnInit {
         (data)=>{
           if(data != ""){
             this.message_alert = true
+            this.show_make_breach =false
               this.breach_number =data["response"]["breach_number"]
               this.breach_type = data["response"]["breach_type"]
               this.quadrent = data["response"]["quadrant"]
+              this.missing =data["response"]["students_missing"]
+              this.not_at_school=data["response"]["stundents_not_at_school"]
             if (data["response"]["status"]== "onroute"){
               this.breach_status = "AID is on the Way" 
             }
@@ -60,11 +73,25 @@ export class SecuritydashboardComponent implements OnInit {
       )
       
   }
-  toolbarControlEdit()
-  {
-    this.toolbar_show="edit"
-
-  }
+   //toolbar functions
+   toolbarControlEdit()
+   {
+     this.toolbar_show="edit"
+     this.toolbar_default =false;
+   }
+ 
+   toolbarControlHome()
+   {
+     this.toolbar_show=""
+     this.toolbar_default =true;
+   }
+   toolbarControlReport()
+   {
+     this.toolbar_report =true;
+     this.toolbar_default=false;
+     this.toolbar_show="";
+ 
+   }
   
   deleteBreach()
   {
@@ -88,8 +115,8 @@ export class SecuritydashboardComponent implements OnInit {
   }
 
 GenrateQR(){
+    this.wait = true;
     let user_number  = this.user_profile["staff_number"]
-    console.log(user_number)
     let payload = {
       "data":{
         "user_number":user_number
@@ -98,7 +125,9 @@ GenrateQR(){
     this.sub.GenerateEnterGroundsQR(payload)
       .subscribe(
         (data)=>{
-          console.log(data)
+          if (data != ""){
+            this.wait=false;
+          }
         }
       )
 

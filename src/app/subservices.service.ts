@@ -32,6 +32,25 @@ export class SubservicesService {
     );
   }
 
+  SendReponse(final_payload:any)
+  {
+    const requestOptions: Object = {
+      //If your response is text not json
+      responseType: 'json'
+    }   
+    return this.http.post<any>(this.url+"/Message/Response",final_payload,requestOptions).pipe(map((data: any,error: any) => {
+      if(data){
+        return data;
+      }
+      else{
+        return error;
+      }
+    })
+    );
+
+
+  }
+
   PurgeQRcodes(final_payload:any)
   {
     const requestOptions: Object = {
@@ -248,6 +267,60 @@ export class SubservicesService {
       responseType: 'json'
     }   
     return this.http.post<any>(this.url+"/Edit/User",final_payload,requestOptions).pipe(map((data: any,error: any) => {
+      if(data){
+        return data;
+      }
+      else{
+        return error;
+      }
+    })
+    );
+
+  }
+
+  DeleteDaily(){
+    const requestOptions: Object = {
+      //If your response is text not json
+      responseType: 'json'
+    } 
+    let payload ={}  
+    return this.http.post<any>(this.url+"/Purge/Daily",payload,requestOptions).pipe(map((data: any,error: any) => {
+      if(data){
+        return data;
+      }
+      else{
+        return error;
+      }
+    })
+    );
+
+  }
+
+  DeleteLocalLogs(){
+    const requestOptions: Object = {
+      //If your response is text not json
+      responseType: 'json'
+    } 
+    let payload ={}  
+    return this.http.post<any>(this.url+"/Purge/Local/logs",payload,requestOptions).pipe(map((data: any,error: any) => {
+      if(data){
+        return data;
+      }
+      else{
+        return error;
+      }
+    })
+    );
+
+  }
+
+  // report functions
+  NumberOfUsers(){
+    const requestOptions: Object = {
+      //If your response is text not json
+      responseType: 'json'
+    }   
+    return this.http.get<any>(this.url+"/Report",requestOptions).pipe(map((data: any,error: any) => {
       if(data){
         return data;
       }

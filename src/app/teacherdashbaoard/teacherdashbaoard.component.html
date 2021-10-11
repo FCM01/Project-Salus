@@ -5,9 +5,9 @@
       <i class="fa fa-caret-down"></i>
     </button>
     <div class="dropdown-content">
-      <a class="underlineHover" href="#">Database Select</a>
-      <a class="underlineHover" href="#">Messages</a>
-      <a class="underlineHover"href="#">Reports</a>
+      <a class="underlineHover" (click)=" toolbarControlHome()">Generate Token</a>
+      <a class="underlineHover"(click)="toolbarControlEdit()">Edit Profile</a>
+      <a class="underlineHover" (click)="toolbarControlReport()">Reports</a>
     </div>
   </div>
   <nav>
@@ -30,59 +30,83 @@
     <h1>Welcome : {{user_profile["name"]}} {{user_profile["surname"]}}</h1>
     <p>Keep Safe with SALUS</p>
     <br>
-</div>   
+</div>  
 
-  <div class="wrapper fadeInDown">
-    <div id="formContent">
-      <h1 style ="color:#ff0000;">Breach Alarm</h1>
-      <h2 class="active">Make a breach Alarm</h2>
-      <br>
-      <input type="submit"  class="fadeIn fourth" value="Breach" routerLink="/breach">
-    </div>
-  </div>
-  <div class="wrapper fadeInDown">
-    <div id="formContent">
-        <h1>Student Database Select</h1>   
-    <table>
-        <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Handle</th>
-              <th scope="col">User Number</th>
-              <th scope="col">Functions</th>
-            </tr>
-          </thead>
-          <tbody  *ngFor= "let user of userarray">
-            <tr>
-              <th scope="row">{{user.name}},{{user.surname}}</th>
-              <td>{{user.email}}</td>
-              <td>{{user.admin_number}}</td>
-              <td>
-                <button type="submit"  class="fadeIn fourth" (click)="deletUser(user.name,user.surname)">Delete</button>
-                <button type="submit" class="fadeIn fourth"> Edit </button>
-                <button type="submit" class="fadeIn fourth">Details</button>
-              </td> 
-              <br>
-              <br>
-            </tr>
-          </tbody>
-    </table>
-    </div>
-</div> 
-    <div  class="wrapper fadeInDown">
-      <h1>GENERATE CLASS REGISTER QR</h1>
+<div class="wrapper fadeInDown">
+  <div id="formContent">
+
+
+    <div class="wrapper fadeInDown" *ngIf="toolbar_default">
       <div id="formContent">
-      <h2 class="active" routerLink="/contact">HELP</h2>
-      <br>
-      <h2>QR code will be sent via email</h2>
-      <h2>Please allow students to scan the qr code to mark themseleves present</h2>
-      <h2>To generate enter on grounds QR code click generate</h2>
-          <input type = "submit" placeholder = "Generate" (click)="GenerateQR()">
-      <div id="formFooter">
-          <a class="underlineHover" routerLink="">CANCEL</a>
+        <h1 style ="color:#ff0000;">Breach Alarm</h1>
+        <h2 class="active">Make a breach Alarm</h2>
+        <br>
+        <input type="submit"  class="fadeIn fourth" value="Breach" routerLink="/breach">
       </div>
-     </div>
-  </div> 
+    </div>
+
+    <div class="wrapper fadeInDown" *ngIf ="toolbar_show == 'edit'">
+      <div id="formContent">
+        
+      <h1>Edit Your Credentials</h1>
+      <h2>Click her to edit your personal details </h2>
+      <img src="assets/images/saluswithname.jpg" alt = "Salus logo" >
+      <br>
+      <div id="formFooter">
+        <a routerLink="/teacheredit">Edit details</a>
+      </div>
+      
+      </div>
+    </div> 
+
+
+    <div class="wrapper fadeInDown" *ngIf="toolbar_default">
+      <div id="formContent">
+      <h1>Personal QR code </h1>
+      <br>
+      <h2>To enter school grounds, get QR personal code by clicking generate token </h2>
+      <p>Click if ask by security ,teaching staff and high level personel only</p>
+      <br>
+      <p class="alert">DO NOT SHARE OR GIVE ACCESS TO YOUR PERSONAL QR CODE</p>
+      <input type = "submit"  value = "generate token" placeholder = "Send"(click)="GenerateVQR()">
+      <div class="wrapper fadeInDown" *ngIf="show">
+        <div id="formContent">
+          <h2>Press resnd of you didnt rescieve email</h2>
+          <p>If you fail to recieve you email three time please click help</p>
+          <h2>{{timeLeft}} Seconds Left....</h2>
+          <h2>{{message}}</h2>
+          <br>
+          <div id="formFooter">
+            <a class="inactive underlineHover" (click)="GenerateVQR()">Resend</a>
+          </div>
+          <div id="formFooter">
+            <a class="inactive underlineHover" routerLink ="/contact">Help</a>
+          </div>
+          <div id="formFooter">
+            <a class="inactive underlineHover" (click)="Cancel()">Go Back</a>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+
+<div  class="wrapper fadeInDown" *ngIf="toolbar_default">
+  <h1>GENERATE CLASS REGISTER QR</h1>
+  <div id="formContent">
+  <h2 class="active" routerLink="/contact">HELP</h2>
+  <br>
+  <h2>QR code will be sent via email</h2>
+  <p>Please allow students to scan the QR code to mark themseleves present</p>
+  <p>To generate enter on grounds QR code click generate</p>
+  <br>
+      <input type = "submit" value = "Generate" (click)="GenerateQR()">
+ 
+ </div>
+</div> 
+  </div>
+</div>
+
+  
   <div *ngIf ="wait" class="preload">
     <div class="logo">
         <span style="color: #050708;">SALUS</span>   

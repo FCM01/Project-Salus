@@ -5,9 +5,8 @@
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
-        <a class="underlineHover" href="#">Database Select</a>
-        <a class="underlineHover" href="#">Messages</a>
-        <a class="underlineHover"href="#">Reports</a>
+        <a class="underlineHover" (click)=" toolbarControlHome()">Generate Token</a>
+        <a class="underlineHover"(click)="toolbarControlEdit()">Edit Profile</a>
       </div>
     </div>
     <nav>
@@ -35,6 +34,8 @@
 <div class="wrapper fadeInDown">
   <div  id="formContent">
 
+    
+
     <div *ngIf= "message_alert" class="wrapper fadeInDown">
       <div id="formContent">
         <div>
@@ -48,9 +49,25 @@
         </div>
       </div>
     </div>  
-    
+
+    <div class="wrapper fadeInDown" *ngIf ="toolbar_show == 'edit'">
+      <div id="formContent">
+        
+      <h1>Edit Your Credentials</h1>
+      <h2>Click her to edit your personal details </h2>
+      <img src="assets/images/saluswithname.jpg" alt = "Salus logo" >
+      <br>
+      <div id="formFooter">
+        <a routerLink="/visitoredit">Edit details</a>
+      </div>
+      
+      </div>
+    </div> 
     <br>
-    <h2>To enter school grounds, get QR personal code by clicking generate token </h2>
+
+
+    <div *ngIf="toolbar_default">
+      <h2>To enter school grounds, get QR personal code by clicking generate token </h2>
     <p>Click if ask by security ,teaching anf high level personel only</p>
     <br>
     <p class="alert">DO NOT SHARE OR GIVE ACCESS TO YOUR PERSONAL QR CODE</p>
@@ -67,6 +84,9 @@
      
       </div>
     </div>
+
+    </div>
+    
   
   </div>
 </div>

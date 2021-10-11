@@ -11,7 +11,9 @@ export class VisitordashboardComponent implements OnInit {
   //Session varibale
   public user_profile:any;
   public data :any ;
-
+ //toolbar variable
+ public toolbar_show:any;
+ public toolbar_default = true;
    //timer avriable
    public show = false;
    // breach varibales 
@@ -28,7 +30,7 @@ export class VisitordashboardComponent implements OnInit {
 
     //edit variable
     let edit_session_payload ={
-      "user_number":this.user_profile["student_number"]
+      "user_number":this.user_profile["visitor_number"]
     }
     localStorage.setItem('user_edit_profile',JSON.stringify(edit_session_payload));
 
@@ -44,6 +46,16 @@ export class VisitordashboardComponent implements OnInit {
          }
        }
      )
+  }
+  toolbarControlEdit()
+  {
+    this.toolbar_show="edit"
+    this.toolbar_default =false;
+  }
+  toolbarControlHome()
+  {
+    this.toolbar_show=""
+    this.toolbar_default =true;
   }
 
   GenerateVQR()

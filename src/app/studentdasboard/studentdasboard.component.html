@@ -6,8 +6,8 @@
       </button>
       <div class="dropdown-content">
         <a class="underlineHover" (click)=" toolbarControlHome()">Generate Token</a>
-        <a class="underlineHover" (click)="toolbarControlEdit()">Edit details</a>
-        <a class="underlineHover" (click)="toolbarControlReport()">Reports</a>
+        <a class="underlineHover" (click)="toolbarControlEdit()">Edit Profile</a>
+        
       </div>
     </div>
     <nav>
@@ -53,7 +53,7 @@
       <div id="formContent">
         
       <h1>Edit Your Credentials</h1>
-      <h2>Click her to edit your personal details </h2>
+      <h2>Click here to edit your personal details </h2>
       <img src="assets/images/saluswithname.jpg" alt = "Salus logo" >
       <br>
       <div id="formFooter">
@@ -66,10 +66,10 @@
     
     <div class="wrapper fadeInDown" *ngIf="toolbar_default">
     <div id="formContent">
-    
-    <br>
-    <h2>To enter school grounds, get QR personal code by clicking generate token </h2>
-    <p>Click if ask by security ,teaching anf high level personel only</p>
+      <h1>Personal QR code </h1>
+      <br>
+      <h2>To enter school grounds, get QR personal code by clicking generate token </h2>
+      <p>Click if ask by security ,teaching staff and high level personel only</p>
     <br>
     <p class="alert">DO NOT SHARE OR GIVE ACCESS TO YOUR PERSONAL QR CODE</p>
     <input type = "submit"  value = "generate token" placeholder = "Send"(click)="GenerateVQR()">

@@ -41,11 +41,6 @@
                     <div class="alert" *ngIf="!editForm.controls['date_of_birth'].valid && editForm.controls['date_of_birth'].touched">
                             {{titleAlert1}} </div>
                     <br>
-                    <h2 class ="active">VALUE : {{edit_payload["register_class"]}}</h2>
-                    <br>
-                    <input type = "text" placeholder ="Register Class" formControlName="register_class">
-                    <div class="alert" *ngIf="!editForm.controls['register_class'].valid && editForm.controls['register_class'].touched">
-                                {{titleAlert1}} </div>
                     <h2 class ="active">VALUE : {{edit_payload["email"]}}</h2>
                     <br>
                     <input type = "email" placeholder = "Email "  formControlName="email">

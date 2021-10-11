@@ -29,14 +29,12 @@ export class AdmineditComponent implements OnInit {
      "surname": [''],
      "id_number": [''],
      "date_of_birth": [''],
-     "register_class": [''],
      "email": [''],
      "password": ['', Validators.compose([Validators.maxLength(12)])],
      "cnr": [''],
      "address": [''],
      "city": [''],
      "pcode": [''],
-     "admin_number":[''],
      "validate": ''
      
    })
@@ -68,6 +66,7 @@ export class AdmineditComponent implements OnInit {
 
  }
  EditForm(post:any){
+   this.wait =true
    let name = "";
    let surname = "";
    let id_number = "";
@@ -177,7 +176,7 @@ export class AdmineditComponent implements OnInit {
                "city":city,
                "pcode":pcode,
                "password":password,
-               "student_number":admin_number,
+               "admin_number":admin_number,
                "register_class":register_class,
                
        }
@@ -188,7 +187,7 @@ export class AdmineditComponent implements OnInit {
    .subscribe(
      (data)=>{
        if (data["message"]=="successful"){
-
+          this.wait =false;
          alert("User has been updated")
          this.router.navigate(["/admindash"])
 
