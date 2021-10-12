@@ -73,8 +73,8 @@
               <h2 class="active">Breach Number :{{breach_number}}</h2>
               <h2 class="active">Breach Type :{{breach_type}}</h2>
               <h2 class="active">Quadrent:{{quadrent}}</h2>
-              <div class="warning"> 
-                <strong>Missing</strong>{{missing}}
+              <div class="alert warning"> 
+                <strong>Missing :</strong>{{missing}}
               </div>
             <div id="formFooterRed">
               <a type="submit" class="underlineHover" (click)="deleteBreach()">DELETE BREACH</a>
@@ -128,15 +128,7 @@
 
     </div>
   </div>
-  <div *ngIf ="wait" class="preload">
-    <div class="logo">
-        <span style="color: #050708;">SALUS</span>   
-    </div>
-    <div  class="loader-frame">
-        <div class="loader1" id="loader1"></div>
-        <div class="loader2" id="loader2"></div>
-</div>
-  </div>
+  
   
     <footer>
         <p>All rights reserved. @SALUS 2021</p>

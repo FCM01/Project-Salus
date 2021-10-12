@@ -67,6 +67,8 @@ export class StudentsuComponent implements OnInit {
     
     
     }
+    let session_payload = {"name":post.name,"surname":post.surname,"student_number":post.studentnum}
+    localStorage.setItem('user_profile',JSON.stringify(session_payload))
     this.log.StudentSignUp(this.payload)
         .subscribe(
           (data)=>{

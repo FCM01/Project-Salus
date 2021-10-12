@@ -16,7 +16,7 @@
                     
                     <h2 class ="active">VALUE : {{edit_payload["name"]}}</h2>
                     <br>
-                    <input type="text"  formControlName="name" #name placeholder= "First Name ">
+                    <input type="text"  formControlName="name"  placeholder= "First Name ">
                     <div class="alert" *ngIf="!editForm.controls['name'].valid && editForm.controls['name'].touched">
                         {{titleAlert1}} </div>
                     <h2 class ="active">VALUE : {{edit_payload["surname"]}}</h2>
@@ -29,7 +29,7 @@
                     <br>
                     <h2 class ="active">VALUE :{{edit_payload["id_number"]}}</h2>
                     <br>
-                    <input type="text"  formControlName="id_number" #name placeholder= "Student ID number">
+                    <input type="text"  formControlName="id_number"  placeholder= "Student ID number">
                     <div class="alert" *ngIf="!editForm.controls['id_number'].valid && editForm.controls['id_number'].touched">
                         {{titleAlert1}} </div>
                     <br>
@@ -37,7 +37,7 @@
                     <br>
                     <h2 class ="active">VALUE : {{edit_payload["date_of_birth"]}}</h2>
                     <br>
-                    <input type="date"  formControlName="date_of_birth" #name placeholder= "Date of Birth">
+                    <input type="date"  formControlName="date_of_birth"  placeholder= "Date of Birth">
                     <div class="alert" *ngIf="!editForm.controls['date_of_birth'].valid && editForm.controls['date_of_birth'].touched">
                             {{titleAlert1}} </div>
                     <br>
@@ -48,7 +48,7 @@
                             {{titleAlert1}} </div>
                     <h2 class ="active">VALUE : {{edit_payload["position"]}}</h2>
                     <br>
-                    <input type = "text" placeholder = "Position"  formControlName="postion">
+                    <input type = "text" placeholder = "Position"  formControlName="position">
                     <div class="alert" *ngIf="!editForm.controls['position'].valid && editForm.controls['position'].touched">
                             {{titleAlert1}} </div>
                     <h2 class ="active">VALUE : {{edit_payload["petrol_sector"]}}</h2>

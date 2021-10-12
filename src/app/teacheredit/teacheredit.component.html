@@ -17,86 +17,66 @@
                     <h2 class ="active">VALUE : {{edit_payload["name"]}}</h2>
                     <br>
                     <input type="text"  formControlName="name" #name placeholder= "First Name ">
-                    <div class="alert" *ngIf="!editForm.controls['name'].valid && editForm.controls['name'].touched">
-                        {{titleAlert1}} </div>
+                    
                     <h2 class ="active">VALUE : {{edit_payload["surname"]}}</h2>
                     <br>
                     <input type = "text" placeholder = "Last Name"  formControlName="surname">
-                    <div class="alert" *ngIf="!editForm.controls['surname'].valid && editForm.controls['surname'].touched">
-                        {{titleAlert1}} </div>
+                   
                     <br>
                         <h2>Not required if student does not have an ID number</h2>
                     <br>
                     <h2 class ="active">VALUE :{{edit_payload["id_number"]}}</h2>
                     <br>
                     <input type="text"  formControlName="id_number" #name placeholder= "Student ID number">
-                    <div class="alert" *ngIf="!editForm.controls['id_number'].valid && editForm.controls['id_number'].touched">
-                        {{titleAlert1}} </div>
+                    
                     <br>
                     <h2>Date of Birth</h2>
                     <br>
                     <h2 class ="active">VALUE : {{edit_payload["date_of_birth"]}}</h2>
                     <br>
                     <input type="date"  formControlName="date_of_birth" #name placeholder= "Date of Birth">
-                    <div class="alert" *ngIf="!editForm.controls['date_of_birth'].valid && editForm.controls['date_of_birth'].touched">
-                            {{titleAlert1}} </div>
+                   
                     <br>
                     <h2 class ="active">VALUE : {{edit_payload["staff_number"]}}</h2>
                     <input type = "text" placeholder = " Staff Number "  formControlName="staffnum">
-                    <div class="alert" *ngIf="!editForm.controls['staffnum'].valid && editForm.controls['staffnum'].touched">
-                        {{titleAlert1}} </div>
+                    
                     <h2 class ="active">VALUE : {{edit_payload["subject"]}}</h2>
                     <br>
                     <input type = "text" placeholder = "Subject"  formControlName="subject">
-                    <div class="alert" *ngIf="!editForm.controls['subject'].valid && editForm.controls['subject'].touched">
-                            {{titleAlert1}} </div>
+                    
                     <h2 class ="active">VALUE : {{edit_payload["position"]}}</h2>
                     <br>
                     <input type = "text" placeholder = "Position"  formControlName="postion">
-                    <div class="alert" *ngIf="!editForm.controls['position'].valid && editForm.controls['position'].touched">
-                            {{titleAlert1}} </div>
-                    <h2 class ="active">VALUE : {{edit_payload["petrol_sector"]}}</h2>
-                    <br>
-                    <input type = "text" placeholder = "Petrol Sector"  formControlName="petrol_sector">
-                    <div class="alert" *ngIf="!editForm.controls['petrol_sector'].valid && editForm.controls['petrol_sector'].touched">
-                            {{titleAlert1}} </div>
+                   
+                    
                     <h2 class ="active">VALUE : {{edit_payload["email"]}}</h2>
                     <br>
                     <input type = "email" placeholder = "Email "  formControlName="email">
-                    <div class="alert" *ngIf="!editForm.controls['email'].valid && editForm.controls['email'].touched">
-                        {{titleAlert1}} </div>
+                    
     
                     <h1>Password</h1>
                     <h2 class ="active">VALUE : {{edit_payload["password"]}}</h2>
                     <br>
                     <input type = "password" placeholder="Create Password"  formControlName="password">
-                    <div class="alert" *ngIf="!editForm.controls['password'].valid && editForm.controls['password'].touched">
-                        {{titleAlert2}} </div>
                     
                     <h1>Contact details</h1>
                     <h2 class ="active">VALUE : {{edit_payload["phone_number"]}}</h2>
                     <br>
                     <input type = "tel" placeholder = "Contact Number"  formControlName="cnr">
-                    <div class="alert" *ngIf="!editForm.controls['cnr'].valid && editForm.controls['cnr'].touched">
-                        {{titleAlert1}} </div>
+                    
                     <h1>Address</h1>
                     <h2 class ="active">VALUE : {{edit_payload["address"]}}</h2>
                     <br>
                     <input type = "text" placeholder = "Physical address"  formControlName="address">
-                    <div class="alert" *ngIf="!editForm.controls['address'].valid && editForm.controls['address'].touched">
-                        {{titleAlert1}} </div>
+                   
                     <h2 class ="active">VALUE : {{edit_payload["city"]}}</h2>
                     <br>
                     <input type = "text" placeholder = "City"  formControlName="city">
-                    <div class="alert" *ngIf="!editForm.controls['city'].valid && editForm.controls['city'].touched">
-                        {{titleAlert1}} </div>
+                    
                     <h2 class ="active">VALUE : {{edit_payload["pcode"]}}</h2>
                     <br>
                     <input type = "number" placeholder = " Postal code"  formControlName="pcode">
-                    <div class="alert" *ngIf="!editForm.controls['pcode'].valid && editForm.controls['pcode'].touched">
-                        {{titleAlert1}} </div>
-
-         
+                    
 
                     <input  type="submit" class="fadeIn fourth" value="Update">
                 </form>

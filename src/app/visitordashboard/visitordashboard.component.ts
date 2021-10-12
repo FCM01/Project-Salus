@@ -64,7 +64,7 @@ export class VisitordashboardComponent implements OnInit {
     let payload  =
     {
       "data":{
-        "user_number":this.user_profile["student_number"],
+        "user_number":this.user_profile["visitor_number"],
         "user_type":"student"
       }
     }

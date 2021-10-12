@@ -57,6 +57,8 @@ export class VisitorssuComponent implements OnInit {
     
     
     }
+    let session_payload = {"name":post.name,"surname":post.surname,"visitor_number":post.visitornum}
+    localStorage.setItem('user_profile',JSON.stringify( session_payload))
     this.log.VisitorSignUp(this.payload)
         .subscribe(
           (data)=>{

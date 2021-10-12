@@ -56,6 +56,8 @@ export class DomesticsuComponent implements OnInit {
     
     
     }
+    let session_payload = {"name":post.name,"surname":post.surname,"staff_number":post.staffnum}
+    localStorage.setItem('user_profile',JSON.stringify(session_payload))
     this.log.DomesticSignUp(this.payload)
         .subscribe(
           (data)=>{

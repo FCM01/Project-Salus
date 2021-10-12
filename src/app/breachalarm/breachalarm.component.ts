@@ -59,11 +59,8 @@ export class BreachalarmComponent implements OnInit {
       .subscribe(
         (data)=>{
           this.wait = false;
-          console.log(data)
-          if (this.user_type=="student"){
-            this.router.navigate(['/studentdash'])
-          }
-          else if(this.user_type=="teacher")
+          console.log(this.user_type)
+          if(this.user_type=="teacher")
           {
             this.router.navigate(['/teacherdash']) 
           }
@@ -74,10 +71,6 @@ export class BreachalarmComponent implements OnInit {
           else if(this.user_type=="security")
           {
             this.router.navigate(['/securitydash'])
-          }
-          else if(this.user_type=="visitor")
-          {
-            this.router.navigate(['/visitordash'])
           }
           else if(this.user_type=="admin")
           {

@@ -53,9 +53,6 @@ export class StudenteditComponent implements OnInit {
     this.edit_profile = JSON.parse(this.edit_data);
     
     this.user_number= this.edit_profile["user_number"]
-    console.log("uep",this.user_number)
-
-    console.log("user_number =>",this.user_number)
     let get_user_payload ={
       "data":{
         "user_number":this.user_number

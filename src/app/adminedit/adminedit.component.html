@@ -66,11 +66,13 @@
                     <input type = "text" placeholder = "Physical address"  formControlName="address">
                     <div class="alert" *ngIf="!editForm.controls['address'].valid && editForm.controls['address'].touched">
                         {{titleAlert1}} </div>
+                    <br>
                     <h2 class ="active">VALUE : {{edit_payload["city"]}}</h2>
                     <br>
                     <input type = "text" placeholder = "City"  formControlName="city">
                     <div class="alert" *ngIf="!editForm.controls['city'].valid && editForm.controls['city'].touched">
                         {{titleAlert1}} </div>
+                    <br>
                     <h2 class ="active">VALUE : {{edit_payload["pcode"]}}</h2>
                     <br>
                     <input type = "number" placeholder = " Postal code"  formControlName="pcode">
@@ -80,7 +82,7 @@
                     <input  type="submit" class="fadeIn fourth" value="Update">
                 </form>
                 <div id="formFooter">
-                    <a class="underlineHover" routerLink = "/studentdash">Go back</a>
+                    <a class="underlineHover" routerLink = "/admindash">Go back</a>
                 </div>
           
         </div>

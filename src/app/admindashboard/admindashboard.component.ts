@@ -137,6 +137,7 @@ export class AdmindashboardComponent implements OnInit {
     this.toolbar_default =false;
     this.toolbar_report =false;
     this.toolbar_endday =false;
+    this.toolbar_message = false;
   }
 
   toolbarControlHome()
@@ -145,6 +146,7 @@ export class AdmindashboardComponent implements OnInit {
     this.toolbar_default =true;
     this.toolbar_report =false;
     this.toolbar_endday =false;
+    this.toolbar_message = false;
   }
   toolbarControlReport()
   {
@@ -152,6 +154,7 @@ export class AdmindashboardComponent implements OnInit {
     this.toolbar_default=false;
     this.toolbar_show="";
     this.toolbar_endday =false;
+    this.toolbar_message = false;
 
   }
 
@@ -447,9 +450,10 @@ GenerateToken()
     this.sub.SendReponse(payload)
       .subscribe(
         (data)=>{
+          this.show_reply_section=false;
+          this.show_message =true;
           if (data["message"] != "successful"){
-            this.show_reply_section=false;
-            this.show_message =true;
+           
 
           }
         }

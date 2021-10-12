@@ -35,6 +35,7 @@ constructor(private sub:SubservicesService,private log :SalusloginService,privat
     "cnr": [''],
     "address": [''],
     "city": [''],
+    "pcode": [''],
     "subject": [''],
     "position": [''],
     "validate": ''
@@ -155,11 +156,11 @@ EditForm(post:any){
   else{
     address =post.address;
   }
-  if(post.postion == ""){
+  if(post.position == ""){
     position =this.edit_payload["position"];
   }
   else{
-    position=post.postion;
+    position = post.position;
   }
   if(post.subject == ""){
     subject =this.edit_payload["subject"];
@@ -190,7 +191,7 @@ EditForm(post:any){
               "pcode":pcode,
               "password":password,
               "staff_number":staff_number,
-              "postion":position,
+              "position":position,
               "subject":subject,
               "register_class":register_class
               

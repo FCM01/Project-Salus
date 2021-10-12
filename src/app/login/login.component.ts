@@ -82,7 +82,6 @@ export class LoginComponent implements OnInit {
         {
           this.user_check_false = true
           this.error_message = data["message"]
-    
         }
          
        },

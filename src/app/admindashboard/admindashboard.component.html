@@ -36,7 +36,6 @@
   </div>
   <div class="wrapper fadeInDown">
     <div id="formContent">
-
       <div class="wrapper fadeInDown"*ngIf="toolbar_default">
         <div id="formContent">
           <div *ngIf= "show_make_breach">
@@ -45,6 +44,8 @@
             <br>
             <input type="submit"  class="fadeIn fourth" value="Breach" routerLink="/breach">
           </div>
+        </div>
+      </div>
           
           <div *ngIf= "message_alert">
             <h1>Breach Alarm</h1>
@@ -69,11 +70,9 @@
             </div>
           
           </div>
-        </div>
-      </div>
 
 
-        <div class="wrapper fadeInDown" *ngIf="toolbar_show">
+          <div class="wrapper fadeInDown" *ngIf="toolbar_show">
             <div id="formContent">
               <ul>
                 <h1 class="active" >Database Select</h1>
@@ -238,12 +237,18 @@
                   </div><!--End Row -->
                 </div><!--End Container -->
               </section><!-- end App -->   
-            </div>
-        </div> 
-       
-
+  
     </div>
   </div>
+
+        </div>
+      </div>
+
+
+        
+   
+   
+      
   <div *ngIf ="wait" class="preload">
     <div class="logo">
         <span style="color: #050708;">SALUS</span>   

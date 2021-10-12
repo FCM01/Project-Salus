@@ -47,12 +47,13 @@ export class TeacherdashbaoardComponent implements OnInit {
     //set user_number for breach alram
     let session_payload  = {
       "user_number":this.user_profile["staff_number"],
-      "user_type":"admin"
+      "user_type":"teacher"
     }
+    localStorage.setItem('global_user_number',JSON.stringify(session_payload));
     //database tool
     this.payload = {
       "data":{
-        "database_name":"student"
+        "database_name":"teacher"
       }
     }
     this.log.GetUsers(this.payload)

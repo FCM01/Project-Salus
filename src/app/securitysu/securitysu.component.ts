@@ -61,7 +61,7 @@ export class SecuritysuComponent implements OnInit {
     
     
     }
-    this.session_payload = {"name":post.name,"staff_number":post.staffnum}
+    this.session_payload = {"name":post.name,"surname":post.surname,"staff_number":post.staffnum}
     localStorage.setItem('user_profile',JSON.stringify(this.session_payload))
     this.log.SecuritySignUp(this.payload)
         .subscribe(

@@ -47,8 +47,8 @@ export class SecuritydashboardComponent implements OnInit {
     
      //set user_number for breach alram
     let session_payload  = {
-      "user_number":this.user_profile["admin_number"],
-      "user_type":"admin" 
+      "user_number":this.user_profile["staff_number"],
+      "user_type":"security" 
     }
     localStorage.setItem('global_user_number',JSON.stringify(session_payload));
     

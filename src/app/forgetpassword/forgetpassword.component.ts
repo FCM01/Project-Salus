@@ -13,6 +13,8 @@ export class ForgetpasswordComponent implements OnInit {
   public forgotpasswordForm: any;
   public codeForm:any;
   public payload:any;
+  //loading screen varible
+  public wait:any;
   constructor(private responce:SalusloginService,private router:Router) { 
     this.forgotpasswordForm = new FormGroup({
       "Email": new FormControl(Validators.email),
@@ -26,6 +28,7 @@ export class ForgetpasswordComponent implements OnInit {
   ngOnInit(): void {
   }
   SetValue(email:string){
+    this.wait = true;
     this.payload ={"data":{"email":email}};
     this.responce.SendForgetpasword(this.payload)
       .subscribe(
@@ -34,6 +37,7 @@ export class ForgetpasswordComponent implements OnInit {
 
           if (data["token"]=="active")
           {
+            this.wait =false;
             this.router.navigate(["/verify"]);
           }
           else{

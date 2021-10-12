@@ -14,8 +14,7 @@
       <h2 class="active">Login</h2>
       <h2 class="inactive underlineHover" routerLink ="/signup">Sign Up </h2>
   
-      <!-- Login Form -->
-      <span *ngIf= "error_message != '' ">{{error_message}} </span>
+      <!-- Login Form -->      
       <form [formGroup]="loginForm" (ngSubmit)="setValues(loginForm.value)">
         <input type="text" id="login" formControlName="User_number" class="fadeIn second" name="login" placeholder="User Number">
         <div class="alert" *ngIf="!loginForm.controls['User_number'].valid && loginForm.controls['User_number'].touched">
@@ -24,6 +23,10 @@
         <input type="password" id="password" formControlName="Password" class="fadeIn third" name="login" placeholder="Password">
         <div class="alert" *ngIf="!loginForm.controls['Password'].valid && loginForm.controls['Password'].touched">
           <span>{{titleAlert1}} </span>
+         
+        </div>
+        <div *ngIf= "error_message != '' ">
+          <span class="alert">{{error_message}} </span>
         </div>
         <input [disabled]="!loginForm.valid" type="submit" class="fadeIn fourth" value="Log In">
       </form>

@@ -19,6 +19,7 @@
                     <input type="text"  formControlName="name" #name placeholder= "First Name ">
                     <div class="alert" *ngIf="!editForm.controls['name'].valid && editForm.controls['name'].touched">
                         {{titleAlert1}} </div>
+                    <br>
                     <h2 class ="active">VALUE : {{edit_payload["surname"]}}</h2>
                     <br>
                     <input type = "text" placeholder = "Last Name"  formControlName="surname">
@@ -46,7 +47,7 @@
                     <input type = "text" placeholder ="Register Class" formControlName="register_class">
                     <div class="alert" *ngIf="!editForm.controls['register_class'].valid && editForm.controls['register_class'].touched">
                                 {{titleAlert1}} </div>
-                    <h2 class ="active">VALUE : {{edit_payload["email"]}}</h2>
+                    <h2 class ="active">VALUE : {{edit_payload.email}}</h2>
                     <br>
                     <input type = "email" placeholder = "Email "  formControlName="email">
                     <div class="alert" *ngIf="!editForm.controls['email'].valid && editForm.controls['email'].touched">
@@ -89,6 +90,7 @@
                     <input type = "text" placeholder = "Parent's/Gaurdian First Name" formControlName ="pg_name">
                     <div class="alert" *ngIf="!editForm.controls['pg_name'].valid && editForm.controls['pg_name'].touched">
                         {{titleAlert1}} </div>
+                    <br>
                     <h2 class ="active">VALUE : {{edit_payload["pg_surname"]}}</h2>
                     <br>
                     <input type = "text" placeholder = "Parent's/Gaurdian  Last Name" formControlName ="pg_surname">

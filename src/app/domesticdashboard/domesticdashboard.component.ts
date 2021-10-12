@@ -33,10 +33,17 @@ export class DomesticdashboardComponent implements OnInit {
      this.data = user_profile_recieved
      this.user_profile = JSON.parse(this.data);
      
+     //set user_number for breach alram
+    let session_payload  = {
+      "user_number":this.user_profile["staff_number"],
+      "user_type":"domestic" 
+    }
+    localStorage.setItem('global_user_number',JSON.stringify(session_payload));
      //edit variable
     let edit_session_payload ={
       "user_number":this.user_profile["staff_number"]
     }
+    
     localStorage.setItem('user_edit_profile',JSON.stringify(edit_session_payload));
      //breach alram fetch
     this.sub.getBreach()

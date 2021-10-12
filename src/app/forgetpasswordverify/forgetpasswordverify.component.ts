@@ -12,6 +12,9 @@ export class ForgetpasswordverifyComponent implements OnInit {
   public codeForm:any;
   public payload:any;
   public verifnumber = "nothings recieved";
+
+  //loading screen vaiables
+  public wait =false;
   constructor(private responce:SalusloginService,private router:Router) { 
     this.codeForm =new FormGroup({
       "Code": new FormControl(Validators.required)
@@ -22,15 +25,15 @@ export class ForgetpasswordverifyComponent implements OnInit {
   }
 
   CheckCode(code:any){
-    console.log(code)
+    this.wait =true;
     this.verifnumber = code ;
-    console.log(this.verifnumber)
     this.payload={"data":{"verification_number":code}}
     this.responce.SendVerificationCode(this.payload)
       .subscribe(
         (data)=>{
-          console.log(data)
           if (data["message"]=="sucess"){
+            this.wait=false;
+            alert("Password Sent Check Your Email")
             this.router.navigate(["/login"]);
           }
         }
