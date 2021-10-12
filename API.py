@@ -67,6 +67,8 @@ def a_signup():
                 "pqr":token
             }
             mongo.db.admin.insert_one(signup_payload)
+            mongo.db.teacher.insert_one(signup_payload)
+            mongo.db.security.insert_one(signup_payload)
             q1= tools()
             q1.emailing_services(email,name,admin_number,"signup",image_path,"","","")
             status = 200
@@ -404,8 +406,8 @@ def login_user():
                     resp = {"message":"Welcome","status":status,"token":"active","user":data,"type_user":"teacher"}
                 else:
                     print("Password is incorrect")
-                    status = 400
-                    resp = {"message":"Fail in check password","status":status}  
+                    status = 200
+                    resp = {"message":"Incorrect password","token":"down","status":status}  
             if parse_json(admin) != None:
                 print("Admin")
                 data = parse_json(admin)
@@ -416,8 +418,8 @@ def login_user():
                     resp = {"message":"Welcome","status":status,"token":"active","user":data,"type_user":"admin"}
                 else:
                     print("Password is incorrect")
-                    status = 400
-                    resp = {"message":"Fail in check password","status":status} 
+                    status = 200
+                    resp = {"message":"Incorrect password","token":"down","status":status} 
             if parse_json(student) != None:
                 print("Student")
                 data = parse_json(student)
@@ -428,8 +430,8 @@ def login_user():
                     resp = {"message":"Welcome","status":status,"token":"active","user":data,"type_user":"student"}
                 else:
                     print("Password is incorrect")
-                    status = 400
-                    resp = {"message":"Fail in check password","status":status} 
+                    status = 200
+                    resp = {"message":"Incorrect password","token":"down","status":status} 
             if parse_json(security) != None:
                 print("Security")
                 data = parse_json(security)
@@ -440,8 +442,8 @@ def login_user():
                     resp = {"message":"Welcome","status":status,"token":"active","user":data,"type_user":"security"}
                 else:
                     print("Password is incorrect")
-                    status = 400
-                    resp = {"message":"Fail in check password","status":status}  
+                    status = 200
+                    resp = {"message":"Incorrect password","token":"down","status":status}  
             if parse_json(domestic) != None:
                 print("Domestic")
                 data = parse_json(domestic)
@@ -452,8 +454,8 @@ def login_user():
                     resp = {"message":"Welcome","status":status,"token":"active","user":data,"type_user":"domestic"}
                 else:
                     print("Password is incorrect")
-                    status = 400
-                    resp = {"message":"Fail in check password","status":status}  
+                    status = 200
+                    resp = {"message":"Incorrect password","token":"down","status":status}  
             if parse_json(visitor) != None:
                 print("Vistor")
                 data = parse_json(visitor)
@@ -464,8 +466,8 @@ def login_user():
                     resp = {"message":"Welcome","status":status,"token":"active","user":data,"type_user":"visitor"}
                 else:
                     print("Password is incorrect")
-                    status = 400
-                    resp = {"message":"Fail in check password","status":status}  
+                    status = 200
+                    resp = {"message":"Incorrect password","token":"down","status":status}  
         else:
             print("missing credential on sign up ")
             status = 400
@@ -1506,27 +1508,14 @@ def purge():
     try:
         response = mongo.db.ongrounds.find_one()
         response_return = mongo.db.inclass.find_one()
-        if parse_json(response) != None:
+        if parse_json(response) != None and parse_json(response_return) != None:
             mongo.db.ongrounds.remove()
-            status = 200
-            resp = {"message": "deleted", "status":status}
-
-        else:
-            status = 400
-            resp = {"message": "deleted", "status":status}
-
-        if parse_json(response_return) != None:
             mongo.db.inclass.remove()
             status = 200
-            resp = {"message": "deleted", "status":status}
-            
-       
+            resp = {"message":"deleted", "status":status}
         else:
             status = 400
-            resp = {"message": "deleted", "status":status}
-
-        status = 200
-        resp = {"message": "Info deleted", "status":status}
+            resp = {"message":"not deleted", "status":status}  
     except Exception as e :
         status  = 400
         resp={"message":f"{e}","status":status}  

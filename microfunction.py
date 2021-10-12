@@ -559,7 +559,7 @@ class tools :
                         for  i in array :
                             array_of_qr.append(i)
                         array_of_qr.append(log_payload)
-                        with open("resources/RCQR/log.json","w") as infile:
+                        with open("resources/BL/log.json","w") as infile:
                             file_object = {
                                 "breaches":array_of_qr
                                 }
