@@ -101,9 +101,6 @@ class tools :
                                     <p>This email has been sent to inform you that a breach of the type above has occured on shool campus with has be idetified as a danger to persons of this facility</p>
                                     <p>Please stand by for instruction and make plans to leave school grounds after evcuation</p>
                                     <p style ="color:#ff0000;">Please parents make plan to fecth your children</p>
-                                    <p>Response</p>
-                                    <p>Yours sincerly</p>
-                                    <p>The Salus team</p>
                                     <p>Please  feel safe under Salus</p>
                                     <p> We care about your well being </p>
                                     <p>Yours sincerly</p>
@@ -380,7 +377,7 @@ class tools :
                                 <p>Please  feel safe under Salus</p>
                                 <p> We care about your well being </p>
                                 <p>Yours sincerly</p>
-                                <p>The Salus team</p>
+                                <p>The Salus Team</p>
                             </body>
                         </html>
                         """,subtype= "html")
@@ -492,7 +489,7 @@ class tools :
                                 <p>A sign in attempt that requires further verification has identified a forgotten passsword</p>
                                 <p>We recieved your request and have verified you as the holder for the account assigned to :{email_recieve}.</p>
                                 <h1 style ="color:#96c8cc;">Your account password :{password}</h1>
-                                <p>Disclaimer: we are not liable for any misconduct if this email is not meant for you please send it to email.</p>
+                                <p>Disclaimer: We are not liable for any misconduct if this email is not meant for you please send it to email.</p>
                                 <p>Yours sincerly</p>
                                 <p>The Salus team</p>
                             </body>
@@ -519,7 +516,9 @@ class tools :
                                 <h1 style ="color:#96c8cc;">Account Made</h1> 
                                 <h2 style ="color:#96c8cc;">Thank you {name}</h2>
                                 <p>Welcome to flow we happy to provide u a new way to bring ease to you doctor appointment making system</p>
-                                <p> WE care about your well being </p>
+                                <p>We care about your well being </p>
+                                <p>Yours sincerly</p>
+                                <p>The Salus Team</p>
                             </body>
                         </html>
                         """,subtype= "html")
