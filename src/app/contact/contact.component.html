@@ -15,31 +15,38 @@
 
             <img src="assets/images/saluswithname.jpg" alt = "Salus logo" >
 
+            <div  class="wrapper fadeInDown">
+                <div id="formContent">
 
-            <h2> Please use this form to <br>
-              contact us and we will get back <br>
-              to you as soon as possible </h2>
+                    <h2> Please use this form to <br>
+                        contact us and we will get back <br>
+                        to you as soon as possible </h2>
+          
+                        <form [formGroup]="signupForm" (ngSubmit)="setValues(signupForm.value)">
+                          <input type="text"  formControlName="name" #name placeholder= "First Name ">
+                          <div class="alert" *ngIf="!signupForm.controls['name'].valid && signupForm.controls['name'].touched">
+                            {{titleAlert1}} </div>
+                          <input type = "email" placeholder = "Email "  formControlName="email">
+                          <div class="alert" *ngIf="!signupForm.controls['email'].valid && signupForm.controls['email'].touched">
+                              {{titleAlert1}} </div>
+                          <input type = "text" placeholder = "Message"  formControlName="message">
+                          <div class="alert" *ngIf="!signupForm.controls['message'].valid && signupForm.controls['message'].touched">
+                              {{titleAlert1}} </div>
+          
+                          <input [disabled]="!signupForm.valid" type="submit" class="fadeIn fourth" value="Send">
+                        </form>
+                        
 
-              <form [formGroup]="signupForm" (ngSubmit)="setValues(signupForm.value)">
-                <input type="text"  formControlName="name" #name placeholder= "First Name ">
-                <div class="alert" *ngIf="!signupForm.controls['name'].valid && signupForm.controls['name'].touched">
-                  {{titleAlert1}} </div>
-                <input type = "email" placeholder = "Email "  formControlName="email">
-                <div class="alert" *ngIf="!signupForm.controls['email'].valid && signupForm.controls['email'].touched">
-                    {{titleAlert1}} </div>
-                <input type = "text" placeholder = "Message"  formControlName="message">
-                <div class="alert" *ngIf="!signupForm.controls['message'].valid && signupForm.controls['message'].touched">
-                    {{titleAlert1}} </div>
+                </div>
 
-                <input [disabled]="!signupForm.valid" type="submit" class="fadeIn fourth" value="Send">
-              </form>
-              
+            </div>
+          
                 
   
         </div>
     </div>
     <footer>
-        <p>All rights reserved. @SALUS 2021</p>
+        <p>All rights reserved. @SALUS 2022</p>
     </footer>
 </body>
 </html>

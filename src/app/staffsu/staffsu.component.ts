@@ -12,6 +12,7 @@ export class StaffsuComponent implements OnInit {
   public signupForm : FormGroup;
   public wait = false;
   public payload:any;
+  public error_message ="";
   public titleAlert2 :string ="Please enter in an password that is 8 charaters long"
   public titleAlert1 :string ="This field is required"
   constructor(private log :SalusloginService,private router: Router,private fb: FormBuilder) {
@@ -40,8 +41,25 @@ export class StaffsuComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  password_check(password_1:any,password_2:any){
+    let final_password;
+    if (password_2 == password_1){
+      final_password = password_2
+      return {"responce":1,"password":final_password}
+    }
+    else{
+      return {"responce":0}
+    }
+  }
   setValues(post:any){  
     this.wait = true;
+    let checked_password =this.password_check(post.password,post.passwordconfirm)
+    if (checked_password["responce"] ==0){
+      this.wait =false
+      this.error_message = "Passwords dont match"
+
+    }
+    else{
     this.payload ={
       "data":{
                 "name":post.name,
@@ -53,7 +71,7 @@ export class StaffsuComponent implements OnInit {
                 "address":post.address,
                 "city":post.city,
                 "pcode":post.pcode,
-                "password":post.passwordconfirm,
+                "password":checked_password["password"],
                 "staff_number":post.staffnum,
                 "position":post.position,
                 "subject":post.subject,
@@ -79,5 +97,5 @@ export class StaffsuComponent implements OnInit {
   
 }
 
-
+  }
 }

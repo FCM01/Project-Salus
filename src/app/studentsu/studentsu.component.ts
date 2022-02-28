@@ -3,6 +3,7 @@ import { SalusloginService } from '../saluslogin.service';
 import { Router } from '@angular/router';
 import { FormBuilder,FormControl, FormGroup, Validators } from "@angular/forms"
 
+
 @Component({
   selector: 'app-studentsu',
   templateUrl: './studentsu.component.html',
@@ -11,6 +12,7 @@ import { FormBuilder,FormControl, FormGroup, Validators } from "@angular/forms"
 export class StudentsuComponent implements OnInit {
   public wait = false;
   public signupForm : FormGroup;
+  public error_message ='';
   public payload:any;
   public titleAlert2 :string ="Please enter in an password that is 8 charaters long"
   public titleAlert1 :string ="This field is required"
@@ -41,8 +43,28 @@ export class StudentsuComponent implements OnInit {
   }
   ngOnInit(): void {
   }
+  password_check(password_1:any,password_2:any){
+    let final_password;
+    if (password_2 == password_1){
+      final_password = password_2
+      return {"responce":1,"password":final_password}
+    }
+    else{
+      return {"responce":0}
+    }
+  }
   setValues(post:any){
     this.wait = true;
+
+    let checked_password =this.password_check(post.password,post.passwordconfirm)
+    if (checked_password["responce"] ==0){
+      this.wait =false
+      this.error_message = "Passwords dont match"
+
+    }
+    else{
+
+    
     this.payload ={
       "data":{
                 "name":post.name,
@@ -54,7 +76,7 @@ export class StudentsuComponent implements OnInit {
                 "address":post.address,
                 "city":post.city,
                 "pcode":post.pcode,
-                "password":post.passwordconfirm,
+                "password":checked_password["password"],
                 "student_number":post.studentnum,
                 "register_class":post.register_class,
                 "pg_name": post.pg_name,
@@ -77,10 +99,18 @@ export class StudentsuComponent implements OnInit {
             {
               this.router.navigate(["/studentdash"])
             }
+            else{
+              this.error_message = data["message"]
+              console.log(data["message"])
+            }
           }
         )
-    
+        } 
   
 }
 
 }
+function stringyfy(arg0: string | undefined): string {
+  throw new Error('Function not implemented.');
+}
+

@@ -56,6 +56,10 @@
                     <input type = "number" placeholder = " Postal code"  formControlName="pcode">
                     <div class="alert" *ngIf="!signupForm.controls['pcode'].valid && signupForm.controls['pcode'].touched">
                         {{titleAlert1}} </div>
+                    
+                    <div *ngIf= "error_message != '' ">
+                            <span class="alert">{{error_message}} </span>
+                    </div>
 
                     <input [disabled]="!signupForm.valid" type="submit" class="fadeIn fourth" value="Sign Up">
                 </form>
@@ -75,7 +79,7 @@
         </div>
 </div>
 <footer>
-    <p>All rights reserved. @SALUS 2021</p>
+    <p>All rights reserved. @SALUS 2022</p>
 </footer>
 </body>
 </html>

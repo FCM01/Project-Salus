@@ -13,7 +13,7 @@ export class AdminsuComponent implements OnInit {
   public wait = false;
   public signupForm : FormGroup;
   public payload:any;
-  public session_payload:any;
+  public error_message ="";
   public titleAlert2 :string ="Please enter in an password that is 8 charaters long"
   public titleAlert1 :string ="This field is required"
   constructor(private sub:SubservicesService,private log :SalusloginService,private router: Router,private fb: FormBuilder) {
@@ -39,6 +39,16 @@ export class AdminsuComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  password_check(password_1:any,password_2:any){
+    let final_password;
+    if (password_2 == password_1){
+      final_password = password_2
+      return {"responce":1,"password":final_password}
+    }
+    else{
+      return {"responce":0}
+    }
+  }
   setValues(post:any){
     this.wait = true;
     this.payload ={
@@ -57,8 +67,8 @@ export class AdminsuComponent implements OnInit {
       }  
     
     }
-    this.session_payload = {"name":post.name,"surname":post.surname,"admin_number":post.admin_number}
-    localStorage.setItem('user_profile',JSON.stringify(this.session_payload))
+    let session_payload = {"name":post.name,"surname":post.surname,"admin_number":post.admin_number}
+    localStorage.setItem('user_profile',JSON.stringify(session_payload))
     this.log.AdminSignUp(this.payload)
         .subscribe(
           (data)=>{
