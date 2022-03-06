@@ -25,8 +25,8 @@ export class VisitorssuComponent implements OnInit {
       "date_of_birth": ['', Validators.required],
       "email": ['', Validators.email],
       "purpose": ['', Validators.required],
-      "password": ['', Validators.compose([Validators.required, Validators.maxLength(8)])],
-      "passwordconfirm": ['', Validators.compose([Validators.required, Validators.maxLength(8)])],
+      "password": ['', Validators.compose([Validators.required, Validators.minLength(8),Validators.maxLength(12)])],
+        "passwordconfirm": ['', Validators.compose([Validators.required, Validators.minLength(8),Validators.maxLength(12)])],
       "cnr": ['',Validators.required],
       "address": ['',Validators.required],
       "city": ['',Validators.required],
@@ -49,6 +49,14 @@ export class VisitorssuComponent implements OnInit {
   }
   setValues(post:any){
     this.wait = true;
+    let checked_password =this.password_check(post.password,post.passwordconfirm)
+    if (checked_password["responce"] ==0){
+      this.wait =false
+      this.error_message = "Passwords dont match"
+
+    }
+    else{
+
     this.payload ={
       "data":{
                 "name":post.name,
@@ -60,7 +68,7 @@ export class VisitorssuComponent implements OnInit {
                 "address":post.address,
                 "city":post.city,
                 "pcode":post.pcode,
-                "password":post.passwordconfirm,
+                "password":checked_password["password"],
                 "staff_number":post.visitornum,
                 "position":post.position,
                 "purpose_of_visit":post.purpose,
@@ -84,4 +92,5 @@ export class VisitorssuComponent implements OnInit {
     
   
 }
+  }
 }

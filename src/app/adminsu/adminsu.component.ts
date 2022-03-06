@@ -24,8 +24,8 @@ export class AdminsuComponent implements OnInit {
       "date_of_birth": ['', Validators.required],
       "admin_number": ['',Validators.required],
       "email": ['', Validators.email],
-      "password": ['', Validators.compose([Validators.required, Validators.maxLength(8)])],
-      "passwordconfirm": ['', Validators.compose([Validators.required, Validators.maxLength(8)])],
+      "password": ['', Validators.compose([Validators.required, Validators.minLength(8),Validators.maxLength(12)])],
+        "passwordconfirm": ['', Validators.compose([Validators.required, Validators.minLength(8),Validators.maxLength(12)])],
       "cnr": ['',Validators.required],
       "address": ['',Validators.required],
       "city": ['',Validators.required],
@@ -51,6 +51,15 @@ export class AdminsuComponent implements OnInit {
   }
   setValues(post:any){
     this.wait = true;
+    let checked_password =this.password_check(post.password,post.passwordconfirm)
+    if (checked_password["responce"] ==0){
+      this.wait =false
+      this.error_message = "Passwords dont match"
+
+    }
+    else{
+
+    
     this.payload ={
       "data":{
                 "name":post.name,
@@ -62,7 +71,7 @@ export class AdminsuComponent implements OnInit {
                 "address":post.address,
                 "city":post.city,
                 "pcode":post.pcode,
-                "password":post.passwordconfirm,
+                "password":checked_password["password"],
                 "admin_number":post.admin_number,
       }  
     
@@ -83,5 +92,5 @@ export class AdminsuComponent implements OnInit {
     
   
 }
-
+  }
 }

@@ -28,7 +28,7 @@ constructor(private sub:SubservicesService,private log :SalusloginService,privat
   this.editForm = fb.group({
     "name": [''],
     "surname": [''],
-    "id_number": [''],
+    "id_number": ['', Validators.compose([Validators.required, Validators.maxLength(13)])],
     "date_of_birth": [''],
     "register_class": [''],
     "email": [''],
