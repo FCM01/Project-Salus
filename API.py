@@ -48,32 +48,38 @@ def a_signup():
         pcode= data["data"]["pcode"]
         password = data["data"]["password"]
         admin_number = data["data"]["admin_number"]
-        if name!= "" and email !="" and password !="" and   id_number  != "": 
-            qr = tools()
-            token = qr.generate_token(data,admin_number,"admin")
-            signup_payload = {
-                "name":f"{name}",
-                "surname":f"{surname}",
-                "id_number":f"{id_number}",
-                "date_of_birth": f"{date_of_birth}",
-                "email":f"{email}",
-                "phone_number":f"{phone_number}",
-                "address":f"{address}",
-                "city":f"{city}",
-                "pcode":f"{pcode}",
-                "password":f"{password}",
-                "admin_number":f"{admin_number}",
-                "acess_level":0,
-                "pqr":token
-            }
-            mongo.db.admin.insert_one(signup_payload)
-            mongo.db.teacher.insert_one(signup_payload)
-            mongo.db.security.insert_one(signup_payload)
-            q1= tools()
-            q1.emailing_services(email,name,admin_number,"signup",image_path,"","","")
-            status = 200
-            resp = {"message":"succeessful","status":f"{status}"}  
-                
+        email_data = mongo.db.admin.find({"email":f"{email}"})
+        if email_data == []:
+
+            if name!= "" and email !="" and password !="" and   id_number  != "": 
+                qr = tools()
+                token = qr.generate_token(data,admin_number,"admin")
+                signup_payload = {
+                    "name":f"{name}",
+                    "surname":f"{surname}",
+                    "id_number":f"{id_number}",
+                    "date_of_birth": f"{date_of_birth}",
+                    "email":f"{email}",
+                    "phone_number":f"{phone_number}",
+                    "address":f"{address}",
+                    "city":f"{city}",
+                    "pcode":f"{pcode}",
+                    "password":f"{password}",
+                    "admin_number":f"{admin_number}",
+                    "acess_level":0,
+                    "pqr":token
+                }
+                mongo.db.admin.insert_one(signup_payload)
+                mongo.db.teacher.insert_one(signup_payload)
+                mongo.db.security.insert_one(signup_payload)
+                q1= tools()
+                q1.emailing_services(email,name,admin_number,"signup",image_path,"","","")
+                status = 200
+                resp = {"message":"succeessful","status":f"{status}"}  
+            else:
+                status = 200
+                resp = {"message":"Email is already in use","status":f"{status}"}  
+
     except Exception as e:
         status = 400
         resp = {"message":"ERROR on /Admin/Signup","status":f"{status}",}
@@ -126,32 +132,40 @@ def t_signup():
         position= data["data"]["position"]
         subject= data["data"]["subject"]
         register_class = data["data"]["register_class"]
-        if name!= "" and email !="" and password !="" and   id_number  != "":
-            qr = tools()
-            token = qr.generate_token(name,staff_number,"teacher")
-            signup_payload = {
-                "name":f"{name}",
-                "surname":f"{surname}",
-                "id_number":f"{id_number}",
-                "date_of_birth": f"{date_of_birth}",
-                "email":f"{email}",
-                "phone_number":f"{phone_number}",
-                "address":f"{address}",
-                "city":f"{city}",
-                "pcode":f"{pcode}",
-                "password":f"{password}",
-                "staff_number":f"{staff_number}",
-                "position":f"{position}",
-                "subject":f"{subject}",
-                "register_class":f"{register_class}",
-                "acess_level":2,
-                "pqr":token
-            }
-            teacher  = mongo.db.teacher.insert_one(signup_payload)
-            q1= tools()
-            q1.emailing_services(email,name,staff_number,"signup","","","","")
-            status = 200
-            resp = {"message":"succeessful","status":f"{status}"}       
+
+        email_data = mongo.db.admin.find({"email":f"{email}"})
+        if email_data == []:
+            if name!= "" and email !="" and password !="" and   id_number  != "":
+                qr = tools()
+                token = qr.generate_token(name,staff_number,"teacher")
+                signup_payload = {
+                    "name":f"{name}",
+                    "surname":f"{surname}",
+                    "id_number":f"{id_number}",
+                    "date_of_birth": f"{date_of_birth}",
+                    "email":f"{email}",
+                    "phone_number":f"{phone_number}",
+                    "address":f"{address}",
+                    "city":f"{city}",
+                    "pcode":f"{pcode}",
+                    "password":f"{password}",
+                    "staff_number":f"{staff_number}",
+                    "position":f"{position}",
+                    "subject":f"{subject}",
+                    "register_class":f"{register_class}",
+                    "acess_level":2,
+                    "pqr":token
+                }
+                teacher  = mongo.db.teacher.insert_one(signup_payload)
+                q1= tools()
+                q1.emailing_services(email,name,staff_number,"signup","","","","")
+                status = 200
+                resp = {"message":"succeessful","status":f"{status}"} 
+
+            else:
+                status  = 200 
+                resp = {"message":"Email is already in use","status":f"{status}"}  
+
     except Exception as e:
         status = 400
         resp = {"message":"ERROR on /Teacher/Signup","status":f"{status}",}
@@ -180,32 +194,38 @@ def se_signup():
         password = data["data"]["password"]
         position= data["data"]["position"]
         petrol_sector = data["data"]["petrol_sector"]
-        print(staff_number)
-        if name!= "" and email !="" and password !="" and   id_number  != "":
-            qr = tools()
-            token = qr.generate_token(name,staff_number,"security")
-            signup_payload = {
-                "name":f"{name}",
-                "surname":f"{surname}",
-                "id_number":f"{id_number}",
-                "date_of_birth": f"{date_of_birth}",
-                "email":f"{email}",
-                "phone_number":f"{phone_number}",
-                "address":f"{address}",
-                "city":f"{city}",
-                "pcode":f"{pcode}",
-                "password":f"{password}",
-                "staff_number":f"{staff_number}",
-                "position":f"{position}",
-                "petrol_sector":f"{petrol_sector}",
-                "acess_level":2,
-                "pqr":token
-            }
-            mongo.db.security.insert_one(signup_payload)
-            q1= tools()
-            q1.emailing_services(email,name,staff_number,"signup","","","","")
-            status = 200
-            resp = {"message":"succeessful","status":f"{status}"}       
+
+        email_data = mongo.db.admin.find({"email":f"{email}"})
+        if email_data == []:
+            if name!= "" and email !="" and password !="" and   id_number  != "":
+                qr = tools()
+                token = qr.generate_token(name,staff_number,"security")
+                signup_payload = {
+                    "name":f"{name}",
+                    "surname":f"{surname}",
+                    "id_number":f"{id_number}",
+                    "date_of_birth": f"{date_of_birth}",
+                    "email":f"{email}",
+                    "phone_number":f"{phone_number}",
+                    "address":f"{address}",
+                    "city":f"{city}",
+                    "pcode":f"{pcode}",
+                    "password":f"{password}",
+                    "staff_number":f"{staff_number}",
+                    "position":f"{position}",
+                    "petrol_sector":f"{petrol_sector}",
+                    "acess_level":2,
+                    "pqr":token
+                }
+                mongo.db.security.insert_one(signup_payload)
+                q1= tools()
+                q1.emailing_services(email,name,staff_number,"signup","","","","")
+                status = 200
+                resp = {"message":"succeessful","status":f"{status}"} 
+            else:
+                status = 200
+                resp = {"message":"Email is already in use","status":f"{status}"} 
+
     except Exception as e:
         status = 400
         resp = {"message":"ERROR on /Security/Signup","status":f"{status}",}
@@ -231,30 +251,37 @@ def dom_signup():
         password = data["data"]["password"]
         staff_number= data["data"]["staff_number"]
         job_title = data["data"]["job_title"]
-        if name!= "" and email !="" and password !="" and   id_number  != "":
-            qr = tools()
-            token = qr.generate_token(name,staff_number,"domestic")
-            signup_payload = {
-                "name":f"{name}",
-                "surname":f"{surname}",
-                "id_number":f"{id_number}",
-                "date_of_birth": f"{date_of_birth}",
-                "email":f"{email}",
-                "phone_number":f"{phone_number}",
-                "address":f"{address}",
-                "city":f"{city}",
-                "pcode":f"{pcode}",
-                "password":f"{password}",
-                "staff_number":f"{staff_number}",
-                "job_title":f"{job_title}",
-                "acess_level":1,
-                "pqr":token
-            }
-            mongo.db.domestic.insert_one(signup_payload)
-            q1= tools()
-            q1.emailing_services(email,name,staff_number,"signup","","","","")
-            status = 200
-            resp = {"message":"succeessful","status":f"{status}"}         
+
+        email_data = mongo.db.admin.find({"email":f"{email}"})
+        if email_data == []:
+            if name!= "" and email !="" and password !="" and   id_number  != "":
+                qr = tools()
+                token = qr.generate_token(name,staff_number,"domestic")
+                signup_payload = {
+                    "name":f"{name}",
+                    "surname":f"{surname}",
+                    "id_number":f"{id_number}",
+                    "date_of_birth": f"{date_of_birth}",
+                    "email":f"{email}",
+                    "phone_number":f"{phone_number}",
+                    "address":f"{address}",
+                    "city":f"{city}",
+                    "pcode":f"{pcode}",
+                    "password":f"{password}",
+                    "staff_number":f"{staff_number}",
+                    "job_title":f"{job_title}",
+                    "acess_level":1,
+                    "pqr":token
+                }
+                mongo.db.domestic.insert_one(signup_payload)
+                q1= tools()
+                q1.emailing_services(email,name,staff_number,"signup","","","","")
+                status = 200
+                resp = {"message":"succeessful","status":f"{status}"}
+            else:
+                status = 200
+                resp = {"message":"succeessful","status":f"{status}"}
+
     except Exception as e:
         status = 400
         resp = {"message":"ERROR on /Domestic/Signup","status":f"{status}",}
@@ -288,36 +315,44 @@ def stu_signup():
         pg_id_number =data["data"]["pg_id_number"]
         pg_phone_number = data["data"]["pg_cnum"]
         
-        if name!= "" and email !="" and password !="":
-            qr = tools()
-            token = qr.generate_token(name,student_number,"student")
-            signup_payload = {
-                "name":f"{name}",
-                "surname":f"{surname}",
-                "id_number":f"{id_number}",
-                "date_of_birth": f"{date_of_birth}",
-                "email":f"{email}",
-                "phone_number":f"{phone_number}",
-                "address":f"{address}",
-                "city":f"{city}",
-                "pcode":f"{pcode}",
-                "password":f"{password}",
-                "student_number":f"{student_number}",
-                "register_class":f"{register_class}",
-                "pg_name":f"{pg_name}",
-                "pg_surname":f"{pg_surname}",
-                "pg_email":f"{pg_email}",
-                "pg_id_number":f"{pg_id_number}",
-                "pg_phone_number":f"{pg_phone_number}",
-                "acess_level":0,
-                "pqr":token
-            }
-            mongo.db.student.insert_one(signup_payload)
-            q1= tools()
-            q1.emailing_services(email,name,student_number,"signup","","","","")
-            q1.emailing_services(pg_email,pg_name,"","pg_signup","","","","")
-            status = 200
-            resp = {"message":"succeessful","status":f"{status}"}       
+        email_data = mongo.db.student.find({"email":f"{email}"})
+        print("email_data-->",parse_json(email_data))
+        if email_data == []:
+
+            if name!= "" and email !="" and password !="":
+                qr = tools()
+                token = qr.generate_token(name,student_number,"student")
+                signup_payload = {
+                    "name":f"{name}",
+                    "surname":f"{surname}",
+                    "id_number":f"{id_number}",
+                    "date_of_birth": f"{date_of_birth}",
+                    "email":f"{email}",
+                    "phone_number":f"{phone_number}",
+                    "address":f"{address}",
+                    "city":f"{city}",
+                    "pcode":f"{pcode}",
+                    "password":f"{password}",
+                    "student_number":f"{student_number}",
+                    "register_class":f"{register_class}",
+                    "pg_name":f"{pg_name}",
+                    "pg_surname":f"{pg_surname}",
+                    "pg_email":f"{pg_email}",
+                    "pg_id_number":f"{pg_id_number}",
+                    "pg_phone_number":f"{pg_phone_number}",
+                    "acess_level":0,
+                    "pqr":token
+                }
+                mongo.db.student.insert_one(signup_payload)
+                q1= tools()
+                q1.emailing_services(email,name,student_number,"signup","","","","")
+                q1.emailing_services(pg_email,pg_name,"","pg_signup","","","","")
+                status = 200   
+                resp = {"message":"succeessful","status":f"{status}"}
+        else:
+            status = 200   
+            resp = {"message":"succeessful","status":f"{status}"} 
+        print(resp)
     except Exception as e:
         status = 400
         resp = {"message":"ERROR on /Student/Signup","status":f"{status}","e":f"{e}"}
@@ -342,34 +377,42 @@ def v_signup():
         pcode= data["data"]["pcode"]
         password = data["data"]["password"]
         purpose_of_visit= data["data"]["purpose_of_visit"]
-        if name!= "" and email !="" and password !="" and   id_number  != "":
-            v_number = tools()
-            visitor_number = v_number.random_number_creation() 
-            qr = tools()
-            token = qr.generate_token(name,visitor_number,"visitor")
-            signup_payload = {
-                "name":f"{name}",
-                "surname":f"{surname}",
-                "id_number":f"{id_number}",
-                "date_of_birth": f"{date_of_birth}",
-                "email":f"{email}",
-                "phone_number":f"{phone_number}",
-                "address":f"{address}",
-                "city":f"{city}",
-                "pcode":f"{pcode}",
-                "password":f"{password}",
-                "visitor_number":f"{visitor_number}",
-                "purpose_of_visit":f"{purpose_of_visit}",
-                "visits":[],
-                "acess_level":0,
-                "pqr":token
-            }
-            print(signup_payload)
-            mongo.db.visitor.insert_one(signup_payload)
-            q1= tools()
-            q1.vistor_emailing_services(email,name,visitor_number)
-            status = 200
-            resp = {"message":"succeessful","status":f"{status}"}       
+
+        email_data = mongo.db.admin.find({"email":f"{email}"})
+        if email_data == []:
+            if name!= "" and email !="" and password !="" and   id_number  != "":
+                v_number = tools()
+                visitor_number = v_number.random_number_creation() 
+                qr = tools()
+                token = qr.generate_token(name,visitor_number,"visitor")
+                signup_payload = {
+                    "name":f"{name}",
+                    "surname":f"{surname}",
+                    "id_number":f"{id_number}",
+                    "date_of_birth": f"{date_of_birth}",
+                    "email":f"{email}",
+                    "phone_number":f"{phone_number}",
+                    "address":f"{address}",
+                    "city":f"{city}",
+                    "pcode":f"{pcode}",
+                    "password":f"{password}",
+                    "visitor_number":f"{visitor_number}",
+                    "purpose_of_visit":f"{purpose_of_visit}",
+                    "visits":[],
+                    "acess_level":0,
+                    "pqr":token
+                }
+                print(signup_payload)
+                mongo.db.visitor.insert_one(signup_payload)
+                q1= tools()
+                q1.vistor_emailing_services(email,name,visitor_number)
+                status = 200
+                resp = {"message":"succeessful","status":f"{status}"}
+            else:
+                status = 200
+                resp = {"message":"succeessful","status":f"{status}"}
+       
+
     except Exception as e:
         status = 400
         resp = {"message":"ERROR on /Visitor/Signup","status":f"{status}",}
@@ -394,9 +437,7 @@ def login_user():
             domestic = mongo.db.domestic.find_one({"staff_number":f"{user_number}"})
             security = mongo.db.security.find_one({"staff_number":f"{user_number}"})
             visitor = mongo.db.visitor.find_one({"visitor_number":f"{user_number}"})
-            print(parse_json(admin))
-            print(parse_json(teacher))
-            if parse_json(teacher) != None:
+            if parse_json(teacher) != []:
                 print("Teacher")
                 data = parse_json(teacher)
                 database_password = data["password"]   
@@ -408,7 +449,11 @@ def login_user():
                     print("Password is incorrect")
                     status = 200
                     resp = {"message":"Incorrect password","token":"down","status":status}  
-            if parse_json(admin) != None:
+            else:
+                status = 200 
+                resp = {"message":"No such user exists","token":"down","status":status}  
+                
+            if parse_json(admin) != []:
                 print("Admin")
                 data = parse_json(admin)
                 database_password = data["password"]   
@@ -420,7 +465,10 @@ def login_user():
                     print("Password is incorrect")
                     status = 200
                     resp = {"message":"Incorrect password","token":"down","status":status} 
-            if parse_json(student) != None:
+            else:
+                status = 200 
+                resp = {"message":"No such user exists","token":"down","status":status}  
+            if parse_json(student) != []:
                 print("Student")
                 data = parse_json(student)
                 database_password = data["password"]   
@@ -431,8 +479,11 @@ def login_user():
                 else:
                     print("Password is incorrect")
                     status = 200
-                    resp = {"message":"Incorrect password","token":"down","status":status} 
-            if parse_json(security) != None:
+                    resp = {"message":"Incorrect password","token":"down","status":status}
+            else:
+                status = 200 
+                resp = {"message":"No such user exists","token":"down","status":status}   
+            if parse_json(security) != []:
                 print("Security")
                 data = parse_json(security)
                 database_password = data["password"]   
@@ -443,8 +494,11 @@ def login_user():
                 else:
                     print("Password is incorrect")
                     status = 200
-                    resp = {"message":"Incorrect password","token":"down","status":status}  
-            if parse_json(domestic) != None:
+                    resp = {"message":"Incorrect password","token":"down","status":status} 
+            else:
+                status = 200 
+                resp = {"message":"No such user exists","token":"down","status":status}   
+            if parse_json(domestic) != []:
                 print("Domestic")
                 data = parse_json(domestic)
                 database_password = data["password"]   
@@ -456,7 +510,10 @@ def login_user():
                     print("Password is incorrect")
                     status = 200
                     resp = {"message":"Incorrect password","token":"down","status":status}  
-            if parse_json(visitor) != None:
+            else:
+                status = 200 
+                resp = {"message":"No such user exists","token":"down","status":status}  
+            if parse_json(visitor) != []:
                 print("Vistor")
                 data = parse_json(visitor)
                 database_password = data["password"]   
@@ -467,7 +524,10 @@ def login_user():
                 else:
                     print("Password is incorrect")
                     status = 200
-                    resp = {"message":"Incorrect password","token":"down","status":status}  
+                    resp = {"message":"Incorrect password","token":"down","status":status}
+            else:
+                status = 200 
+                resp = {"message":"No such user exists","token":"down","status":status}  
         else:
             print("missing credential on sign up ")
             status = 400
@@ -494,7 +554,7 @@ def genrate_grounds_token():
             qr = tools()
             token = qr.genrate_grounds_qr(user_number) 
             security  = mongo.db.security.find_one({"staff_number":f"{user_number}"})
-            if parse_json(security) != None:
+            if parse_json(security) != []:
                     data = parse_json(security)
                     email = data["email"]
                     name = data["name"] 
@@ -533,7 +593,7 @@ def mark_present():
 
         if user_number !="" and subject != "" and register_class != "":
             student = mongo.db.student.find_one({"student_number":f"{user_number}"})
-            if parse_json(student) != None:
+            if parse_json(student) != []:
                 print("Student")
                 data = parse_json(student)
                 name = data["name"]
@@ -572,7 +632,7 @@ def enter_grounds():
             domestic = mongo.db.domestic.find_one({"staff_number":f"{user_number}"})
             security = mongo.db.security.find_one({"staff_number":f"{user_number}"})
             visitor = mongo.db.visitor.find_one({"visitor_number":f"{user_number}"})
-            if parse_json(teacher) != None:
+            if parse_json(teacher) != []:
                 print("Teacher")
                 data = parse_json(teacher)
                 name = data["name"]
@@ -588,7 +648,7 @@ def enter_grounds():
                 mongo.db.ongrounds.insert_one(on_grounds_payload)
                 status  = 200
                 resp ={"message":"successful","status":status}
-            if parse_json(admin) != None:
+            if parse_json(admin) != []:
                 print("Admin")
                 data = parse_json(admin)
                 name = data["name"]
@@ -605,7 +665,7 @@ def enter_grounds():
                 mongo.db.ongrounds.insert_one(on_grounds_payload)
                 status  = 200
                 resp ={"message":"successful","status":status}
-            if parse_json(student) != None:
+            if parse_json(student) != []:
                 print("Student")
                 data = parse_json(student)
                 print(data)
@@ -623,7 +683,7 @@ def enter_grounds():
                 mongo.db.ongrounds.insert_one(on_grounds_payload)
                 status  = 200
                 resp ={"message":"successful","status":status} 
-            if parse_json(security) != None:
+            if parse_json(security) != []:
                 print("Security")
                 data = parse_json(security)
                 name = data["name"]
@@ -640,7 +700,7 @@ def enter_grounds():
                 mongo.db.ongrounds.insert_one(on_grounds_payload)
                 status  = 200
                 resp ={"message":"successful","status":status}  
-            if parse_json(domestic) != None:
+            if parse_json(domestic) != []:
                 print("Domestic")
                 data = parse_json(domestic)
                 name = data["name"]
@@ -657,7 +717,7 @@ def enter_grounds():
                 mongo.db.ongrounds.insert_one(on_grounds_payload)
                 status  = 200
                 resp ={"message":"successful","status":status}  
-            if parse_json(visitor) != None:
+            if parse_json(visitor) != []:
                 print("Vistor")
                 data = parse_json(visitor)
                 name = data["name"]
@@ -697,7 +757,7 @@ def generate_personal_qr():
         if user_number != "" and user_type != "":
             if user_type == "teacher":
                 teacher = mongo.db.teacher.find_one({"staff_number":f"{user_number}"})
-                if parse_json(teacher) != None:
+                if parse_json(teacher) != []:
                     data = parse_json(teacher)
                     email = data["email"]
                     get_qr= tools()
@@ -706,7 +766,7 @@ def generate_personal_qr():
                     resp  = {"message":"successful","status":status}
             if user_type =="security":
                 security = mongo.db.security.find_one({"staff_number":f"{user_number}"})    
-                if parse_json(security) != None:
+                if parse_json(security) != []:
                     data = parse_json(security)
                     token = qr.generate_token(name,user_number)
                     email = data["email"]
@@ -716,7 +776,7 @@ def generate_personal_qr():
                     resp  = {"message":"successful","status":status}
             elif user_type =="domestic":
                 domestic = mongo.db.domestic.find_one({"staff_number":f"{user_number}"})
-                if parse_json(domestic) != None:
+                if parse_json(domestic) != []:
                     print("Domestic")
                     data = parse_json(domestic)
                     email = data["email"]
@@ -727,7 +787,7 @@ def generate_personal_qr():
 
             elif user_type == "student":
                 student = mongo.db.student.find_one({"student_number":f"{user_number}"})
-                if  parse_json(student) != None:
+                if  parse_json(student) != []:
                     data = parse_json(student)
                     email = student["email"]
                     get_qr= tools()
@@ -737,7 +797,7 @@ def generate_personal_qr():
             
             elif user_type == "vistor":
                 visitor = mongo.db.visitor.find_one({"visitor_number":f"{user_number}"})
-                if parse_json(visitor)  != None:
+                if parse_json(visitor)  != []:
                     data = parse_json(visitor)
                     email = data["email"]
                     get_qr= tools()
@@ -777,7 +837,7 @@ def generate_token():
             qr = tools()
             token = qr.class_register_qr_code(user_number) 
             teacher = mongo.db.teacher.find_one({"staff_number":f"{user_number}"})
-            if parse_json(teacher) != None:
+            if parse_json(teacher) != []:
                 data = parse_json(teacher)
                 email = data["email"]
                 name = data["name"] 
@@ -809,7 +869,7 @@ def get_user_list():
         if database_name == "domestic":
             users = mongo.db.domestic
             response  = users.find()
-            if response != None:
+            if response != []:
                 print("working d")
                 status = 200
                 return_response = parse_json(response)
@@ -817,7 +877,7 @@ def get_user_list():
         elif database_name == "teacher":
             users = mongo.db.teacher
             response  = users.find()
-            if response != None:
+            if response != []:
                 print("working t")
                 status = 200
                 return_response = parse_json(response)
@@ -826,7 +886,7 @@ def get_user_list():
         elif database_name == "student":
             users = mongo.db.student
             response  = users.find()
-            if response != None:
+            if response != []:
                 print("working st")
                 status = 200
                 return_response = parse_json(response)
@@ -835,7 +895,7 @@ def get_user_list():
         elif database_name == "security":
             users = mongo.db.security
             response  = users.find()
-            if response != None:
+            if response != []:
                 print("working se")
                 status = 200
                 return_response = parse_json(response)
@@ -844,7 +904,7 @@ def get_user_list():
         elif database_name == "visitor":
             users = mongo.db.visitor
             response  = users.find()
-            if response != None:
+            if response != []:
                 print("working v")
                 status = 200
                 return_response = parse_json(response)
@@ -854,7 +914,7 @@ def get_user_list():
         elif database_name == "admin":
             users = mongo.db.admin
             response  = users.find()
-            if response != None:
+            if response != []:
                 print("working v")
                 status = 200
                 return_response = parse_json(response)
@@ -885,7 +945,7 @@ def user_delete():
             if user_type == "domestic":              
                 users = mongo.db.domestic
                 response  = users.find_one({"name":f"{name}","surname":f"{surname}"})
-                if response != None:
+                if response != []:
                     print("working d")
                     status = 200
                     return_response = parse_json(response)
@@ -900,7 +960,7 @@ def user_delete():
             elif user_type == "teacher":
                 users = mongo.db.teacher
                 response  = users.find_one({"name":f"{name}","surname":f"{surname}"})
-                if response != None:
+                if response != []:
                     print("working t")
                     status = 200
                     return_response = parse_json(response)
@@ -916,7 +976,7 @@ def user_delete():
             elif user_type == "student":
                 users = mongo.db.student
                 response  = users.find_one({"name":f"{name}","surname":f"{surname}"})
-                if response != None:
+                if response != []:
                     print("working st")
                     status = 200
                     return_response = parse_json(response)
@@ -933,7 +993,7 @@ def user_delete():
             elif user_type == "security":
                 users = mongo.db.security
                 response  = users.find_one({"name":f"{name}","surname":f"{surname}"})
-                if response != None:
+                if response != []:
                     print("working se")
                     status = 200
                     return_response = parse_json(response)
@@ -949,7 +1009,7 @@ def user_delete():
             elif user_type == "visitor":
                 users = mongo.db.visitor
                 response  = users.find_one({"name":f"{name}","surname":f"{surname}"})
-                if response != None:
+                if response != []:
                     print("working v")
                     status = 200
                     return_response = parse_json(response)
@@ -991,33 +1051,33 @@ def get_user():
             visitor = mongo.db.visitor.find_one({"visitor_number":f"{user_number}"})
             print(parse_json(admin))
             print(parse_json(teacher))
-            if parse_json(teacher) != None:
+            if parse_json(teacher) != []:
                 print("Teacher")
                 data = parse_json(teacher) 
                 status= 200
                 resp = {"status":status,"token":"active","user":data}
                 
-            if parse_json(admin) != None:
+            if parse_json(admin) != []:
                 print("Admin")
                 data = parse_json(admin)
                 status= 200
                 resp = {"status":status,"token":"active","user":data}
-            if parse_json(student) != None:
+            if parse_json(student) != []:
                 print("Student")
                 data = parse_json(student)
                 status= 200
                 resp = {"status":status,"token":"active","user":data}
-            if parse_json(security) != None:
+            if parse_json(security) != []:
                 print("Security")
                 data = parse_json(security)
                 status= 200
                 resp = {"status":status,"token":"active","user":data}
-            if parse_json(domestic) != None:
+            if parse_json(domestic) != []:
                 print("Domestic")
                 data = parse_json(domestic)
                 status= 200
                 resp = {"status":status,"token":"active","user":data}
-            if parse_json(visitor) != None:
+            if parse_json(visitor) != []:
                 print("Vistor")
                 data = parse_json(visitor)
                 status= 200
@@ -1046,7 +1106,7 @@ def edit_user():
             domestic = mongo.db.domestic.find_one({"staff_number":f"{user_number}"})
             security = mongo.db.security.find_one({"staff_number":f"{user_number}"})
             visitor = mongo.db.visitor.find_one({"visitor_number":f"{user_number}"})
-            if parse_json(teacher) != None:
+            if parse_json(teacher) != []:
                 print("Teacher")
                 name = new_crediatials["name"]
                 surname = new_crediatials["surname"]
@@ -1081,7 +1141,7 @@ def edit_user():
                 mongo.db.teacher.update_one({"staff_number":f"{user_number}"},newvalues)
                 status = 200
                 resp ={"message":"successful","token":"true" ,"status":status}
-            if parse_json(admin) != None:
+            if parse_json(admin) != []:
                     print("Admin")
                     name = new_crediatials["name"]
                     surname = new_crediatials["surname"]
@@ -1112,7 +1172,7 @@ def edit_user():
                     mongo.db.admin.update_one({"staff_number":f"{user_number}"},newvalues)
                     status = 200
                     resp ={"message":"successful","token":"true" ,"status":status}
-            if parse_json(student) != None:
+            if parse_json(student) != []:
                     print("Student")
                     name = new_crediatials["name"]
                     surname = new_crediatials["surname"]
@@ -1154,7 +1214,7 @@ def edit_user():
                     mongo.db.student.update_one({"student_number":f"{user_number}"},newvalues)
                     status = 200
                     resp ={"message":"successful","token":"true" ,"status":status} 
-            if parse_json(security) != None:
+            if parse_json(security) != []:
                     print("Security")
                     name = new_crediatials["name"]
                     surname = new_crediatials["surname"]
@@ -1188,7 +1248,7 @@ def edit_user():
                     mongo.db.security.update_one({"staff_number":f"{user_number}"},newvalues)
                     status = 200
                     resp ={"message":"successful","token":"true" ,"status":status}
-            if parse_json(domestic) != None:
+            if parse_json(domestic) != []:
                     print("Domestic")
                     name = new_crediatials["name"]
                     surname = new_crediatials["surname"]
@@ -1220,7 +1280,7 @@ def edit_user():
                     mongo.db.domestic.update_one({"staff_number":f"{user_number}"},newvalues)
                     status = 200
                     resp ={"message":"successful","token":"true" ,"status":status}  
-            if parse_json(visitor) != None:
+            if parse_json(visitor) != []:
                     print("Vistor")
                     name = new_crediatials["name"]
                     surname = new_crediatials["surname"]
@@ -1278,7 +1338,7 @@ def forgot_password1():
             domestic = mongo.db.domestic.find_one({"email":f"{email}"})
             security = mongo.db.security.find_one({"email":f"{email}"})
             visitor = mongo.db.visitor.find_one({"email":f"{email}"})
-            if parse_json(teacher) != None:
+            if parse_json(teacher) != []:
                 print("Teacher")
                 data = parse_json(teacher)
                 email = data["email"]
@@ -1306,7 +1366,7 @@ def forgot_password1():
                     status = 400
                     resp = {"message":"Verification number was not created","status":status} 
 
-            if parse_json(admin) != None:
+            if parse_json(admin) != []:
                 print("Admin")
                 data = parse_json(admin)
                 email = data["email"]
@@ -1334,7 +1394,7 @@ def forgot_password1():
                     status = 400
                     resp = {"message":"Verification number was not created","status":status} 
 
-            if parse_json(student) != None:
+            if parse_json(student) != []:
                 print("Student")
                 data = parse_json(student)
                 email = data["email"]
@@ -1361,7 +1421,7 @@ def forgot_password1():
                     status = 400
                     resp = {"message":"Verification number was not created","status":status} 
 
-            if parse_json(security) != None:
+            if parse_json(security) != []:
                 print("Security")
                 data = parse_json(security)
                 email = data["email"]
@@ -1388,7 +1448,7 @@ def forgot_password1():
                     status = 400
                     resp = {"message":"Verification number was not created","status":status} 
 
-            if parse_json(domestic) != None:
+            if parse_json(domestic) != []:
                 print("Domestic")
                 data = parse_json(domestic)
                 email = data["email"]
@@ -1417,7 +1477,7 @@ def forgot_password1():
                     status = 400
                     resp = {"message":"Verification number was not created","status":status}  
 
-            if parse_json(visitor) != None:
+            if parse_json(visitor) != []:
                 print("Vistor")
                 data = parse_json(visitor)
                 email = data["email"]
@@ -1463,7 +1523,7 @@ def forgot_paswword_send():
         verification_number = data["data"]["verification_number"]
         if verification_number != "":
             forgort_password_user = mongo.db.forgot.find_one({"verification_number":f"{verification_number}"})
-            if parse_json(forgort_password_user) != None:
+            if parse_json(forgort_password_user) != []:
                 data  = parse_json(forgort_password_user) 
                 database_veri_num = data["verification_number"]
                 if verification_number == database_veri_num:
@@ -1508,7 +1568,7 @@ def purge():
     try:
         response = mongo.db.ongrounds.find_one()
         response_return = mongo.db.inclass.find_one()
-        if parse_json(response) != None and parse_json(response_return) != None:
+        if parse_json(response) != [] and parse_json(response_return) != []:
             mongo.db.ongrounds.remove()
             mongo.db.inclass.remove()
             status = 200
@@ -1611,7 +1671,7 @@ def make_alarm():
             student_number = mongo.db.student.find()
             present = mongo.db.ongrounds.find()
             inclass = mongo.db.inclass.find()
-            if(student_number != None and present != None and inclass != None):
+            if(student_number != [] and present != [] and inclass != []):
                 data_present = parse_json(present) 
                 ongrounds_array = []
                 for i in data_present:
@@ -1687,7 +1747,7 @@ def update_alarm():
         if breach_number != "":
             breach = mongo.db.breach_alarm
             response  = breach.find()
-            if response != None:
+            if response != []:
                 mongo.db.breach_alarm.update_one({"breach_number":f"{breach_number}"},{ "$set": { "status":"onroute"}})
                 status = 200
                 resp ={"message":"successful","token":"true" ,"status":status}  
@@ -1711,7 +1771,7 @@ def check_alarm():
     resp = {}
     try:
         breach = mongo.db.breach_alarm.find()
-        if breach  != None:
+        if breach  != []:
             response = parse_json(breach)
             status = 200
             resp ={"message":"breach is present","response":response[0] ,"status":status}  
@@ -1736,7 +1796,7 @@ def delete_alarm():
         breach_number =data["data"]["breach_number"]
         if breach_number != "":
             database  = mongo.db.breach_alarm.find_one({"breach_number":f"{breach_number}"})
-            if database != None:
+            if database != []:
                     mongo.db.breach_alarm.delete_one({"breach_number":f"{breach_number}"})
                     status =200
                     resp = {"message":"Breach has been deleted","status":status}
@@ -1801,7 +1861,7 @@ def delete_messages():
         message_number  = data["data"]["message_number"]
         if message_number != "":
             messages = mongo.db.messages.find_one({"message_number":f"{message_number}"})
-            if messages != None:
+            if messages != []:
                 status = 200
                 return_response = parse_json(messages)
                 if return_response != []:
@@ -1855,7 +1915,7 @@ def messages():
     resp = {}
     try:
         messages_r = mongo.db.messages.find()
-        if messages_r != None :
+        if messages_r != [] :
             status = 200
             messages = parse_json(messages_r)
             resp = {"response":messages,"message":"messages retieved","status":status}
@@ -1891,22 +1951,22 @@ def get_report():
         security = mongo.db.security.find()
         visitor = mongo.db.visitor.find()
 
-        if teacher != None:
+        if teacher != []:
             number_of_teacher = mongo.db.teacher.count()
 
-        if admin != None:
+        if admin != []:
             number_of_admin = mongo.db.admin.count()
 
-        if student != None:
+        if student != []:
             number_of_student = mongo.db.student.count()
 
-        if domestic != None:
+        if domestic != []:
             number_of_domestic = mongo.db.domestic.count()
 
-        if security != None:
+        if security != []:
             number_of_security = mongo.db.security.count()
 
-        if visitor != None:
+        if visitor != []:
             number_of_visitor = mongo.db.visitor.count()
 
         numbers = tools()
